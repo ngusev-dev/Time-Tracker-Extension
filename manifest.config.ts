@@ -7,4 +7,9 @@ export default defineManifest({
   action: {
     default_popup: 'index.html',
   },
+  permissions: ['storage', 'unlimitedStorage'],
+  background: {
+    scripts: ['background.js'],
+    persistent: false,
+  },
 });
