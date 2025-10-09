@@ -132,4 +132,14 @@
       line-height: 1.5;
     }
   }
+
+  .open-burger {
+    width: 150px !important;
+    padding: 8px;
+  }
+
+  .open-burger + main {
+    filter: blur(2px);
+    transition: all;
+  }
 }

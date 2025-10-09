@@ -1,9 +1,12 @@
-export function Header() {
+export function Header({ toggleBurger }: { toggleBurger: () => void }) {
   return (
     <header className="border-b border-gray-300 backdrop-blur">
       <div className="flex h-16 items-center px-3">
         <div className="flex items-center gap-4">
-          <button className="cursor-pointer inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-8 px-3 text-sm ">
+          <button
+            onClick={toggleBurger}
+            className="cursor-pointer inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-8 px-3 text-sm "
+          >
             ☰
           </button>
         </div>
