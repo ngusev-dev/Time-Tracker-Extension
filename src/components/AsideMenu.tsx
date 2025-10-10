@@ -4,6 +4,17 @@ import { ROUTES } from '../lib/router.config';
 import { observer } from 'mobx-react-lite';
 import { AppStore } from '../store/App.store';
 
+const LINKS_BAR = [
+  {
+    title: 'Главная',
+    href: ROUTES.MAIN,
+  },
+  {
+    title: 'Статистика',
+    href: ROUTES.goTo(ROUTES.STATISTIC),
+  },
+];
+
 export const AsideMenu = observer(() => {
   const { isOpenAsideMenu, toggleAsideMenu } = AppStore;
 
@@ -14,16 +25,17 @@ export const AsideMenu = observer(() => {
       })}
     >
       <ul className="text-sm flex flex-col">
-        <li className="px-2 py-2 hover:bg-gray-100 rounded">
-          <NavLink onClick={() => toggleAsideMenu(false)} to={ROUTES.MAIN}>
-            Главная
-          </NavLink>
-        </li>
-        <li className="px-2 py-2 hover:bg-gray-100 rounded">
-          <NavLink onClick={() => toggleAsideMenu(false)} to={ROUTES.goTo(ROUTES.STATISTIC)}>
-            Статистика
-          </NavLink>
-        </li>
+        {LINKS_BAR.map((link) => (
+          <li key={link.title}>
+            <NavLink
+              onClick={() => toggleAsideMenu(false)}
+              to={link.href}
+              className="block px-2 py-2 hover:bg-gray-200 rounded"
+            >
+              {link.title}
+            </NavLink>
+          </li>
+        ))}
       </ul>
     </aside>
   );

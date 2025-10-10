@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { CardContent } from '../ui/Card';
 import { Button } from '../ui/Button';
+import { formatTime } from '../../lib/helper/time.helper';
+import { Pause, Play, Square } from 'lucide-react';
+import { TimerStore } from '../../store/Timer.store';
+import { observer } from 'mobx-react-lite';
 
 const projects = [
   'Разработка веб-сайта',
@@ -10,22 +14,15 @@ const projects = [
   'Планирование проекта',
 ];
 
-const formatTime = (seconds: number) => {
-  const hrs = Math.floor(seconds / 3600);
-  const mins = Math.floor((seconds % 3600) / 60);
-  const secs = seconds % 60;
-  return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-};
-
-export function TimeTracker() {
-  const [time] = useState(0);
+export const TimeTracker = observer(() => {
+  const { seconds, startTimer, endTimer, pauseTimer, isStarted, isPaused } = TimerStore;
   const [selectedProject, setSelectedProject] = useState('');
 
   return (
     <div className="w-full">
       <CardContent className="flex flex-col gap-4">
         <div className="text-center">
-          <div className="text-4xl font-mono">{formatTime(time)}</div>
+          <div className="text-6xl font-mono">{formatTime(seconds)}</div>
         </div>
 
         <div className="flex flex-col gap-2">
@@ -33,9 +30,8 @@ export function TimeTracker() {
           <select
             value={selectedProject}
             onChange={(e) => setSelectedProject(e.target.value)}
-            className="w-full p-2 border rounded-md bg-background"
+            className="w-full p-2 border rounded-md bg-background text-sm"
           >
-            <option value="">Категория</option>
             {projects.map((project) => (
               <option key={project} value={project}>
                 {project}
@@ -43,11 +39,32 @@ export function TimeTracker() {
             ))}
           </select>
         </div>
+        <textarea
+          className="border rounded-md bg-background p-2 text-sm resize-none"
+          placeholder="Описание..."
+          rows={4}
+        />
+        <div className="w-full flex gap-2 justify-center">
+          {(!isStarted || isPaused) && (
+            <Button onClick={startTimer} variant={isPaused ? 'outline' : 'default'}>
+              <Play className="w-4 h-4" /> {isPaused ? 'Продолжить' : 'Начать'}
+            </Button>
+          )}
 
-        <div className="flex gap-2 justify-center">
-          <Button>Начать</Button>
+          {isStarted && (
+            <div className="flex gap-2 w-full justify-center">
+              <Button variant="secondary" onClick={pauseTimer}>
+                <Pause className="w-4 h-4" />
+                Пауза
+              </Button>
+              <Button variant="destructive" onClick={endTimer}>
+                <Square className="w-4 h-4" />
+                Стоп
+              </Button>
+            </div>
+          )}
         </div>
       </CardContent>
     </div>
   );
-}
+});
