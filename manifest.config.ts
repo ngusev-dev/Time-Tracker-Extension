@@ -9,7 +9,7 @@ export default defineManifest({
   },
   permissions: ['storage', 'unlimitedStorage'],
   background: {
-    scripts: ['background.js'],
+    service_worker: 'background.js',
     persistent: false,
   },
 });

@@ -15,7 +15,7 @@ const projects = [
 ];
 
 export const TimeTracker = observer(() => {
-  const { seconds, startTimer, endTimer, pauseTimer, isStarted, isPaused } = TimerStore;
+  const { seconds, endTimer, pauseTimer, isStarted, isPaused, startTimer } = TimerStore;
   const [selectedProject, setSelectedProject] = useState('');
 
   return (
@@ -46,7 +46,12 @@ export const TimeTracker = observer(() => {
         />
         <div className="w-full flex gap-2 justify-center">
           {(!isStarted || isPaused) && (
-            <Button onClick={startTimer} variant={isPaused ? 'outline' : 'default'}>
+            <Button
+              onClick={() => {
+                startTimer();
+              }}
+              variant={isPaused ? 'outline' : 'default'}
+            >
               <Play className="w-4 h-4" /> {isPaused ? 'Продолжить' : 'Начать'}
             </Button>
           )}
