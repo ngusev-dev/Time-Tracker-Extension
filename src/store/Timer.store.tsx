@@ -8,20 +8,27 @@ class timerStore {
 
   constructor() {
     makeAutoObservable(this);
-    this.loadTimer();
+    this.loadTimerInit();
   }
 
-  async loadTimer() {
+  async loadTimerInit() {
     chrome.storage.local.get(['timer', 'isPaused', 'isStarted'], (result) => {
       runInAction(() => {
         this.seconds = result.timer ?? 0;
         this.isStarted = result.isStarted ?? false;
         this.isPaused = result.isPaused ?? false;
-
         if (this.isStarted) this.startTimer();
       });
     });
   }
+
+  loadTimerValue = () => {
+    chrome.storage.local.get(['timer'], (result) => {
+      runInAction(() => {
+        this.seconds = result.timer ?? 0;
+      });
+    });
+  };
 
   startTimer = () => {
     this.isStarted = true;

@@ -5,6 +5,7 @@ export interface EVENT_PAYLOAD {
 
 export const EVENT = {
   CLOSE_EXTENSION: 'close_extension',
+  LOAD_TIMER_VALUE: 'load_timer_value',
 } as const;
 
 export type EVENT_TYPE = (typeof EVENT)[keyof typeof EVENT];
