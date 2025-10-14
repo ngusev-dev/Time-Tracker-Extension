@@ -1,4 +1,4 @@
-import { EVENT, EVENT_PAYLOAD } from './src/lib/event.constants';
+import { EVENT, type EVENT_PAYLOAD } from './src/lib/event.constants';
 
 chrome.runtime.onConnect.addListener(async function (port) {
   if (port.name === 'time-tracker') {
@@ -17,7 +17,7 @@ chrome.runtime.onConnect.addListener(async function (port) {
 
     port.onDisconnect.addListener(async function () {
       const { isStarted }: { isStarted: boolean } = await chrome.storage.local.get(['isStarted']);
-      console.log(isStarted);
+
       if (isStarted) {
         chrome.storage.local.set({ closeTime: Date.now() });
       }

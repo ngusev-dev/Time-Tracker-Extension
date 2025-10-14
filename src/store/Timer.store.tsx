@@ -3,7 +3,7 @@ import { makeAutoObservable, runInAction } from 'mobx';
 class timerStore {
   isPaused = false;
   isStarted = false;
-  intervalId = -1;
+  intervalId?: NodeJS.Timeout;
   seconds = 0;
 
   constructor() {
@@ -25,7 +25,8 @@ class timerStore {
   loadTimerValue = () => {
     chrome.storage.local.get(['timer'], (result) => {
       runInAction(() => {
-        this.seconds = result.timer ?? 0;
+        if (result.timer) this.seconds = result.timer + 1; // коррекция таймера +1 секунда
+        else this.seconds = 0;
       });
     });
   };
