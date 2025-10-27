@@ -8,6 +8,7 @@ import { join } from 'path';
 import { PrismaService } from './prisma/prisma.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
+import { UserTimerModule } from './user-timer/user-timer.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ConfigModule } from '@nestjs/config';
     UserModule,
     PrismaModule,
     ConfigModule.forRoot(),
+    UserTimerModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

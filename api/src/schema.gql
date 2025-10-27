@@ -7,6 +7,10 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Mutation {
+  createUserTimer(userId: Int!): UserTimerModel!
+}
+
 type Query {
   getUsers: [UserModel!]!
 }
@@ -20,4 +24,13 @@ type UserModel {
   login: String!
   middleName: String
   password: String!
+}
+
+type UserTimerModel {
+  endTimer: DateTime
+  id: ID!
+  startTimer: DateTime
+  status: String!
+  user: UserModel!
+  userId: Float!
 }

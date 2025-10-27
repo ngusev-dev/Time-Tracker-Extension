@@ -25,5 +25,38 @@ model User {
   login String
   createdAt DateTime @default(now())
 
+  userTimer UserTimer?
+  timerHistory TimerHistory[]
+
   @@map("users")
+}
+
+model UserTimer {
+  id Int @default(autoincrement()) @id
+  startTimer DateTime?
+  endTimer DateTime?
+  status TimerStatus @default(NEW)
+
+  user User @relation(fields: [userId], references: [id])
+  userId Int  @unique
+
+  @@map("userTimers")
+}
+
+model TimerHistory {
+  id Int @default(autoincrement()) @id
+  startTimer DateTime
+  endTimer DateTime
+  totalTime Decimal
+
+  user User @relation(fields: [userId], references: [id])
+  userId Int  @unique
+
+  @@map("timerHistories")
+}
+
+enum TimerStatus {
+  NEW
+  WORKING
+  PAUSE
 }

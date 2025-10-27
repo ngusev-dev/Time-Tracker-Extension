@@ -1,0 +1,15 @@
+import { Args, Int, Mutation, Resolver } from '@nestjs/graphql';
+import { UserTimerService } from './user-timer.service';
+import { UserTimerModel } from './models/UserTimer.model';
+
+@Resolver()
+export class UserTimerResolver {
+  constructor(private readonly userTimerService: UserTimerService) {}
+
+  @Mutation(() => UserTimerModel)
+  async createUserTimer(
+    @Args({ name: 'userId', type: () => Int }) userId: number,
+  ) {
+    return await this.userTimerService.createTimer(userId);
+  }
+}
