@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { computedIntervalInSeconds } from './helpers/time.helper';
 
 @Injectable()
 export class UserTimerService {
@@ -36,20 +37,13 @@ export class UserTimerService {
       },
     });
 
-    if (timer?.status === 'PAUSE') {
-      return await this.prisma.userTimer.update({
-        data: {
-          status: 'WORKING',
-        },
-        where: {
-          userId,
-        },
-      });
-    }
+    if (timer?.status === 'WORKING')
+      throw new BadRequestException('Timer is already started!');
 
     return await this.prisma.userTimer.update({
       data: {
         startTimer: new Date(),
+        endTimer: null,
         status: 'WORKING',
       },
       where: {
@@ -59,15 +53,33 @@ export class UserTimerService {
   }
 
   async pauseTimer(userId: number) {
-    return await this.prisma.userTimer.update({
+    const timer = await this.prisma.userTimer.findFirst({
+      where: {
+        userId,
+      },
+    });
+
+    if (timer?.status === 'PAUSE')
+      throw new BadRequestException('Timer is already paused!');
+
+    const timeNow = new Date();
+
+    const updatedTimer = await this.prisma.userTimer.update({
       data: {
-        endTimer: new Date(),
+        totalTimeInSeconds:
+          timer!.totalTimeInSeconds +
+          computedIntervalInSeconds(timer!.startTimer!, timeNow),
+        endTimer: timeNow,
         status: 'PAUSE',
       },
       where: {
         userId,
       },
     });
+
+    await this.saveTimerRecordHistory(userId);
+
+    return updatedTimer;
   }
 
   async stopTimer(userId: number) {
@@ -77,23 +89,61 @@ export class UserTimerService {
       },
     });
 
-    if (!timer) throw new NotFoundException('Timer not found');
-
     try {
-      const endTimer = new Date();
-      await this.prisma.timerHistory.create({
-        data: {
-          startTimer: timer.startTimer!,
-          endTimer,
-          userId: timer.userId,
-          totalTime:
-            (endTimer.getTime() - timer.startTimer!.getTime()) / 1000 / 60 / 60,
-        },
-      });
+      if (timer?.status === 'WORKING')
+        await this.saveTimerRecordHistory(userId);
+
+      return await this.resetTimer(userId);
     } catch {
       throw new BadRequestException('Error saving the timer');
     }
+  }
 
-    return true;
+  private async saveTimerRecordHistory(userId: number) {
+    const timer = await this.prisma.userTimer.findFirst({
+      where: {
+        userId,
+      },
+    });
+
+    if (!timer) throw new NotFoundException('Timer not found');
+
+    if (timer.status === 'NEW')
+      throw new NotFoundException('Timer did not start working!');
+
+    const endTimer = timer.endTimer || new Date();
+
+    const totalTimeInSeconds = computedIntervalInSeconds(
+      timer.startTimer!,
+      endTimer,
+    );
+
+    return await this.prisma.timerHistory.create({
+      data: {
+        startTimer: timer.startTimer!,
+        endTimer: endTimer,
+        totalTimeInSeconds,
+        user: {
+          connect: { id: timer.userId },
+        },
+      },
+      include: {
+        user: true,
+      },
+    });
+  }
+
+  private async resetTimer(userId: number) {
+    return await this.prisma.userTimer.update({
+      data: {
+        startTimer: null,
+        endTimer: null,
+        totalTimeInSeconds: 0,
+        status: 'NEW',
+      },
+      where: {
+        userId,
+      },
+    });
   }
 }

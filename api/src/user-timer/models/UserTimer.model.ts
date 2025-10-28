@@ -13,6 +13,9 @@ export class UserTimerModel implements UserTimer {
   @Field(() => Date, { nullable: true })
   endTimer: Date | null;
 
+  @Field(() => Number)
+  totalTimeInSeconds: number;
+
   @Field()
   status: TimerStatus;
 
