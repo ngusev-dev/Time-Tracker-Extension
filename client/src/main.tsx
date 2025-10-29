@@ -5,8 +5,13 @@ import { router } from './router.tsx';
 
 import './lib/index.css';
 
+import { ApolloProvider } from '@apollo/client/react';
+import { apolloClient } from './lib/apollo/apollo.client.ts';
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <ApolloProvider client={apolloClient}>
+      <RouterProvider router={router} />
+    </ApolloProvider>
   </StrictMode>
 );

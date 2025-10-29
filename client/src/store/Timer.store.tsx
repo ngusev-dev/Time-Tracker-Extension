@@ -1,4 +1,5 @@
-import { makeAutoObservable, runInAction } from 'mobx';
+import { makeAutoObservable } from 'mobx';
+import type { TUserTimer } from '../lib/queries/user-timer.queries';
 
 class timerStore {
   isPaused = false;
@@ -8,68 +9,47 @@ class timerStore {
 
   constructor() {
     makeAutoObservable(this);
-    this.loadTimerInit();
   }
 
-  async loadTimerInit() {
-    chrome.storage.local.get(['timer', 'isPaused', 'isStarted'], (result) => {
-      runInAction(() => {
-        this.seconds = result.timer ?? 0;
-        this.isStarted = result.isStarted ?? false;
-        this.isPaused = result.isPaused ?? false;
-        if (this.isStarted) this.startTimer();
-      });
-    });
-  }
-
-  loadTimerValue = () => {
-    chrome.storage.local.get(['timer'], (result) => {
-      runInAction(() => {
-        if (result.timer) this.seconds = result.timer + 1; // коррекция таймера +1 секунда
-        else this.seconds = 0;
-      });
-    });
+  loadTimerInit = async (initData: TUserTimer) => {
+    this.seconds = initData.getTimer.totalTimeInSeconds;
+    this.isStarted = initData.getTimer.status === 'WORKING';
+    this.isPaused = initData.getTimer.status === 'PAUSE';
   };
 
   startTimer = () => {
-    this.isStarted = true;
-    this.isPaused = false;
-
-    chrome.storage.local.set({ isPaused: this.isPaused });
-    chrome.storage.local.set({ isStarted: this.isStarted });
-
-    this.intervalId = setInterval(() => {
-      runInAction(() => {
-        this.seconds += 1;
-        chrome.storage.local.set({ timer: this.seconds });
-      });
-    }, 1000);
+    // this.isStarted = true;
+    // this.isPaused = false;
+    // chrome.storage.local.set({ isPaused: this.isPaused });
+    // chrome.storage.local.set({ isStarted: this.isStarted });
+    // this.intervalId = setInterval(() => {
+    //   runInAction(() => {
+    //     this.seconds += 1;
+    //     chrome.storage.local.set({ timer: this.seconds });
+    //   });
+    // }, 1000);
   };
 
   pauseTimer = () => {
-    this.isPaused = true;
-    this.isStarted = false;
-
-    chrome.storage.local.set({ isPaused: this.isPaused });
-    chrome.storage.local.set({ isStarted: this.isStarted });
-
-    clearInterval(this.intervalId);
+    // this.isPaused = true;
+    // this.isStarted = false;
+    // chrome.storage.local.set({ isPaused: this.isPaused });
+    // chrome.storage.local.set({ isStarted: this.isStarted });
+    // clearInterval(this.intervalId);
   };
 
   endTimer = () => {
-    this.isStarted = false;
-    chrome.storage.local.set({ isStarted: this.isStarted });
-
-    clearInterval(this.intervalId);
-
-    this.seconds = 0;
-    chrome.storage.local.set({ timer: this.seconds });
+    // this.isStarted = false;
+    // chrome.storage.local.set({ isStarted: this.isStarted });
+    // clearInterval(this.intervalId);
+    // this.seconds = 0;
+    // chrome.storage.local.set({ timer: this.seconds });
   };
 
   saveToStore = () => {
-    chrome.storage.local.set({ timer: this.seconds });
-    chrome.storage.local.set({ isPaused: this.isPaused });
-    chrome.storage.local.set({ isStarted: this.isStarted });
+    // chrome.storage.local.set({ timer: this.seconds });
+    // chrome.storage.local.set({ isPaused: this.isPaused });
+    // chrome.storage.local.set({ isStarted: this.isStarted });
   };
 }
 

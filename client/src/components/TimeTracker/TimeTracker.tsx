@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CardContent } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { formatTime } from '../../lib/helper/time.helper';
 import { Pause, Play, Square } from 'lucide-react';
 import { TimerStore } from '../../store/Timer.store';
 import { observer } from 'mobx-react-lite';
+import { useSuspenseQuery } from '@apollo/client/react';
+import { GET_TIMER_QUERY, type TUserTimer } from '../../lib/queries/user-timer.queries';
 
 const projects = [
   'Разработка веб-сайта',
@@ -15,8 +17,15 @@ const projects = [
 ];
 
 export const TimeTracker = observer(() => {
-  const { seconds, endTimer, pauseTimer, isStarted, isPaused, startTimer } = TimerStore;
+  const { data: timerInitData, error } = useSuspenseQuery<TUserTimer>(GET_TIMER_QUERY, {
+    variables: { userId: 1 },
+  });
+  const { seconds, endTimer, pauseTimer, isStarted, isPaused, startTimer, loadTimerInit } = TimerStore;
   const [selectedProject, setSelectedProject] = useState('');
+
+  useEffect(() => {
+    if (!error && timerInitData) loadTimerInit(timerInitData);
+  }, [error]);
 
   return (
     <div className="w-full">
