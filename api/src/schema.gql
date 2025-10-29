@@ -15,6 +15,7 @@ type Mutation {
 }
 
 type Query {
+  getTimer(userId: Int!): UserTimerModel!
   getUsers: [UserModel!]!
 }
 

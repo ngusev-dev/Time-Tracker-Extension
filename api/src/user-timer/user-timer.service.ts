@@ -10,6 +10,23 @@ import { computedIntervalInSeconds } from './helpers/time.helper';
 export class UserTimerService {
   constructor(private prisma: PrismaService) {}
 
+  async getTimer(userId: number) {
+    const timer = await this.prisma.userTimer.findFirst({
+      where: {
+        userId,
+      },
+    });
+
+    if (timer?.status === 'WORKING') {
+      timer.totalTimeInSeconds += computedIntervalInSeconds(
+        timer.startTimer!,
+        new Date(),
+      );
+    }
+
+    return timer;
+  }
+
   async createTimer(userId: number) {
     const timer = await this.prisma.userTimer.findFirst({
       where: {
