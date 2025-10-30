@@ -1,12 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { CardContent } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { formatTime } from '../../lib/helper/time.helper';
 import { Pause, Play, Square } from 'lucide-react';
 import { TimerStore } from '../../store/Timer.store';
 import { observer } from 'mobx-react-lite';
-import { useSuspenseQuery } from '@apollo/client/react';
-import { GET_TIMER_QUERY, type TUserTimer } from '../../lib/queries/user-timer.queries';
 
 const projects = [
   'Разработка веб-сайта',
@@ -17,15 +15,8 @@ const projects = [
 ];
 
 export const TimeTracker = observer(() => {
-  const { data: timerInitData, error } = useSuspenseQuery<TUserTimer>(GET_TIMER_QUERY, {
-    variables: { userId: 1 },
-  });
-  const { seconds, endTimer, pauseTimer, isStarted, isPaused, startTimer, loadTimerInit } = TimerStore;
+  const { seconds, endTimer, pauseTimer, isStarted, isPaused, startTimer } = TimerStore;
   const [selectedProject, setSelectedProject] = useState('');
-
-  useEffect(() => {
-    if (!error && timerInitData) loadTimerInit(timerInitData);
-  }, [error]);
 
   return (
     <div className="w-full">
@@ -55,23 +46,18 @@ export const TimeTracker = observer(() => {
         />
         <div className="w-full flex gap-2 justify-center">
           {(!isStarted || isPaused) && (
-            <Button
-              onClick={() => {
-                startTimer();
-              }}
-              variant={isPaused ? 'outline' : 'default'}
-            >
+            <Button onClick={async () => await startTimer()} variant={isPaused ? 'outline' : 'default'}>
               <Play className="w-4 h-4" /> {isPaused ? 'Продолжить' : 'Начать'}
             </Button>
           )}
 
           {isStarted && (
             <div className="flex gap-2 w-full justify-center">
-              <Button variant="secondary" onClick={pauseTimer}>
+              <Button variant="secondary" onClick={async () => await pauseTimer()}>
                 <Pause className="w-4 h-4" />
                 Пауза
               </Button>
-              <Button variant="destructive" onClick={endTimer}>
+              <Button variant="destructive" onClick={async () => await endTimer()}>
                 <Square className="w-4 h-4" />
                 Стоп
               </Button>
