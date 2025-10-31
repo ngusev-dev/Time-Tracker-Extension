@@ -41,7 +41,7 @@ export const TimeTracker = observer(() => {
         </div>
         <textarea
           value={description ?? ''}
-          onChange={(e) => updateDescription(e.target.value.trimEnd().trimStart())}
+          onChange={(e) => updateDescription(e.target.value)}
           className="border rounded-md bg-background p-2 text-sm resize-none"
           placeholder="Описание..."
           rows={4}

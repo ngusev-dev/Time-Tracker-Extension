@@ -10,6 +10,8 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { UserTimerModule } from './user-timer/user-timer.module';
 import { UuidModule } from './uuid/uuid.module';
+import { TimerHistoryModule } from './timer-history/timer-history.module';
+import { TimerStatisticModule } from './timer-statistic/timer-statistic.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { UuidModule } from './uuid/uuid.module';
     ConfigModule.forRoot(),
     UserTimerModule,
     UuidModule,
+    TimerHistoryModule,
+    TimerStatisticModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

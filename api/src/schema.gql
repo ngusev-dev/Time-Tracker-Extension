@@ -14,9 +14,29 @@ type Mutation {
   stopTimer(description: String, userId: Int!): UserTimerModel!
 }
 
+"""Allowed values for periods"""
+enum PERIOD {
+  DAY
+  MONTH
+  WEEK
+}
+
 type Query {
+  getByPeriod(period: PERIOD!, userId: Int!): [TimerHistoryModel!]!
+  getByTimerId(timerId: String!, userId: Int!): [TimerHistoryModel!]!
   getTimer(userId: Int!): UserTimerModel!
   getUsers: [UserModel!]!
+}
+
+type TimerHistoryModel {
+  description: String
+  endTimer: DateTime!
+  id: ID!
+  startTimer: DateTime!
+  timerId: String!
+  totalTimeInSeconds: Float!
+  user: UserModel!
+  userId: Float!
 }
 
 type UserModel {
