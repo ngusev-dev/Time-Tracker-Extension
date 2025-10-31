@@ -9,9 +9,9 @@ scalar DateTime
 
 type Mutation {
   createUserTimer(userId: Int!): UserTimerModel!
-  pauseTimer(userId: Int!): UserTimerModel!
-  startTimer(userId: Int!): UserTimerModel!
-  stopTimer(userId: Int!): UserTimerModel!
+  pauseTimer(description: String, userId: Int!): UserTimerModel!
+  startTimer(description: String, userId: Int!): UserTimerModel!
+  stopTimer(description: String, userId: Int!): UserTimerModel!
 }
 
 type Query {
@@ -31,10 +31,12 @@ type UserModel {
 }
 
 type UserTimerModel {
+  description: String
   endTimer: DateTime
   id: ID!
   startTimer: DateTime
   status: String!
+  timerId: String!
   totalTimeInSeconds: Float!
   user: UserModel!
   userId: Float!

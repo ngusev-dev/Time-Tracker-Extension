@@ -7,6 +7,12 @@ export class UserTimerModel implements UserTimer {
   @Field(() => ID)
   id: number;
 
+  @Field()
+  timerId: string;
+
+  @Field(() => String, { nullable: true })
+  description: string | null;
+
   @Field(() => Date, { nullable: true })
   startTimer: Date | null;
 

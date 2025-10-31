@@ -5,10 +5,14 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { computedIntervalInSeconds } from './helpers/time.helper';
+import { UuidService } from 'src/uuid/uuid.service';
 
 @Injectable()
 export class UserTimerService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private uuid: UuidService,
+  ) {}
 
   async getTimer(userId: number) {
     const timer = await this.prisma.userTimer.findFirst({
@@ -47,7 +51,7 @@ export class UserTimerService {
     });
   }
 
-  async startTimer(userId: number) {
+  async startTimer(userId: number, description: string | null) {
     const timer = await this.prisma.userTimer.findFirst({
       where: {
         userId,
@@ -62,6 +66,7 @@ export class UserTimerService {
         startTimer: new Date(),
         endTimer: null,
         status: 'WORKING',
+        description,
       },
       where: {
         userId,
@@ -69,7 +74,7 @@ export class UserTimerService {
     });
   }
 
-  async pauseTimer(userId: number) {
+  async pauseTimer(userId: number, description: string | null) {
     const timer = await this.prisma.userTimer.findFirst({
       where: {
         userId,
@@ -88,18 +93,19 @@ export class UserTimerService {
           computedIntervalInSeconds(timer!.startTimer!, timeNow),
         endTimer: timeNow,
         status: 'PAUSE',
+        description,
       },
       where: {
         userId,
       },
     });
 
-    await this.saveTimerRecordHistory(userId);
+    await this.saveTimerRecordHistory(userId, description);
 
     return updatedTimer;
   }
 
-  async stopTimer(userId: number) {
+  async stopTimer(userId: number, description: string | null) {
     const timer = await this.prisma.userTimer.findFirst({
       where: {
         userId,
@@ -108,7 +114,7 @@ export class UserTimerService {
 
     try {
       if (timer?.status === 'WORKING')
-        await this.saveTimerRecordHistory(userId);
+        await this.saveTimerRecordHistory(userId, description);
 
       return await this.resetTimer(userId);
     } catch {
@@ -116,7 +122,10 @@ export class UserTimerService {
     }
   }
 
-  private async saveTimerRecordHistory(userId: number) {
+  private async saveTimerRecordHistory(
+    userId: number,
+    description: string | null,
+  ) {
     const timer = await this.prisma.userTimer.findFirst({
       where: {
         userId,
@@ -140,6 +149,8 @@ export class UserTimerService {
         startTimer: timer.startTimer!,
         endTimer: endTimer,
         totalTimeInSeconds,
+        timerId: timer.timerId,
+        description,
         user: {
           connect: { id: timer.userId },
         },
@@ -157,6 +168,8 @@ export class UserTimerService {
         endTimer: null,
         totalTimeInSeconds: 0,
         status: 'NEW',
+        description: null,
+        timerId: this.uuid.generateUUID_v4(),
       },
       where: {
         userId,

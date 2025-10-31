@@ -9,6 +9,7 @@ import { PrismaService } from './prisma/prisma.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { UserTimerModule } from './user-timer/user-timer.module';
+import { UuidModule } from './uuid/uuid.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UserTimerModule } from './user-timer/user-timer.module';
     PrismaModule,
     ConfigModule.forRoot(),
     UserTimerModule,
+    UuidModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

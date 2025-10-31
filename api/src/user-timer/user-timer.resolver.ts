@@ -19,17 +19,29 @@ export class UserTimerResolver {
   }
 
   @Mutation(() => UserTimerModel)
-  async startTimer(@Args({ name: 'userId', type: () => Int }) userId: number) {
-    return await this.userTimerService.startTimer(userId);
+  async startTimer(
+    @Args({ name: 'userId', type: () => Int }) userId: number,
+    @Args({ name: 'description', type: () => String, nullable: true })
+    description: string | null,
+  ) {
+    return await this.userTimerService.startTimer(userId, description);
   }
 
   @Mutation(() => UserTimerModel)
-  async pauseTimer(@Args({ name: 'userId', type: () => Int }) userId: number) {
-    return await this.userTimerService.pauseTimer(userId);
+  async pauseTimer(
+    @Args({ name: 'userId', type: () => Int }) userId: number,
+    @Args({ name: 'description', type: () => String, nullable: true })
+    description: string | null,
+  ) {
+    return await this.userTimerService.pauseTimer(userId, description);
   }
 
   @Mutation(() => UserTimerModel)
-  async stopTimer(@Args({ name: 'userId', type: () => Int }) userId: number) {
-    return await this.userTimerService.stopTimer(userId);
+  async stopTimer(
+    @Args({ name: 'userId', type: () => Int }) userId: number,
+    @Args({ name: 'description', type: () => String, nullable: true })
+    description: string | null,
+  ) {
+    return await this.userTimerService.stopTimer(userId, description);
   }
 }
