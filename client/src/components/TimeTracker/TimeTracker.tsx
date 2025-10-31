@@ -15,7 +15,7 @@ const projects = [
 ];
 
 export const TimeTracker = observer(() => {
-  const { seconds, endTimer, pauseTimer, isStarted, isPaused, startTimer } = TimerStore;
+  const { seconds, endTimer, pauseTimer, isStarted, isPaused, startTimer, updateDescription, description } = TimerStore;
   const [selectedProject, setSelectedProject] = useState('');
 
   return (
@@ -40,6 +40,8 @@ export const TimeTracker = observer(() => {
           </select>
         </div>
         <textarea
+          value={description ?? ''}
+          onChange={(e) => updateDescription(e.target.value.trimEnd().trimStart())}
           className="border rounded-md bg-background p-2 text-sm resize-none"
           placeholder="Описание..."
           rows={4}

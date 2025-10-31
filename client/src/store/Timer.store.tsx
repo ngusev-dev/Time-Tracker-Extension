@@ -16,11 +16,16 @@ class timerStore {
   isPaused = false;
   isStarted = false;
   intervalId?: NodeJS.Timeout;
+  description: string | null = null;
   seconds = 0;
 
   constructor() {
     makeAutoObservable(this);
   }
+
+  updateDescription = (description: string | null) => {
+    this.description = description;
+  };
 
   loadTimerInit = async () => {
     runInAction(() => {
@@ -34,7 +39,8 @@ class timerStore {
 
     runInAction(() => {
       this.isLoading = false;
-
+      console.log(initTimerData.data?.getTimer);
+      this.description = initTimerData.data?.getTimer.description ?? null;
       this.seconds = initTimerData.data?.getTimer.totalTimeInSeconds || 0;
       this.isStarted = initTimerData.data?.getTimer.status === 'WORKING';
       this.isPaused = initTimerData.data?.getTimer.status === 'PAUSE';
@@ -46,7 +52,7 @@ class timerStore {
   startTimer = async () => {
     const updatedTimer = await apolloClient.mutate<START_TIMER_QUERY_RESPONSE>({
       mutation: START_TIMER_MUTATION,
-      variables: { userId: 1 },
+      variables: { userId: 1, description: this.description },
     });
 
     runInAction(() => {
@@ -61,7 +67,7 @@ class timerStore {
   pauseTimer = async () => {
     const updatedTimer = await apolloClient.mutate<PAUSE_TIMER_QUERY_RESPONSE>({
       mutation: PAUSE_TIMER_MUTATION,
-      variables: { userId: 1 },
+      variables: { userId: 1, description: this.description },
     });
 
     runInAction(() => {
@@ -76,7 +82,7 @@ class timerStore {
   endTimer = async () => {
     const updatedTimer = await apolloClient.mutate<STOP_TIMER_QUERY_RESPONSE>({
       mutation: STOP_TIMER_MUTATION,
-      variables: { userId: 1 },
+      variables: { userId: 1, description: this.description },
     });
 
     runInAction(() => {
@@ -84,6 +90,7 @@ class timerStore {
 
       this.isStarted = updatedTimer.data?.stopTimer.status === 'WORKING';
       this.seconds = updatedTimer.data?.stopTimer.totalTimeInSeconds || 0;
+      this.description = updatedTimer.data?.stopTimer.description ?? null;
     });
   };
 
