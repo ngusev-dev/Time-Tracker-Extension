@@ -22,7 +22,7 @@ enum PERIOD {
 }
 
 type Query {
-  getByPeriod(period: PERIOD!, userId: Int!): [TimerHistoryModel!]!
+  getByPeriod(offset: Int, period: PERIOD!, userId: Int!): [TimerHistoryModel!]!
   getByTimerId(timerId: String!, userId: Int!): [TimerHistoryModel!]!
   getTimer(userId: Int!): UserTimerModel!
   getUsers: [UserModel!]!

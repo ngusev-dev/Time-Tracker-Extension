@@ -19,7 +19,9 @@ export class TimerHistoryResolver {
   async getByPeriod(
     @Args({ name: 'userId', type: () => Int }) userId: number,
     @Args({ name: 'period', type: () => PERIOD }) period: keyof typeof PERIOD,
+    @Args({ name: 'offset', type: () => Int, nullable: true })
+    offset: number = 0,
   ) {
-    return await this.timerHistoryService.getByPeriod(userId, period);
+    return await this.timerHistoryService.getByPeriod(userId, period, offset);
   }
 }

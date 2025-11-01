@@ -1,6 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PERIOD } from './constants/period.constants';
+import {
+  addDays,
+  endOfDay,
+  endOfMonth,
+  startOfDay,
+  startOfMonth,
+  startOfWeek,
+  subDays,
+  subMonths,
+  subWeeks,
+} from 'date-fns';
 
 @Injectable()
 export class TimerHistoryService {
@@ -15,13 +26,19 @@ export class TimerHistoryService {
     });
   }
 
-  async getByPeriod(userId: number, period: keyof typeof PERIOD) {
-    const endPeriod = new Date();
-    let startPeriod;
+  async getByPeriod(
+    userId: number,
+    period: keyof typeof PERIOD,
+    offset: number = 0,
+  ) {
+    const now = new Date();
 
     switch (period) {
-      case 'DAY':
-        startPeriod = new Date(Date.now() - 1000 * 60 * 60 * 24);
+      case 'DAY': {
+        const dayDate = subDays(now, offset);
+        const startPeriod = startOfDay(dayDate);
+        const endPeriod = endOfDay(dayDate);
+
         return await this.prisma.timerHistory.findMany({
           where: {
             startTimer: {
@@ -31,28 +48,36 @@ export class TimerHistoryService {
             userId,
           },
         });
-      case 'WEEK':
-        startPeriod = new Date(Date.now() - 1000 * 60 * 60 * 24 * 7);
+      }
+      case 'WEEK': {
+        const thisWeekStart = startOfWeek(now, { weekStartsOn: 1 });
+        const weekStart = subWeeks(thisWeekStart, offset);
+        const weekEnd = addDays(weekStart, 6);
+
         return await this.prisma.timerHistory.findMany({
           where: {
             startTimer: {
-              gte: startPeriod,
-              lte: endPeriod,
+              gte: weekStart,
+              lte: weekEnd,
             },
             userId,
           },
         });
-      case 'MONTH':
-        startPeriod = new Date(Date.now() - 1000 * 60 * 60 * 24 * 30);
+      }
+      case 'MONTH': {
+        const monthStart = startOfMonth(subMonths(now, offset));
+        const monthEnd = endOfMonth(monthStart);
+
         return await this.prisma.timerHistory.findMany({
           where: {
             startTimer: {
-              gte: startPeriod,
-              lte: endPeriod,
+              gte: monthStart,
+              lte: monthEnd,
             },
             userId,
           },
         });
+      }
     }
   }
 }
