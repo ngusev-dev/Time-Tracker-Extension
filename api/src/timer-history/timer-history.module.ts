@@ -3,6 +3,7 @@ import { TimerHistoryService } from './timer-history.service';
 import { TimerHistoryResolver } from './timer-history.resolver';
 
 @Module({
+  exports: [TimerHistoryService],
   providers: [TimerHistoryResolver, TimerHistoryService],
 })
 export class TimerHistoryModule {}

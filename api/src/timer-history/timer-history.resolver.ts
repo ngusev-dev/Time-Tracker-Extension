@@ -1,7 +1,6 @@
 import { Args, Int, Query, Resolver } from '@nestjs/graphql';
 import { TimerHistoryService } from './timer-history.service';
 import { TimerHistoryModel } from './models/TimerHistory.model';
-import { PERIOD } from './constants/period.constants';
 
 @Resolver()
 export class TimerHistoryResolver {
@@ -18,10 +17,13 @@ export class TimerHistoryResolver {
   @Query(() => [TimerHistoryModel])
   async getByPeriod(
     @Args({ name: 'userId', type: () => Int }) userId: number,
-    @Args({ name: 'period', type: () => PERIOD }) period: keyof typeof PERIOD,
-    @Args({ name: 'offset', type: () => Int, nullable: true })
-    offset: number = 0,
+    @Args({ name: 'startPeriod', type: () => Date }) startPeriod: Date,
+    @Args({ name: 'endPeriod', type: () => Date }) endPeriod: Date,
   ) {
-    return await this.timerHistoryService.getByPeriod(userId, period, offset);
+    return await this.timerHistoryService.getByPeriod(
+      userId,
+      startPeriod,
+      endPeriod,
+    );
   }
 }
