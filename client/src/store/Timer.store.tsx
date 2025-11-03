@@ -39,7 +39,7 @@ class timerStore {
 
     runInAction(() => {
       this.isLoading = false;
-      console.log(initTimerData.data?.getTimer);
+
       this.description = initTimerData.data?.getTimer.description ?? null;
       this.seconds = initTimerData.data?.getTimer.totalTimeInSeconds || 0;
       this.isStarted = initTimerData.data?.getTimer.status === 'WORKING';

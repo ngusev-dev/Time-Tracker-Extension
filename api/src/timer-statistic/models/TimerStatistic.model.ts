@@ -9,9 +9,18 @@ export class TimerStatisticModel {
   @Field(() => Date)
   endPeriod: Date;
 
-  @Field(() => [TimerHistoryModel])
-  history: TimerHistoryModel[];
+  @Field(() => [HistoryItemModel])
+  history: HistoryItemModel[];
 
   @Field(() => Int)
-  length: Date;
+  length: number;
+}
+
+@ObjectType()
+class HistoryItemModel {
+  @Field()
+  day: string;
+
+  @Field(() => [TimerHistoryModel])
+  entries: TimerHistoryModel[];
 }

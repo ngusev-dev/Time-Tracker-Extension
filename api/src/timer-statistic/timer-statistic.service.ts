@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { addDays, startOfDay, startOfWeek, subWeeks } from 'date-fns';
+import { addDays, format, startOfDay, startOfWeek, subWeeks } from 'date-fns';
 import { TimerHistoryService } from 'src/timer-history/timer-history.service';
 
 @Injectable()
@@ -18,10 +18,25 @@ export class TimerStatisticService {
       endPeriod,
     );
 
+    const daysGroup = history.reduce((group, item) => {
+      const dayKey = format(item.startTimer, 'EEEE');
+
+      if (!group[dayKey]) group[dayKey] = [];
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      group[dayKey].push(item);
+
+      return group;
+    }, {});
+
+    const weekHistory = Object.entries(daysGroup).map(([day, entries]) => ({
+      day,
+      entries,
+    }));
+
     return {
       startPeriod,
       endPeriod,
-      history,
+      history: weekHistory,
       length: history.length,
     };
   }
