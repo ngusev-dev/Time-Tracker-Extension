@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { addDays, format, startOfDay, startOfWeek, subWeeks } from 'date-fns';
 import { TimerHistoryService } from 'src/timer-history/timer-history.service';
+import { HistoryItemModel } from './models/TimerStatistic.model';
+import { TimerHistoryModel } from 'src/timer-history/models/TimerHistory.model';
 
 @Injectable()
 export class TimerStatisticService {
@@ -28,10 +30,23 @@ export class TimerStatisticService {
       return group;
     }, {});
 
-    const weekHistory = Object.entries(daysGroup).map(([day, entries]) => ({
-      day,
-      entries,
-    }));
+    const computedTotalTimeInSeconds = (entries: TimerHistoryModel[]) => {
+      return entries.reduce((acc, item) => (acc += item.totalTimeInSeconds), 0);
+    };
+
+    const weekHistory: HistoryItemModel[] = Object.entries(daysGroup).map(
+      ([day, entries]: [day: string, entries: TimerHistoryModel[]]) => ({
+        day,
+        entries,
+        general: {
+          totalTimeInSeconds: computedTotalTimeInSeconds(entries),
+          percent: (
+            (computedTotalTimeInSeconds(entries) * 100) /
+            (24 * 60 * 60)
+          ).toFixed(2),
+        },
+      }),
+    );
 
     return {
       startPeriod,

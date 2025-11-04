@@ -13,6 +13,10 @@ const LINKS_BAR = [
     title: 'Статистика',
     href: ROUTES.goTo(ROUTES.STATISTIC),
   },
+  {
+    title: 'История',
+    href: ROUTES.goTo(ROUTES.HISTORY),
+  },
 ];
 
 export const AsideMenu = observer(() => {

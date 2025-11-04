@@ -3,6 +3,7 @@ import MainPage from './pages/MainPage';
 import { StatisticPage } from './pages/StatisticPage';
 import BaseLayout from './pages/layouts/BaseLayout';
 import { ROUTES } from './lib/router.config';
+import HistoryPage from './pages/HistoryPage';
 
 export const router = createBrowserRouter([
   {
@@ -11,6 +12,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, Component: MainPage },
       { path: ROUTES.STATISTIC, Component: StatisticPage },
+      { path: ROUTES.HISTORY, Component: HistoryPage },
     ],
   },
   {

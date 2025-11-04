@@ -13,6 +13,10 @@ export type GET_WEEK_STATISTIC_QUERY_RESPONSE = {
 export type THistoryItem = {
   day: string;
   entries: TUserTimer[];
+  general: {
+    totalTimeInSeconds: number;
+    percent: string;
+  };
 };
 
 export const GET_WEEK_STATISTIC_QUERY = gql`
@@ -23,6 +27,10 @@ export const GET_WEEK_STATISTIC_QUERY = gql`
       length
       history {
         day
+        general {
+          totalTimeInSeconds
+          percent
+        }
         entries {
           id
           startTimer

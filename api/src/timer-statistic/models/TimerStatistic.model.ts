@@ -17,10 +17,22 @@ export class TimerStatisticModel {
 }
 
 @ObjectType()
-class HistoryItemModel {
+export class GeneralStatisticModel {
+  @Field()
+  totalTimeInSeconds: number;
+
+  @Field()
+  percent: string;
+}
+
+@ObjectType()
+export class HistoryItemModel {
   @Field()
   day: string;
 
   @Field(() => [TimerHistoryModel])
   entries: TimerHistoryModel[];
+
+  @Field(() => GeneralStatisticModel)
+  general: GeneralStatisticModel;
 }

@@ -1,5 +1,4 @@
-import { DaysStatistic } from '../components/widgets/DaysStatistic';
-import { QuickStatistic } from '../components/widgets/QuickStatistic';
+import { DaysStatistic } from '../components/widgets/DaysStatistic/DaysStatistic';
 
 export function StatisticPage() {
   return (
@@ -10,7 +9,6 @@ export function StatisticPage() {
 
       <div className="flex flex-col gap-2">
         <DaysStatistic />
-        <QuickStatistic />
       </div>
     </div>
   );
