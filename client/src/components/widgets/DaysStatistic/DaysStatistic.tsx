@@ -5,14 +5,14 @@ import { useQuery } from '@apollo/client/react';
 import {
   GET_WEEK_STATISTIC_QUERY,
   type GET_WEEK_STATISTIC_QUERY_RESPONSE,
-  type THistoryItem,
 } from '../../../lib/queries/user-timer-statistic';
 
 import { WEEK_DAYS } from '../../../lib/constants/period.constants';
-import { format, intervalToDuration } from 'date-fns';
+import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { useState } from 'react';
 import ControlButton from './ControlButton';
+import { computeIntervalDuration } from '../../../lib/helper/time.helper';
 
 export function DaysStatistic() {
   const [weekOffset, setWeekOffset] = useState(0);
@@ -20,18 +20,6 @@ export function DaysStatistic() {
   const { data } = useQuery<GET_WEEK_STATISTIC_QUERY_RESPONSE>(GET_WEEK_STATISTIC_QUERY, {
     variables: { userId: 1, weekOffset },
   });
-
-  const totalTimerValue = (row: THistoryItem) => {
-    const duration = intervalToDuration({ start: 0, end: row.general.totalTimeInSeconds * 1000 });
-
-    const parts = [];
-    if (duration.days) parts.push(`${duration.days} д`);
-    if (duration.hours) parts.push(`${duration.hours} ч`);
-    if (duration.minutes) parts.push(`${duration.minutes} м`);
-    if (duration.seconds) parts.push(`${duration.seconds} с`);
-
-    return parts.join(' ');
-  };
 
   const currentPeriodTime = () => (
     <>
@@ -76,7 +64,9 @@ export function DaysStatistic() {
               <div key={value} className="flex items-center gap-1 items-end">
                 <div className="w-8 text-sm">{value}</div>
                 <div className="flex-4">
-                  <div className="text-right  text-sm text-muted-foreground">{row ? totalTimerValue(row) : '-'}</div>
+                  <div className="text-right  text-sm text-muted-foreground">
+                    {row ? computeIntervalDuration(row.general.totalTimeInSeconds) : '-'}
+                  </div>
                   <Progress progress={(row && +row.general.percent) ?? 0} />
                 </div>
               </div>

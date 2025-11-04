@@ -1,21 +1,30 @@
 import { gql } from '@apollo/client';
 import type { TUserTimer } from './user-timer.queries';
 
+export interface THistoryTimerRecord extends Omit<TUserTimer, 'status'> {
+  user: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    middleName: string | null;
+  };
+}
+
+export type THistoryItem = {
+  day: string;
+  entries: THistoryTimerRecord[];
+  general: {
+    totalTimeInSeconds: number;
+    percent: string;
+  };
+};
+
 export type GET_WEEK_STATISTIC_QUERY_RESPONSE = {
   getWeekStatistic: {
     startPeriod: Date;
     endPeriod: Date;
     length: number;
     history: THistoryItem[];
-  };
-};
-
-export type THistoryItem = {
-  day: string;
-  entries: TUserTimer[];
-  general: {
-    totalTimeInSeconds: number;
-    percent: string;
   };
 };
 
@@ -39,7 +48,37 @@ export const GET_WEEK_STATISTIC_QUERY = gql`
           userId
           description
           timerId
+          user {
+            id
+            firstName
+            lastName
+            middleName
+          }
         }
+      }
+    }
+  }
+`;
+
+export type GET_TIMER_HISTORY_QUERY_RESPONSE = {
+  getByPeriod: THistoryTimerRecord[];
+};
+
+export const GET_TIMER_HISTORY_QUERY = gql`
+  query getByPeriod($userId: Int!, $startPeriod: DateTime!, $endPeriod: DateTime!) {
+    getByPeriod(userId: $userId, startPeriod: $startPeriod, endPeriod: $endPeriod) {
+      id
+      startTimer
+      endTimer
+      totalTimeInSeconds
+      userId
+      description
+      timerId
+      user {
+        id
+        firstName
+        lastName
+        middleName
       }
     }
   }

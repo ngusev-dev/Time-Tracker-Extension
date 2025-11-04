@@ -24,6 +24,9 @@ export class TimerHistoryService {
         },
         userId,
       },
+      include: {
+        user: true,
+      },
     });
   }
 }
