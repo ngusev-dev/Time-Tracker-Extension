@@ -28,3 +28,12 @@ export class TimerHistoryModel implements TimerHistory {
   @Field(() => UserModel)
   user: UserModel;
 }
+
+@ObjectType()
+export class TimerHistoryGroupModel {
+  @Field(() => String)
+  timerId: string;
+
+  @Field(() => [TimerHistoryModel])
+  records: TimerHistoryModel[];
+}
