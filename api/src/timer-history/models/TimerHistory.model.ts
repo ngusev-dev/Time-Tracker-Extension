@@ -32,7 +32,7 @@ export class TimerHistoryModel implements TimerHistory {
 @ObjectType()
 export class TimerHistoryGroupModel {
   @Field(() => String)
-  timerId: string;
+  groupField: any;
 
   @Field(() => [TimerHistoryModel])
   records: TimerHistoryModel[];

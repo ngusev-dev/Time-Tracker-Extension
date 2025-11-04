@@ -29,14 +29,15 @@ type Query {
   getByPeriod(endPeriod: DateTime!, startPeriod: DateTime!, userId: Int!): [TimerHistoryModel!]!
   getByTimerId(timerId: String!, userId: Int!): [TimerHistoryModel!]!
   getTimer(userId: Int!): UserTimerModel!
+  getTimerHistoryGroupByDate(endPeriod: DateTime!, startPeriod: DateTime!, userId: Int!): [TimerHistoryGroupModel!]!
   getTimerHistoryGroupByTimerId(endPeriod: DateTime!, startPeriod: DateTime!, userId: Int!): [TimerHistoryGroupModel!]!
   getUsers: [UserModel!]!
   getWeekStatistic(userId: Int!, weekOffset: Int): TimerStatisticModel!
 }
 
 type TimerHistoryGroupModel {
+  groupField: String!
   records: [TimerHistoryModel!]!
-  timerId: String!
 }
 
 type TimerHistoryModel {

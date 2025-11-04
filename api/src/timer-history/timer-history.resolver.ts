@@ -42,4 +42,17 @@ export class TimerHistoryResolver {
       endPeriod,
     );
   }
+
+  @Query(() => [TimerHistoryGroupModel])
+  async getTimerHistoryGroupByDate(
+    @Args({ name: 'userId', type: () => Int }) userId: number,
+    @Args({ name: 'startPeriod', type: () => Date }) startPeriod: Date,
+    @Args({ name: 'endPeriod', type: () => Date }) endPeriod: Date,
+  ) {
+    return await this.timerHistoryService.getTimerHistoryGroupByDate(
+      userId,
+      startPeriod,
+      endPeriod,
+    );
+  }
 }

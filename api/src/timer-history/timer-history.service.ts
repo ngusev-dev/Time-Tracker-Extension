@@ -53,10 +53,10 @@ export class TimerHistoryService {
     });
 
     const groupByTimerId = list.reduce((acc, record) => {
-      const index = acc.findIndex((x) => x.timerId === record.timerId);
+      const index = acc.findIndex((x) => x.groupField === record.timerId);
       if (index === -1) {
         acc.push({
-          timerId: record.timerId,
+          groupField: record.timerId,
           records: [record],
         });
       } else {
@@ -67,5 +67,46 @@ export class TimerHistoryService {
     }, [] as TimerHistoryGroupModel[]);
 
     return groupByTimerId;
+  }
+
+  async getTimerHistoryGroupByDate(
+    userId: number,
+    startPeriod: Date,
+    endPeriod: Date,
+  ) {
+    const list = await this.prisma.timerHistory.findMany({
+      where: {
+        startTimer: {
+          gte: startOfDay(startPeriod),
+          lte: endOfDay(endPeriod),
+        },
+        userId,
+      },
+      include: {
+        user: true,
+      },
+      orderBy: {
+        startTimer: 'desc',
+      },
+    });
+
+    const groupByDate = list.reduce((acc, record) => {
+      const groupDateValue = startOfDay(record.startTimer).getTime();
+
+      const index = acc.findIndex((x) => x.groupField === groupDateValue);
+
+      if (index === -1) {
+        acc.push({
+          groupField: groupDateValue,
+          records: [record],
+        });
+      } else {
+        acc[index].records.push(record);
+      }
+
+      return acc;
+    }, [] as TimerHistoryGroupModel[]);
+
+    return groupByDate;
   }
 }
