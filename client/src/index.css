@@ -10,7 +10,7 @@
   --popover-foreground: oklch(0.145 0 0);
   --primary: #030213;
   --primary-foreground: oklch(1 0 0);
-  --secondary: rgba(0, 0, 0, 0.25);
+  --secondary: rgba(0, 0, 0, 0.1);
   --secondary-foreground: #030213;
   --muted: #ececf0;
   --muted-foreground: #717182;
