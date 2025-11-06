@@ -3,7 +3,7 @@ import MainPage from './pages/MainPage';
 import { StatisticPage } from './pages/StatisticPage';
 import BaseLayout from './pages/layouts/BaseLayout';
 import { ROUTES } from './lib/router.config';
-import HistoryPage from './pages/HistoryPage';
+import HistoryPage from './pages/HistoryPage/HistoryPage';
 
 export const router = createBrowserRouter([
   {
