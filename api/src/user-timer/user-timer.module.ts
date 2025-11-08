@@ -6,5 +6,6 @@ import { UuidModule } from 'src/uuid/uuid.module';
 @Module({
   imports: [UuidModule],
   providers: [UserTimerResolver, UserTimerService],
+  exports: [UserTimerService],
 })
 export class UserTimerModule {}

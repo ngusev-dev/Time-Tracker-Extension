@@ -12,6 +12,7 @@ import { UserTimerModule } from './user-timer/user-timer.module';
 import { UuidModule } from './uuid/uuid.module';
 import { TimerHistoryModule } from './timer-history/timer-history.module';
 import { TimerStatisticModule } from './timer-statistic/timer-statistic.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { TimerStatisticModule } from './timer-statistic/timer-statistic.module';
     UuidModule,
     TimerHistoryModule,
     TimerStatisticModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
