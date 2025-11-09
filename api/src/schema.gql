@@ -18,8 +18,14 @@ type HistoryItemModel {
   general: GeneralStatisticModel!
 }
 
+input LoginDto {
+  login: String!
+  password: String!
+}
+
 type Mutation {
   createUserTimer(userId: Int!): UserTimerModel!
+  loginUser(loginDto: LoginDto!): UserModel!
   pauseTimer(description: String, userId: Int!): UserTimerModel!
   registrationUser(registrationDto: RegistrationDto!): UserModel!
   startTimer(description: String, userId: Int!): UserTimerModel!
@@ -33,7 +39,7 @@ type Query {
   getTimerHistoryGroupByDate(endPeriod: DateTime!, startPeriod: DateTime!, userId: Int!): [TimerHistoryGroupModel!]!
   getTimerHistoryGroupByTimerId(endPeriod: DateTime!, startPeriod: DateTime!, userId: Int!): [TimerHistoryGroupModel!]!
   getUsers: [UserModel!]!
-  getWeekStatistic(userId: Int!, weekOffset: Int): TimerStatisticModel!
+  getWeekStatistic(weekOffset: Int): TimerStatisticModel!
 }
 
 input RegistrationDto {
