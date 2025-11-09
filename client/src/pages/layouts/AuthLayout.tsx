@@ -1,16 +1,20 @@
 import { Header } from '../../components/Header';
-import { Outlet } from 'react-router';
+import { Outlet, useNavigate } from 'react-router';
 import { AsideMenu } from '../../components/AsideMenu';
-import { TimerStore } from '../../store/Timer.store';
+// import { TimerStore } from '../../store/Timer.store';
 import { useEffect } from 'react';
+import { PUBLIC_ROUTES } from '../../lib/router.config';
 
-function BaseLayout() {
-  const { loadTimerInit } = TimerStore;
+function AuthLayout() {
+  const navigate = useNavigate();
+
+  // const { loadTimerInit } = TimerStore;
 
   useEffect(() => {
-    (async function () {
-      await loadTimerInit();
-    })();
+    navigate(PUBLIC_ROUTES.goTo(PUBLIC_ROUTES.AUTH));
+    // (async function () {
+    //   await loadTimerInit();
+    // })();
   }, []);
 
   return (
@@ -26,4 +30,4 @@ function BaseLayout() {
   );
 }
 
-export default BaseLayout;
+export default AuthLayout;

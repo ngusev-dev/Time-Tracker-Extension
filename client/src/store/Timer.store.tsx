@@ -52,7 +52,7 @@ class timerStore {
   startTimer = async () => {
     const updatedTimer = await apolloClient.mutate<START_TIMER_QUERY_RESPONSE>({
       mutation: START_TIMER_MUTATION,
-      variables: { userId: 1, description: this.description },
+      variables: { description: this.description },
     });
 
     runInAction(() => {
@@ -67,7 +67,7 @@ class timerStore {
   pauseTimer = async () => {
     const updatedTimer = await apolloClient.mutate<PAUSE_TIMER_QUERY_RESPONSE>({
       mutation: PAUSE_TIMER_MUTATION,
-      variables: { userId: 1, description: this.description },
+      variables: { description: this.description },
     });
 
     runInAction(() => {
@@ -82,7 +82,7 @@ class timerStore {
   endTimer = async () => {
     const updatedTimer = await apolloClient.mutate<STOP_TIMER_QUERY_RESPONSE>({
       mutation: STOP_TIMER_MUTATION,
-      variables: { userId: 1, description: this.description },
+      variables: { description: this.description },
     });
 
     runInAction(() => {

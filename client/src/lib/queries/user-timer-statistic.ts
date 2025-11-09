@@ -34,8 +34,8 @@ export type GET_WEEK_STATISTIC_QUERY_RESPONSE = {
 };
 
 export const GET_WEEK_STATISTIC_QUERY = gql`
-  query getWeekStatistic($userId: Int!, $weekOffset: Int) {
-    getWeekStatistic(userId: $userId, weekOffset: $weekOffset) {
+  query getWeekStatistic($weekOffset: Int) {
+    getWeekStatistic(weekOffset: $weekOffset) {
       startPeriod
       endPeriod
       length
@@ -70,8 +70,8 @@ export type GET_TIMER_HISTORY_QUERY_RESPONSE = {
 };
 
 export const GET_TIMER_HISTORY_QUERY = gql`
-  query getByPeriod($userId: Int!, $startPeriod: DateTime!, $endPeriod: DateTime!) {
-    getByPeriod(userId: $userId, startPeriod: $startPeriod, endPeriod: $endPeriod) {
+  query getByPeriod($startPeriod: DateTime!, $endPeriod: DateTime!) {
+    getByPeriod(startPeriod: $startPeriod, endPeriod: $endPeriod) {
       id
       startTimer
       endTimer
@@ -94,8 +94,8 @@ export type GET_TIMER_HISTORY_GROUP_TIMER_ID_QUERY_RESPONSE = {
 };
 
 export const GET_TIMER_HISTORY_GROUP_TIMER_ID_QUERY = gql`
-  query getTimerHistoryGroupByTimerId($userId: Int!, $startPeriod: DateTime!, $endPeriod: DateTime!) {
-    getTimerHistoryGroupByTimerId(userId: $userId, startPeriod: $startPeriod, endPeriod: $endPeriod) {
+  query getTimerHistoryGroupByTimerId($startPeriod: DateTime!, $endPeriod: DateTime!) {
+    getTimerHistoryGroupByTimerId(startPeriod: $startPeriod, endPeriod: $endPeriod) {
       groupField
       records {
         id
@@ -121,8 +121,8 @@ export type GET_TIMER_HISTORY_GROUP_DATE_QUERY_RESPONSE = {
 };
 
 export const GET_TIMER_HISTORY_GROUP_DATE_QUERY = gql`
-  query getTimerHistoryGroupByDate($userId: Int!, $startPeriod: DateTime!, $endPeriod: DateTime!) {
-    getTimerHistoryGroupByDate(userId: $userId, startPeriod: $startPeriod, endPeriod: $endPeriod) {
+  query getTimerHistoryGroupByDate($startPeriod: DateTime!, $endPeriod: DateTime!) {
+    getTimerHistoryGroupByDate(startPeriod: $startPeriod, endPeriod: $endPeriod) {
       groupField
       records {
         id

@@ -1,17 +1,21 @@
-import { Args, Int, Query, Resolver } from '@nestjs/graphql';
+import { Args, Query, Resolver } from '@nestjs/graphql';
 import { TimerHistoryService } from './timer-history.service';
 import {
   TimerHistoryGroupModel,
   TimerHistoryModel,
 } from './models/TimerHistory.model';
+import { Authorized } from 'src/auth/decorators/authorized.decorator';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
+@UseGuards(AuthGuard)
 @Resolver()
 export class TimerHistoryResolver {
   constructor(private readonly timerHistoryService: TimerHistoryService) {}
 
   @Query(() => [TimerHistoryModel])
   async getByTimerId(
-    @Args({ name: 'userId', type: () => Int }) userId: number,
+    @Authorized('id') userId: number,
     @Args({ name: 'timerId', type: () => String }) timerId: string,
   ) {
     return await this.timerHistoryService.getByTimerId(userId, timerId);
@@ -19,7 +23,7 @@ export class TimerHistoryResolver {
 
   @Query(() => [TimerHistoryModel])
   async getByPeriod(
-    @Args({ name: 'userId', type: () => Int }) userId: number,
+    @Authorized('id') userId: number,
     @Args({ name: 'startPeriod', type: () => Date }) startPeriod: Date,
     @Args({ name: 'endPeriod', type: () => Date }) endPeriod: Date,
   ) {
@@ -32,7 +36,7 @@ export class TimerHistoryResolver {
 
   @Query(() => [TimerHistoryGroupModel])
   async getTimerHistoryGroupByTimerId(
-    @Args({ name: 'userId', type: () => Int }) userId: number,
+    @Authorized('id') userId: number,
     @Args({ name: 'startPeriod', type: () => Date }) startPeriod: Date,
     @Args({ name: 'endPeriod', type: () => Date }) endPeriod: Date,
   ) {
@@ -45,7 +49,7 @@ export class TimerHistoryResolver {
 
   @Query(() => [TimerHistoryGroupModel])
   async getTimerHistoryGroupByDate(
-    @Args({ name: 'userId', type: () => Int }) userId: number,
+    @Authorized('id') userId: number,
     @Args({ name: 'startPeriod', type: () => Date }) startPeriod: Date,
     @Args({ name: 'endPeriod', type: () => Date }) endPeriod: Date,
   ) {

@@ -1,21 +1,22 @@
 import { NavLink } from 'react-router';
-import { cn } from '../lib/utils/util';
-import { ROUTES } from '../lib/router.config';
+
+import { AUTH_ROUTES } from '../lib/router.config';
 import { observer } from 'mobx-react-lite';
 import { AppStore } from '../store/App.store';
+import { cn } from '@/lib/utils';
 
 const LINKS_BAR = [
   {
     title: 'Главная',
-    href: ROUTES.MAIN,
+    href: AUTH_ROUTES.MAIN,
   },
   {
     title: 'Статистика',
-    href: ROUTES.goTo(ROUTES.STATISTIC),
+    href: AUTH_ROUTES.goTo(AUTH_ROUTES.STATISTIC),
   },
   {
     title: 'История',
-    href: ROUTES.goTo(ROUTES.HISTORY),
+    href: AUTH_ROUTES.goTo(AUTH_ROUTES.HISTORY),
   },
 ];
 

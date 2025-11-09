@@ -24,20 +24,20 @@ input LoginDto {
 }
 
 type Mutation {
-  createUserTimer(userId: Int!): UserTimerModel!
+  createUserTimer: UserTimerModel!
   loginUser(loginDto: LoginDto!): UserModel!
-  pauseTimer(description: String, userId: Int!): UserTimerModel!
+  pauseTimer(description: String): UserTimerModel!
   registrationUser(registrationDto: RegistrationDto!): UserModel!
-  startTimer(description: String, userId: Int!): UserTimerModel!
-  stopTimer(description: String, userId: Int!): UserTimerModel!
+  startTimer(description: String): UserTimerModel!
+  stopTimer(description: String): UserTimerModel!
 }
 
 type Query {
-  getByPeriod(endPeriod: DateTime!, startPeriod: DateTime!, userId: Int!): [TimerHistoryModel!]!
-  getByTimerId(timerId: String!, userId: Int!): [TimerHistoryModel!]!
-  getTimer(userId: Int!): UserTimerModel!
-  getTimerHistoryGroupByDate(endPeriod: DateTime!, startPeriod: DateTime!, userId: Int!): [TimerHistoryGroupModel!]!
-  getTimerHistoryGroupByTimerId(endPeriod: DateTime!, startPeriod: DateTime!, userId: Int!): [TimerHistoryGroupModel!]!
+  getByPeriod(endPeriod: DateTime!, startPeriod: DateTime!): [TimerHistoryModel!]!
+  getByTimerId(timerId: String!): [TimerHistoryModel!]!
+  getTimer: UserTimerModel!
+  getTimerHistoryGroupByDate(endPeriod: DateTime!, startPeriod: DateTime!): [TimerHistoryGroupModel!]!
+  getTimerHistoryGroupByTimerId(endPeriod: DateTime!, startPeriod: DateTime!): [TimerHistoryGroupModel!]!
   getUsers: [UserModel!]!
   getWeekStatistic(weekOffset: Int): TimerStatisticModel!
 }

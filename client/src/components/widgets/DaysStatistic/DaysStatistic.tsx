@@ -18,7 +18,7 @@ export function DaysStatistic() {
   const [weekOffset, setWeekOffset] = useState(0);
 
   const { data } = useQuery<GET_WEEK_STATISTIC_QUERY_RESPONSE>(GET_WEEK_STATISTIC_QUERY, {
-    variables: { userId: 1, weekOffset },
+    variables: { weekOffset },
   });
 
   const currentPeriodTime = () => (

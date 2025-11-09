@@ -15,8 +15,8 @@ export type GET_TIMER_QUERY_RESPONSE = {
 };
 
 export const GET_TIMER_QUERY = gql`
-  query getTimer($userId: Int!) {
-    getTimer(userId: $userId) {
+  query getTimer {
+    getTimer {
       id
       startTimer
       endTimer
@@ -33,8 +33,8 @@ export type START_TIMER_QUERY_RESPONSE = {
 };
 
 export const START_TIMER_MUTATION = gql`
-  mutation startTimer($userId: Int!, $description: String) {
-    startTimer(userId: $userId, description: $description) {
+  mutation startTimer($description: String) {
+    startTimer(description: $description) {
       id
       startTimer
       endTimer
@@ -51,8 +51,8 @@ export type STOP_TIMER_QUERY_RESPONSE = {
 };
 
 export const STOP_TIMER_MUTATION = gql`
-  mutation stopTimer($userId: Int!, $description: String) {
-    stopTimer(userId: $userId, description: $description) {
+  mutation stopTimer($description: String) {
+    stopTimer(description: $description) {
       id
       startTimer
       endTimer
@@ -69,8 +69,8 @@ export type PAUSE_TIMER_QUERY_RESPONSE = {
 };
 
 export const PAUSE_TIMER_MUTATION = gql`
-  mutation pauseTimer($userId: Int!, $description: String) {
-    pauseTimer(userId: $userId, description: $description) {
+  mutation pauseTimer($description: String) {
+    pauseTimer(description: $description) {
       id
       startTimer
       endTimer

@@ -18,7 +18,6 @@ export default function HistoryPage() {
 
   const { data } = useQuery<GET_TIMER_HISTORY_GROUP_DATE_QUERY_RESPONSE>(GET_TIMER_HISTORY_GROUP_DATE_QUERY, {
     variables: {
-      userId: 1,
       startPeriod: startPeriod(),
       endPeriod: endPeriod(),
     },

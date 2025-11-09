@@ -1,13 +1,30 @@
-class routes {
+class AuthPages {
   _PREFIX = '/index.html';
 
   MAIN = this._PREFIX;
   STATISTIC = 'statistic';
   HISTORY = 'history';
 
+  _AUTH_PREFIX = this._PREFIX + '/auth';
+  AUTH = 'login';
+  REGISTER = 'register';
+
   goTo(path: string) {
     return this._PREFIX + `/${path}`;
   }
 }
 
-export const ROUTES = new routes();
+class PublicPages {
+  _PREFIX = '/index.html';
+
+  PUBLIC_PREFIX = this._PREFIX + '/auth';
+  AUTH = 'login';
+  REGISTER = 'register';
+
+  goTo(path: string) {
+    return this.PUBLIC_PREFIX + `/${path}`;
+  }
+}
+
+export const AUTH_ROUTES = new AuthPages();
+export const PUBLIC_ROUTES = new PublicPages();
