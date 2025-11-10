@@ -6,24 +6,24 @@ export class UserModel implements User {
   @Field(() => ID)
   id: number;
 
-  @Field()
+  @Field(() => String)
   email: string;
 
-  @Field()
+  @Field(() => String)
   password: string;
 
-  @Field()
+  @Field(() => String)
   firstName: string;
 
-  @Field()
+  @Field(() => String)
   lastName: string;
 
   @Field(() => String, { nullable: true })
   middleName: string | null;
 
-  @Field()
+  @Field(() => String)
   login: string;
 
-  @Field()
+  @Field(() => Date)
   createdAt: Date;
 }

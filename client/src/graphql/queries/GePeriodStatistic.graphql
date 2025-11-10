@@ -1,0 +1,17 @@
+query GetPeriodStatistic($startPeriod: DateTime!, $endPeriod: DateTime!) {
+  getByPeriod(startPeriod: $startPeriod, endPeriod: $endPeriod) {
+    id
+    startTimer
+    endTimer
+    totalTimeInSeconds
+    userId
+    description
+    timerId
+    user {
+      id
+      firstName
+      lastName
+      middleName
+    }
+  }
+}

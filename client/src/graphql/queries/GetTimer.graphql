@@ -1,0 +1,11 @@
+query GetTimer {
+  getTimer {
+    id
+    startTimer
+    endTimer
+    totalTimeInSeconds
+    status
+    description
+    timerId
+  }
+}

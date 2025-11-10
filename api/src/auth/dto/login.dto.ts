@@ -2,9 +2,9 @@ import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class LoginDto {
-  @Field()
+  @Field(() => String)
   login: string;
 
-  @Field()
+  @Field(() => String)
   password: string;
 }

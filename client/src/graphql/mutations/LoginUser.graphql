@@ -1,0 +1,10 @@
+mutation LoginUser($loginDto: LoginDto!) {
+  loginUser(loginDto: $loginDto) {
+    id
+    firstName
+    lastName
+    middleName
+    login
+    email
+  }
+}

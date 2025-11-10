@@ -1,0 +1,20 @@
+query GetTimerHistoryGroupByDate($startPeriod: DateTime!, $endPeriod: DateTime!) {
+  getTimerHistoryGroupByDate(startPeriod: $startPeriod, endPeriod: $endPeriod) {
+    groupField
+    records {
+      id
+      startTimer
+      endTimer
+      totalTimeInSeconds
+      userId
+      description
+      timerId
+      user {
+        id
+        firstName
+        lastName
+        middleName
+      }
+    }
+  }
+}

@@ -3,23 +3,23 @@ import { IsEmail, IsString, MinLength, IsOptional } from 'class-validator';
 
 @InputType()
 export class RegistrationDto {
-  @Field()
+  @Field(() => String)
   @IsEmail()
   email: string;
 
-  @Field()
+  @Field(() => String)
   @IsString()
   @MinLength(4)
   login: string;
 
-  @Field()
+  @Field(() => String)
   password: string;
 
-  @Field()
+  @Field(() => String)
   @IsString()
   firstName: string;
 
-  @Field()
+  @Field(() => String)
   @IsString()
   lastName: string;
 

@@ -1,0 +1,29 @@
+query GetWeekStatistic($weekOffset: Int) {
+  getWeekStatistic(weekOffset: $weekOffset) {
+    startPeriod
+    endPeriod
+    length
+    history {
+      day
+      general {
+        totalTimeInSeconds
+        percent
+      }
+      entries {
+        id
+        startTimer
+        endTimer
+        totalTimeInSeconds
+        userId
+        description
+        timerId
+        user {
+          id
+          firstName
+          lastName
+          middleName
+        }
+      }
+    }
+  }
+}

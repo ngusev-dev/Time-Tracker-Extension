@@ -1,15 +1,15 @@
 import { makeAutoObservable, runInAction } from 'mobx';
-import {
-  GET_TIMER_QUERY,
-  PAUSE_TIMER_MUTATION,
-  START_TIMER_MUTATION,
-  STOP_TIMER_MUTATION,
-  type GET_TIMER_QUERY_RESPONSE,
-  type PAUSE_TIMER_QUERY_RESPONSE,
-  type START_TIMER_QUERY_RESPONSE,
-  type STOP_TIMER_QUERY_RESPONSE,
-} from '../lib/queries/user-timer.queries';
 import { apolloClient } from '../lib/apollo/apollo.client';
+import {
+  GetTimerDocument,
+  PauseTimerDocument,
+  StartTimerDocument,
+  StopTimerDocument,
+  type GetTimerQuery,
+  type PauseTimerMutation,
+  type StartTimerMutation,
+  type StopTimerMutation,
+} from '@/graphql/generated/output';
 
 class timerStore {
   isLoading = false;
@@ -32,9 +32,8 @@ class timerStore {
       this.isLoading = true;
     });
 
-    const initTimerData = await apolloClient.query<GET_TIMER_QUERY_RESPONSE>({
-      query: GET_TIMER_QUERY,
-      variables: { userId: 1 },
+    const initTimerData = await apolloClient.query<GetTimerQuery>({
+      query: GetTimerDocument,
     });
 
     runInAction(() => {
@@ -50,8 +49,8 @@ class timerStore {
   };
 
   startTimer = async () => {
-    const updatedTimer = await apolloClient.mutate<START_TIMER_QUERY_RESPONSE>({
-      mutation: START_TIMER_MUTATION,
+    const updatedTimer = await apolloClient.mutate<StartTimerMutation>({
+      mutation: StartTimerDocument,
       variables: { description: this.description },
     });
 
@@ -65,8 +64,8 @@ class timerStore {
   };
 
   pauseTimer = async () => {
-    const updatedTimer = await apolloClient.mutate<PAUSE_TIMER_QUERY_RESPONSE>({
-      mutation: PAUSE_TIMER_MUTATION,
+    const updatedTimer = await apolloClient.mutate<PauseTimerMutation>({
+      mutation: PauseTimerDocument,
       variables: { description: this.description },
     });
 
@@ -80,8 +79,8 @@ class timerStore {
   };
 
   endTimer = async () => {
-    const updatedTimer = await apolloClient.mutate<STOP_TIMER_QUERY_RESPONSE>({
-      mutation: STOP_TIMER_MUTATION,
+    const updatedTimer = await apolloClient.mutate<StopTimerMutation>({
+      mutation: StopTimerDocument,
       variables: { description: this.description },
     });
 

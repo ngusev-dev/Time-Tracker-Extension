@@ -18,16 +18,16 @@ export class TimerStatisticModel {
 
 @ObjectType()
 export class GeneralStatisticModel {
-  @Field()
+  @Field(() => Int)
   totalTimeInSeconds: number;
 
-  @Field()
+  @Field(() => String)
   percent: string;
 }
 
 @ObjectType()
 export class HistoryItemModel {
-  @Field()
+  @Field(() => String)
   day: string;
 
   @Field(() => [TimerHistoryModel])

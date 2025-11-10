@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { TimerStatus, UserTimer } from 'generated/prisma/client';
 import { UserModel } from 'src/user/models/User.model';
 
@@ -7,7 +7,7 @@ export class UserTimerModel implements UserTimer {
   @Field(() => ID)
   id: number;
 
-  @Field()
+  @Field(() => String)
   timerId: string;
 
   @Field(() => String, { nullable: true })
@@ -22,10 +22,10 @@ export class UserTimerModel implements UserTimer {
   @Field(() => Number)
   totalTimeInSeconds: number;
 
-  @Field()
+  @Field(() => String)
   status: TimerStatus;
 
-  @Field()
+  @Field(() => Int)
   userId: number;
 
   @Field(() => UserModel)

@@ -1,20 +1,17 @@
 import { Header } from '../../components/Header';
-import { Outlet, useNavigate } from 'react-router';
+import { Outlet } from 'react-router';
 import { AsideMenu } from '../../components/AsideMenu';
-// import { TimerStore } from '../../store/Timer.store';
+import { TimerStore } from '../../store/Timer.store';
 import { useEffect } from 'react';
-import { PUBLIC_ROUTES } from '../../lib/router.config';
+import { observer } from 'mobx-react-lite';
 
-function AuthLayout() {
-  const navigate = useNavigate();
-
-  // const { loadTimerInit } = TimerStore;
+const AuthorizedLayout = observer(() => {
+  const { loadTimerInit } = TimerStore;
 
   useEffect(() => {
-    navigate(PUBLIC_ROUTES.goTo(PUBLIC_ROUTES.AUTH));
-    // (async function () {
-    //   await loadTimerInit();
-    // })();
+    (async function () {
+      await loadTimerInit();
+    })();
   }, []);
 
   return (
@@ -28,6 +25,6 @@ function AuthLayout() {
       </div>
     </div>
   );
-}
+});
 
-export default AuthLayout;
+export default AuthorizedLayout;

@@ -1,3 +1,5 @@
+import { apolloClient } from '@/lib/apollo/apollo.client';
+import { gql } from '@apollo/client';
 import { makeAutoObservable } from 'mobx';
 
 class appStore {
@@ -9,6 +11,20 @@ class appStore {
 
   toggleAsideMenu = (flag: boolean) => {
     this.isOpenAsideMenu = flag;
+  };
+
+  validateSession = async () => {
+    try {
+      return await apolloClient.query<boolean>({
+        query: gql`
+          query getTimer {
+            validateSession
+          }
+        `,
+      });
+    } catch {
+      return false;
+    }
   };
 }
 

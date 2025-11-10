@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { TimerHistory } from 'generated/prisma/client';
 import { UserModel } from 'src/user/models/User.model';
 
@@ -22,7 +22,7 @@ export class TimerHistoryModel implements TimerHistory {
   @Field(() => String, { nullable: true })
   description: string | null;
 
-  @Field()
+  @Field(() => Int)
   userId: number;
 
   @Field(() => UserModel)

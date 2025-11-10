@@ -5,10 +5,6 @@ class AuthPages {
   STATISTIC = 'statistic';
   HISTORY = 'history';
 
-  _AUTH_PREFIX = this._PREFIX + '/auth';
-  AUTH = 'login';
-  REGISTER = 'register';
-
   goTo(path: string) {
     return this._PREFIX + `/${path}`;
   }
@@ -17,7 +13,7 @@ class AuthPages {
 class PublicPages {
   _PREFIX = '/index.html';
 
-  PUBLIC_PREFIX = this._PREFIX + '/auth';
+  PUBLIC_PREFIX = this._PREFIX;
   AUTH = 'login';
   REGISTER = 'register';
 

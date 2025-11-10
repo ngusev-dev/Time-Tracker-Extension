@@ -9,7 +9,7 @@ scalar DateTime
 
 type GeneralStatisticModel {
   percent: String!
-  totalTimeInSeconds: Float!
+  totalTimeInSeconds: Int!
 }
 
 type HistoryItemModel {
@@ -40,6 +40,7 @@ type Query {
   getTimerHistoryGroupByTimerId(endPeriod: DateTime!, startPeriod: DateTime!): [TimerHistoryGroupModel!]!
   getUsers: [UserModel!]!
   getWeekStatistic(weekOffset: Int): TimerStatisticModel!
+  validateSession: Boolean!
 }
 
 input RegistrationDto {
@@ -64,7 +65,7 @@ type TimerHistoryModel {
   timerId: String!
   totalTimeInSeconds: Float!
   user: UserModel!
-  userId: Float!
+  userId: Int!
 }
 
 type TimerStatisticModel {
@@ -94,5 +95,5 @@ type UserTimerModel {
   timerId: String!
   totalTimeInSeconds: Float!
   user: UserModel!
-  userId: Float!
+  userId: Int!
 }

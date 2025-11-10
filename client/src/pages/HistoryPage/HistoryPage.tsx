@@ -1,14 +1,10 @@
-import { useQuery } from '@apollo/client/react';
-import {
-  GET_TIMER_HISTORY_GROUP_DATE_QUERY,
-  type GET_TIMER_HISTORY_GROUP_DATE_QUERY_RESPONSE,
-} from '../../lib/queries/user-timer-statistic';
 import HistoryItem from '../../components/HistoryItem/HistoryItem';
 import TopHistory from './TopHistory';
 import { endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
 import { Fragment, useState } from 'react';
 import ControlButton from '../../components/widgets/DaysStatistic/ControlButton';
 import { ArrowBigLeft, ArrowBigRight } from 'lucide-react';
+import { useGetTimerHistoryGroupByDateQuery } from '@/graphql/generated/output';
 
 export default function HistoryPage() {
   const [monthOffset, setMonthOffset] = useState(0);
@@ -16,7 +12,7 @@ export default function HistoryPage() {
   const startPeriod = () => startOfMonth(subMonths(new Date(), monthOffset));
   const endPeriod = () => endOfMonth(subMonths(new Date(), monthOffset));
 
-  const { data } = useQuery<GET_TIMER_HISTORY_GROUP_DATE_QUERY_RESPONSE>(GET_TIMER_HISTORY_GROUP_DATE_QUERY, {
+  const { data } = useGetTimerHistoryGroupByDateQuery({
     variables: {
       startPeriod: startPeriod(),
       endPeriod: endPeriod(),

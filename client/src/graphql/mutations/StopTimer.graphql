@@ -1,0 +1,11 @@
+mutation StopTimer($description: String) {
+  stopTimer(description: $description) {
+    id
+    startTimer
+    endTimer
+    totalTimeInSeconds
+    status
+    description
+    timerId
+  }
+}

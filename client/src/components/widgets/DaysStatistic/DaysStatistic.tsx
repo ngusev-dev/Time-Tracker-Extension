@@ -1,11 +1,6 @@
 import { ArrowBigLeft, ArrowBigRight, BarChart3 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/Card';
 import { Progress } from '../../ui/Progress';
-import { useQuery } from '@apollo/client/react';
-import {
-  GET_WEEK_STATISTIC_QUERY,
-  type GET_WEEK_STATISTIC_QUERY_RESPONSE,
-} from '../../../lib/queries/user-timer-statistic';
 
 import { WEEK_DAYS } from '../../../lib/constants/period.constants';
 import { format } from 'date-fns';
@@ -13,11 +8,12 @@ import { ru } from 'date-fns/locale';
 import { useState } from 'react';
 import ControlButton from './ControlButton';
 import { computeIntervalDuration } from '../../../lib/helper/time.helper';
+import { useGetWeekStatisticQuery } from '@/graphql/generated/output';
 
 export function DaysStatistic() {
   const [weekOffset, setWeekOffset] = useState(0);
 
-  const { data } = useQuery<GET_WEEK_STATISTIC_QUERY_RESPONSE>(GET_WEEK_STATISTIC_QUERY, {
+  const { data } = useGetWeekStatisticQuery({
     variables: { weekOffset },
   });
 
