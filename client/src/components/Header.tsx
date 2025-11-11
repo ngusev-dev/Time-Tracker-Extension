@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite';
 import { AppStore } from '../store/App.store';
 
 export const Header = observer(() => {
-  const { toggleAsideMenu, isOpenAsideMenu } = AppStore;
+  const { toggleAsideMenu, isOpenAsideMenu, user } = AppStore;
 
   return (
     <header className="border-b border-gray-300 backdrop-blur">
@@ -18,8 +18,8 @@ export const Header = observer(() => {
         <div className="ml-auto flex items-center gap-4">
           <div className="flex items-center gap-3 pl-4 border-l border-gray-300">
             <div className="text-sm">
-              <div className="font-medium">TankistPro</div>
-              <div className="text-muted-foreground">Project Manager</div>
+              <div className="font-medium">{user?.login}</div>
+              <div className="text-muted-foreground">{user?.email}</div>
             </div>
           </div>
         </div>

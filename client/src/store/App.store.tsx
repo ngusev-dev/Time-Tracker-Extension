@@ -1,30 +1,20 @@
-import { apolloClient } from '@/lib/apollo/apollo.client';
-import { gql } from '@apollo/client';
 import { makeAutoObservable } from 'mobx';
+import type { UserStoreModel } from './types/UserStoreModel.type';
 
 class appStore {
+  user: UserStoreModel | null = null;
   isOpenAsideMenu = false;
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  toggleAsideMenu = (flag: boolean) => {
-    this.isOpenAsideMenu = flag;
+  setUserData = (user: UserStoreModel) => {
+    this.user = user;
   };
 
-  validateSession = async () => {
-    try {
-      return await apolloClient.query<boolean>({
-        query: gql`
-          query getTimer {
-            validateSession
-          }
-        `,
-      });
-    } catch {
-      return false;
-    }
+  toggleAsideMenu = (flag: boolean) => {
+    this.isOpenAsideMenu = flag;
   };
 }
 

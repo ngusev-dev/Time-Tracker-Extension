@@ -23,18 +23,22 @@ export const TimeTracker = observer(() => {
         />
         <div className="w-full flex gap-2 justify-center">
           {(!isStarted || isPaused) && (
-            <Button onClick={async () => await startTimer()} variant={isPaused ? 'outline' : 'default'}>
+            <Button
+              onClick={async () => await startTimer()}
+              className="flex-1"
+              variant={isPaused ? 'outline' : 'default'}
+            >
               <Play className="w-4 h-4" /> {isPaused ? 'Продолжить' : 'Начать'}
             </Button>
           )}
 
           {isStarted && (
             <div className="flex gap-2 w-full justify-center">
-              <Button variant="secondary" onClick={async () => await pauseTimer()}>
+              <Button className="flex-1" onClick={async () => await pauseTimer()}>
                 <Pause className="w-4 h-4" />
                 Пауза
               </Button>
-              <Button variant="destructive" onClick={async () => await endTimer()}>
+              <Button variant="destructive" className="flex-1" onClick={async () => await endTimer()}>
                 <Square className="w-4 h-4" />
                 Стоп
               </Button>

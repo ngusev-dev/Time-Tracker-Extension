@@ -13,9 +13,11 @@ export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
   @UseGuards(AuthGuard)
-  @Query(() => Boolean)
-  validateSession() {
-    return true;
+  @Query(() => UserModel)
+  profileData(@Context() context: any) {
+    const request = context.req;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return request.user;
   }
 
   @Mutation(() => UserModel)

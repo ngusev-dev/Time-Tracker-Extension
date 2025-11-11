@@ -80,7 +80,7 @@ export type Query = {
   getTimerHistoryGroupByTimerId: Array<TimerHistoryGroupModel>;
   getUsers: Array<UserModel>;
   getWeekStatistic: TimerStatisticModel;
-  validateSession: Scalars['Boolean']['output'];
+  profileData: UserModel;
 };
 
 
@@ -235,10 +235,10 @@ export type GetWeekStatisticQueryVariables = Exact<{
 
 export type GetWeekStatisticQuery = { __typename?: 'Query', getWeekStatistic: { __typename?: 'TimerStatisticModel', startPeriod: any, endPeriod: any, length: number, history: Array<{ __typename?: 'HistoryItemModel', day: string, general: { __typename?: 'GeneralStatisticModel', totalTimeInSeconds: number, percent: string }, entries: Array<{ __typename?: 'TimerHistoryModel', id: string, startTimer: any, endTimer: any, totalTimeInSeconds: number, userId: number, description?: string | null, timerId: string, user: { __typename?: 'UserModel', id: string, firstName: string, lastName: string, middleName?: string | null } }> }> } };
 
-export type ValidateSessionQueryVariables = Exact<{ [key: string]: never; }>;
+export type ProfileDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ValidateSessionQuery = { __typename?: 'Query', validateSession: boolean };
+export type ProfileDataQuery = { __typename?: 'Query', profileData: { __typename?: 'UserModel', id: string, firstName: string, lastName: string, middleName?: string | null, login: string, email: string } };
 
 
 export const LoginUserDocument = gql`
@@ -670,40 +670,47 @@ export type GetWeekStatisticQueryHookResult = ReturnType<typeof useGetWeekStatis
 export type GetWeekStatisticLazyQueryHookResult = ReturnType<typeof useGetWeekStatisticLazyQuery>;
 export type GetWeekStatisticSuspenseQueryHookResult = ReturnType<typeof useGetWeekStatisticSuspenseQuery>;
 export type GetWeekStatisticQueryResult = Apollo.QueryResult<GetWeekStatisticQuery, GetWeekStatisticQueryVariables>;
-export const ValidateSessionDocument = gql`
-    query ValidateSession {
-  validateSession
+export const ProfileDataDocument = gql`
+    query profileData {
+  profileData {
+    id
+    firstName
+    lastName
+    middleName
+    login
+    email
+  }
 }
     `;
 
 /**
- * __useValidateSessionQuery__
+ * __useProfileDataQuery__
  *
- * To run a query within a React component, call `useValidateSessionQuery` and pass it any options that fit your needs.
- * When your component renders, `useValidateSessionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useProfileDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProfileDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useValidateSessionQuery({
+ * const { data, loading, error } = useProfileDataQuery({
  *   variables: {
  *   },
  * });
  */
-export function useValidateSessionQuery(baseOptions?: Apollo.QueryHookOptions<ValidateSessionQuery, ValidateSessionQueryVariables>) {
+export function useProfileDataQuery(baseOptions?: Apollo.QueryHookOptions<ProfileDataQuery, ProfileDataQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ValidateSessionQuery, ValidateSessionQueryVariables>(ValidateSessionDocument, options);
+        return Apollo.useQuery<ProfileDataQuery, ProfileDataQueryVariables>(ProfileDataDocument, options);
       }
-export function useValidateSessionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ValidateSessionQuery, ValidateSessionQueryVariables>) {
+export function useProfileDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProfileDataQuery, ProfileDataQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ValidateSessionQuery, ValidateSessionQueryVariables>(ValidateSessionDocument, options);
+          return Apollo.useLazyQuery<ProfileDataQuery, ProfileDataQueryVariables>(ProfileDataDocument, options);
         }
-export function useValidateSessionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ValidateSessionQuery, ValidateSessionQueryVariables>) {
+export function useProfileDataSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ProfileDataQuery, ProfileDataQueryVariables>) {
           const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<ValidateSessionQuery, ValidateSessionQueryVariables>(ValidateSessionDocument, options);
+          return Apollo.useSuspenseQuery<ProfileDataQuery, ProfileDataQueryVariables>(ProfileDataDocument, options);
         }
-export type ValidateSessionQueryHookResult = ReturnType<typeof useValidateSessionQuery>;
-export type ValidateSessionLazyQueryHookResult = ReturnType<typeof useValidateSessionLazyQuery>;
-export type ValidateSessionSuspenseQueryHookResult = ReturnType<typeof useValidateSessionSuspenseQuery>;
-export type ValidateSessionQueryResult = Apollo.QueryResult<ValidateSessionQuery, ValidateSessionQueryVariables>;
+export type ProfileDataQueryHookResult = ReturnType<typeof useProfileDataQuery>;
+export type ProfileDataLazyQueryHookResult = ReturnType<typeof useProfileDataLazyQuery>;
+export type ProfileDataSuspenseQueryHookResult = ReturnType<typeof useProfileDataSuspenseQuery>;
+export type ProfileDataQueryResult = Apollo.QueryResult<ProfileDataQuery, ProfileDataQueryVariables>;

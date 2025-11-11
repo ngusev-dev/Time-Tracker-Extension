@@ -1,42 +1,18 @@
 import { Button } from '@/components/ui/Button';
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { useLoginUserMutation } from '@/graphql/generated/output';
-import { AUTH_ROUTES } from '@/lib/router.config';
-import { useForm, type SubmitHandler } from 'react-hook-form';
-import { useNavigate } from 'react-router';
 
-interface ILoginForm {
-  login: string;
-  password: string;
-}
+import { observer } from 'mobx-react-lite';
+import { useForm } from 'react-hook-form';
+import type { ILoginForm } from './AuthForm.type';
+import { useAuth } from './useAuth';
 
-export default function AuthPage() {
-  const navigate = useNavigate();
+const AuthPage = observer(() => {
+  const { onSubmit } = useAuth();
+
   const { register, handleSubmit } = useForm<ILoginForm>({
     mode: 'onChange',
   });
-
-  const [loginUserMutation] = useLoginUserMutation();
-
-  const onSubmit: SubmitHandler<ILoginForm> = (data) =>
-    loginUserMutation({
-      variables: { loginDto: data },
-      async onCompleted({ loginUser }) {
-        const { toast } = await import('react-hot-toast');
-        toast.success(`Продуктивной работы, ${loginUser.firstName}!`, {
-          id: 'login-success',
-          duration: 2000,
-        });
-        navigate(AUTH_ROUTES.MAIN);
-      },
-      async onError(error) {
-        const { toast } = await import('react-hot-toast');
-        toast.error(error.message, {
-          id: 'login-error',
-        });
-      },
-    });
 
   return (
     <div className="w-3/4">
@@ -62,4 +38,6 @@ export default function AuthPage() {
       </form>
     </div>
   );
-}
+});
+
+export default AuthPage;

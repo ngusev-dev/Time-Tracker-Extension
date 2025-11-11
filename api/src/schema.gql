@@ -40,7 +40,7 @@ type Query {
   getTimerHistoryGroupByTimerId(endPeriod: DateTime!, startPeriod: DateTime!): [TimerHistoryGroupModel!]!
   getUsers: [UserModel!]!
   getWeekStatistic(weekOffset: Int): TimerStatisticModel!
-  validateSession: Boolean!
+  profileData: UserModel!
 }
 
 input RegistrationDto {

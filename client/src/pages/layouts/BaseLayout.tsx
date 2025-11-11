@@ -1,17 +1,21 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Skeleton from '@/components/ui/Skeleton';
-import { useValidateSessionQuery } from '@/graphql/generated/output';
+import { useProfileDataQuery } from '@/graphql/generated/output';
 import { PUBLIC_ROUTES } from '@/lib/router.config';
+import { AppStore } from '@/store/App.store';
+import { observer } from 'mobx-react-lite';
 import { useState, useTransition } from 'react';
 import { Outlet, useNavigate } from 'react-router';
 
-export default function BaseLayout() {
+const BaseLayout = observer(() => {
   const navigate = useNavigate();
   const [_, startTransition] = useTransition();
   const [isLoading, setIsLoading] = useState(true);
 
-  useValidateSessionQuery({
-    onCompleted() {
+  const { setUserData } = AppStore;
+  useProfileDataQuery({
+    onCompleted({ profileData }) {
+      setUserData(profileData);
       setIsLoading(false);
     },
     onError(error) {
@@ -25,4 +29,6 @@ export default function BaseLayout() {
 
   if (isLoading) return <Skeleton className="h-[450px] w-[550px]" />;
   return <Outlet />;
-}
+});
+
+export default BaseLayout;

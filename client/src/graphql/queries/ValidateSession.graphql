@@ -1,3 +1,10 @@
-query ValidateSession {
-  validateSession
+query profileData {
+  profileData {
+    id
+    firstName
+    lastName
+    middleName
+    login
+    email
+  }
 }
