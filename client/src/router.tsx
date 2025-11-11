@@ -7,6 +7,7 @@ import AuthorizedLayout from './pages/layouts/AuthorizedLayout';
 import AuthPage from './pages/AuthPage/AuthPage';
 import PublicLayout from './pages/layouts/PublicLayout';
 import BaseLayout from './pages/layouts/BaseLayout';
+import RegistrationPage from './pages/RegistrationPage/RegistrationPage';
 
 export const router = createBrowserRouter([
   {
@@ -23,7 +24,10 @@ export const router = createBrowserRouter([
       },
       {
         Component: PublicLayout,
-        children: [{ path: PUBLIC_ROUTES.AUTH, Component: AuthPage }],
+        children: [
+          { path: PUBLIC_ROUTES.AUTH, Component: AuthPage },
+          { path: PUBLIC_ROUTES.REGISTER, Component: RegistrationPage },
+        ],
       },
     ],
   },
