@@ -26,6 +26,7 @@ input LoginDto {
 type Mutation {
   createUserTimer: UserTimerModel!
   loginUser(loginDto: LoginDto!): UserModel!
+  logoutUser: Boolean!
   pauseTimer(description: String): UserTimerModel!
   registrationUser(registrationDto: RegistrationDto!): UserModel!
   startTimer(description: String): UserTimerModel!

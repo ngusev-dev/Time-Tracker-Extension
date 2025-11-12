@@ -10,12 +10,14 @@ import {
 } from '@/components/ui/Card';
 import { FieldDescription, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import type { RegistrationDto } from '@/graphql/generated/output';
-import { PUBLIC_ROUTES } from '@/lib/router.config';
+import { useRegistrationUserMutation, type RegistrationDto } from '@/graphql/generated/output';
+import { AUTH_ROUTES, PUBLIC_ROUTES } from '@/lib/router.config';
+import { AppStore } from '@/store/App.store';
+import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 
-import { NavLink } from 'react-router';
+import { NavLink, useNavigate } from 'react-router';
 
 const STEP_DESCRIPTION = [
   'Укажите Фамилию, Имя, Отчество (необязательно)',
@@ -24,11 +26,14 @@ const STEP_DESCRIPTION = [
 ];
 
 interface IRegistrationForm extends RegistrationDto {
-  repeatPassword: string;
+  repeatPassword?: string;
 }
 
-export default function RegistrationPage() {
+const RegistrationPage = observer(() => {
+  const navigate = useNavigate();
   const [step, setSep] = useState(0);
+
+  const { setUserData } = AppStore;
 
   const {
     register,
@@ -39,8 +44,31 @@ export default function RegistrationPage() {
     mode: 'onChange',
   });
 
+  const [registrationUserMutation] = useRegistrationUserMutation();
+
   const onSubmit: SubmitHandler<IRegistrationForm> = (data) => {
-    console.log(data);
+    delete data.repeatPassword;
+
+    registrationUserMutation({
+      variables: {
+        registrationDto: data,
+      },
+      async onCompleted({ registrationUser }) {
+        const { toast } = await import('react-hot-toast');
+        toast.success(`Успешно зарегистрирован!`, {
+          id: 'register-success',
+        });
+
+        setUserData(registrationUser);
+        navigate(AUTH_ROUTES.MAIN);
+      },
+      async onError(error) {
+        const { toast } = await import('react-hot-toast');
+        toast.error(error.message, {
+          id: 'register-error',
+        });
+      },
+    });
   };
 
   return (
@@ -108,9 +136,7 @@ export default function RegistrationPage() {
                   id="repeat-password"
                   {...register('repeatPassword', {
                     required: true,
-                    validate: (val: string) => {
-                      if (watch('password') != val) return 'Пароли не совпадают';
-                    },
+                    validate: (val?: string) => val === watch('password') || 'Пароли не совпадают',
                   })}
                   type="password"
                 />
@@ -141,4 +167,6 @@ export default function RegistrationPage() {
       </Card>
     </form>
   );
-}
+});
+
+export default RegistrationPage;

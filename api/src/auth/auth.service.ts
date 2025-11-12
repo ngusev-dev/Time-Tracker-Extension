@@ -50,7 +50,10 @@ export class AuthService {
       dto.email,
       dto.login,
     );
-    if (candidate) throw new BadRequestException('Пользователь уже существует');
+    if (candidate)
+      throw new BadRequestException(
+        'Пользователь с таким логином или e-mail уже существует',
+      );
 
     dto.password = await bcrypt.hash(dto.password, this.saltOrRounds);
 
@@ -83,6 +86,23 @@ export class AuthService {
         }
 
         resolve(user);
+      });
+    });
+  }
+
+  async logoutUser(req: Request): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      req.session.destroy((error) => {
+        if (error) {
+          console.log(error);
+          return reject(
+            new InternalServerErrorException(
+              'Не удалось выполнить выход из аккаунта',
+            ),
+          );
+        }
+
+        resolve(true);
       });
     });
   }

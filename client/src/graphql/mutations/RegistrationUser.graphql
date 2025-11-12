@@ -1,0 +1,10 @@
+mutation RegistrationUser($registrationDto: RegistrationDto!) {
+  registrationUser(registrationDto: $registrationDto) {
+    id
+    firstName
+    lastName
+    middleName
+    login
+    email
+  }
+}

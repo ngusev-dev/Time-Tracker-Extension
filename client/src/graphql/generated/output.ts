@@ -40,6 +40,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createUserTimer: UserTimerModel;
   loginUser: UserModel;
+  logoutUser: Scalars['Boolean']['output'];
   pauseTimer: UserTimerModel;
   registrationUser: UserModel;
   startTimer: UserTimerModel;
@@ -178,12 +179,24 @@ export type LoginUserMutationVariables = Exact<{
 
 export type LoginUserMutation = { __typename?: 'Mutation', loginUser: { __typename?: 'UserModel', id: string, firstName: string, lastName: string, middleName?: string | null, login: string, email: string } };
 
+export type LogoutUserMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutUserMutation = { __typename?: 'Mutation', logoutUser: boolean };
+
 export type PauseTimerMutationVariables = Exact<{
   description?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
 export type PauseTimerMutation = { __typename?: 'Mutation', pauseTimer: { __typename?: 'UserTimerModel', id: string, startTimer?: any | null, endTimer?: any | null, totalTimeInSeconds: number, status: string, description?: string | null, timerId: string } };
+
+export type RegistrationUserMutationVariables = Exact<{
+  registrationDto: RegistrationDto;
+}>;
+
+
+export type RegistrationUserMutation = { __typename?: 'Mutation', registrationUser: { __typename?: 'UserModel', id: string, firstName: string, lastName: string, middleName?: string | null, login: string, email: string } };
 
 export type StartTimerMutationVariables = Exact<{
   description?: InputMaybe<Scalars['String']['input']>;
@@ -279,6 +292,36 @@ export function useLoginUserMutation(baseOptions?: Apollo.MutationHookOptions<Lo
 export type LoginUserMutationHookResult = ReturnType<typeof useLoginUserMutation>;
 export type LoginUserMutationResult = Apollo.MutationResult<LoginUserMutation>;
 export type LoginUserMutationOptions = Apollo.BaseMutationOptions<LoginUserMutation, LoginUserMutationVariables>;
+export const LogoutUserDocument = gql`
+    mutation LogoutUser {
+  logoutUser
+}
+    `;
+export type LogoutUserMutationFn = Apollo.MutationFunction<LogoutUserMutation, LogoutUserMutationVariables>;
+
+/**
+ * __useLogoutUserMutation__
+ *
+ * To run a mutation, you first call `useLogoutUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLogoutUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [logoutUserMutation, { data, loading, error }] = useLogoutUserMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLogoutUserMutation(baseOptions?: Apollo.MutationHookOptions<LogoutUserMutation, LogoutUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LogoutUserMutation, LogoutUserMutationVariables>(LogoutUserDocument, options);
+      }
+export type LogoutUserMutationHookResult = ReturnType<typeof useLogoutUserMutation>;
+export type LogoutUserMutationResult = Apollo.MutationResult<LogoutUserMutation>;
+export type LogoutUserMutationOptions = Apollo.BaseMutationOptions<LogoutUserMutation, LogoutUserMutationVariables>;
 export const PauseTimerDocument = gql`
     mutation PauseTimer($description: String) {
   pauseTimer(description: $description) {
@@ -318,6 +361,44 @@ export function usePauseTimerMutation(baseOptions?: Apollo.MutationHookOptions<P
 export type PauseTimerMutationHookResult = ReturnType<typeof usePauseTimerMutation>;
 export type PauseTimerMutationResult = Apollo.MutationResult<PauseTimerMutation>;
 export type PauseTimerMutationOptions = Apollo.BaseMutationOptions<PauseTimerMutation, PauseTimerMutationVariables>;
+export const RegistrationUserDocument = gql`
+    mutation RegistrationUser($registrationDto: RegistrationDto!) {
+  registrationUser(registrationDto: $registrationDto) {
+    id
+    firstName
+    lastName
+    middleName
+    login
+    email
+  }
+}
+    `;
+export type RegistrationUserMutationFn = Apollo.MutationFunction<RegistrationUserMutation, RegistrationUserMutationVariables>;
+
+/**
+ * __useRegistrationUserMutation__
+ *
+ * To run a mutation, you first call `useRegistrationUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegistrationUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [registrationUserMutation, { data, loading, error }] = useRegistrationUserMutation({
+ *   variables: {
+ *      registrationDto: // value for 'registrationDto'
+ *   },
+ * });
+ */
+export function useRegistrationUserMutation(baseOptions?: Apollo.MutationHookOptions<RegistrationUserMutation, RegistrationUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RegistrationUserMutation, RegistrationUserMutationVariables>(RegistrationUserDocument, options);
+      }
+export type RegistrationUserMutationHookResult = ReturnType<typeof useRegistrationUserMutation>;
+export type RegistrationUserMutationResult = Apollo.MutationResult<RegistrationUserMutation>;
+export type RegistrationUserMutationOptions = Apollo.BaseMutationOptions<RegistrationUserMutation, RegistrationUserMutationVariables>;
 export const StartTimerDocument = gql`
     mutation StartTimer($description: String) {
   startTimer(description: $description) {

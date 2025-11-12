@@ -1,16 +1,15 @@
-import { useLoginUserMutation } from '@/graphql/generated/output';
+import { useLoginUserMutation, type LoginDto } from '@/graphql/generated/output';
 import { AUTH_ROUTES } from '@/lib/router.config';
 import { AppStore } from '@/store/App.store';
 import type { SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router';
-import type { ILoginForm } from './AuthForm.type';
 
 export const useAuth = () => {
   const navigate = useNavigate();
   const { setUserData } = AppStore;
   const [loginUserMutation] = useLoginUserMutation();
 
-  const onSubmit: SubmitHandler<ILoginForm> = (data) => {
+  const onSubmit: SubmitHandler<LoginDto> = (data) => {
     loginUserMutation({
       variables: { loginDto: data },
       async onCompleted({ loginUser }) {

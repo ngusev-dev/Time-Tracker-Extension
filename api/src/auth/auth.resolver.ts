@@ -37,4 +37,10 @@ export class AuthResolver {
     const request = context.req as Request;
     return await this.authService.registrationUser(request, registrationDto);
   }
+
+  @Mutation(() => Boolean)
+  async logoutUser(@Context() context: any) {
+    const request = context.req as Request;
+    return await this.authService.logoutUser(request);
+  }
 }
