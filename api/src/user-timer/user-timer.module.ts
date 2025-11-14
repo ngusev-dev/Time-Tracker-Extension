@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { UserTimerService } from './user-timer.service';
 import { UserTimerResolver } from './user-timer.resolver';
-import { UuidModule } from 'src/uuid/uuid.module';
+import { UuidModule } from 'src/lib/uuid/uuid.module';
 
 @Module({
   imports: [UuidModule],

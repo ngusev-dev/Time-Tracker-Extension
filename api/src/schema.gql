@@ -29,6 +29,7 @@ type Mutation {
   logoutUser: Boolean!
   pauseTimer(description: String): UserTimerModel!
   registrationUser(registrationDto: RegistrationDto!): UserModel!
+  resetPassword(email: String!): Boolean!
   startTimer(description: String): UserTimerModel!
   stopTimer(description: String): UserTimerModel!
 }

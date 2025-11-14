@@ -9,10 +9,12 @@ import { PrismaService } from './prisma/prisma.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { UserTimerModule } from './user-timer/user-timer.module';
-import { UuidModule } from './uuid/uuid.module';
+import { UuidModule } from './lib/uuid/uuid.module';
 import { TimerHistoryModule } from './timer-history/timer-history.module';
 import { TimerStatisticModule } from './timer-statistic/timer-statistic.module';
 import { AuthModule } from './auth/auth.module';
+import { MailModule } from './lib/mail/mail.module';
+import { PasswordRecoveryModule } from './auth/password-recovery/password-recovery.module';
 
 @Module({
   imports: [
@@ -32,6 +34,8 @@ import { AuthModule } from './auth/auth.module';
     TimerHistoryModule,
     TimerStatisticModule,
     AuthModule,
+    MailModule,
+    PasswordRecoveryModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

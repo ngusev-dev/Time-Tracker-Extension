@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { computedIntervalInSeconds } from './helpers/time.helper';
-import { UuidService } from 'src/uuid/uuid.service';
+import { UuidService } from 'src/lib/uuid/uuid.service';
 
 @Injectable()
 export class UserTimerService {
