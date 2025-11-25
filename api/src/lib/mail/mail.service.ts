@@ -8,9 +8,13 @@ import { SentMessageInfo } from 'nodemailer';
 export class MailService {
   constructor(private readonly mailerService: MailerService) {}
 
-  public async sendPasswordReset(email: string, firstName: string) {
+  public async sendPasswordReset(
+    email: string,
+    firstName: string,
+    resetCode: number,
+  ) {
     const html = await pretty(
-      await render(ResetPasswordTemplate({ resetCode: 123456, firstName })),
+      await render(ResetPasswordTemplate({ resetCode, firstName })),
     );
 
     return await this.sendMail(email, 'Сброс пароля', html);

@@ -65,6 +65,7 @@ model Token {
   token     String
   expiresIn DateTime
   type      TokenType
+  code      Int?
 
   user      User        @relation(fields: [userId], references: [id])
   userId    Int         @unique
