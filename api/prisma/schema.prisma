@@ -1,12 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
   moduleFormat = "cjs"
 }
 
@@ -16,50 +10,70 @@ datasource db {
 }
 
 model User {
-  id Int @default(autoincrement()) @id
-  email String @unique
-  password String
-  firstName String
-  lastName String
-  middleName String?
-  login String
-  createdAt DateTime @default(now())
-
-  userTimer UserTimer?
+  id           Int            @id @default(autoincrement())
+  email        String         @unique
+  password     String
+  firstName    String
+  lastName     String
+  middleName   String?
+  login        String
+  createdAt    DateTime       @default(now())
   timerHistory TimerHistory[]
+  userTimer    UserTimer?
+  token        Token?
 
   @@map("users")
 }
 
 model UserTimer {
-  id Int @default(autoincrement()) @id
-  timerId String @default(uuid()) @db.Uuid @unique
-
-  startTimer DateTime?
-  endTimer DateTime?
-  totalTimeInSeconds Float @default(0)
-  status TimerStatus @default(NEW)
-  description String?
-
-  user User @relation(fields: [userId], references: [id])
-  userId Int  @unique
+  id                 Int         @id @default(autoincrement())
+  startTimer         DateTime?
+  status             TimerStatus @default(NEW)
+  userId             Int         @unique
+  totalTimeInSeconds Float       @default(0)
+  endTimer           DateTime?
+  description        String?
+  timerId            String      @unique @default(uuid()) @db.Uuid
+  user               User        @relation(fields: [userId], references: [id])
 
   @@map("userTimers")
 }
 
 model TimerHistory {
-  id Int @default(autoincrement()) @id
-  timerId String @db.Uuid
-
-  startTimer DateTime
-  endTimer DateTime
+  id                 Int      @id @default(autoincrement())
+  startTimer         DateTime
+  endTimer           DateTime
+  userId             Int
   totalTimeInSeconds Float
-  description String?
-
-  user User @relation(fields: [userId], references: [id])
-  userId Int
+  description        String?
+  timerId            String   @db.Uuid
+  user               User     @relation(fields: [userId], references: [id])
 
   @@map("timerHistories")
+}
+
+model session {
+  sid    String   @id @db.VarChar
+  sess   Json     @db.Json
+  expire DateTime @db.Timestamp(6)
+
+  @@index([expire], map: "IDX_session_expire")
+}
+
+model Token {
+  id        Int         @default(autoincrement()) @id
+  token     String
+  expiresIn DateTime
+  type      TokenType
+
+  user      User        @relation(fields: [userId], references: [id])
+  userId    Int         @unique
+
+  @@map("tokens")
+}
+
+enum TokenType {
+  RESET_PASSWORD
 }
 
 enum TimerStatus {
