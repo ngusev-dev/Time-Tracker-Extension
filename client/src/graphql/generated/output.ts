@@ -43,8 +43,10 @@ export type Mutation = {
   logoutUser: Scalars['Boolean']['output'];
   pauseTimer: UserTimerModel;
   registrationUser: UserModel;
+  resetPassword: Scalars['Boolean']['output'];
   startTimer: UserTimerModel;
   stopTimer: UserTimerModel;
+  validateResetCode: Scalars['String']['output'];
 };
 
 
@@ -63,6 +65,11 @@ export type MutationRegistrationUserArgs = {
 };
 
 
+export type MutationResetPasswordArgs = {
+  email: Scalars['String']['input'];
+};
+
+
 export type MutationStartTimerArgs = {
   description?: InputMaybe<Scalars['String']['input']>;
 };
@@ -70,6 +77,12 @@ export type MutationStartTimerArgs = {
 
 export type MutationStopTimerArgs = {
   description?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationValidateResetCodeArgs = {
+  code: Scalars['Int']['input'];
+  email: Scalars['String']['input'];
 };
 
 export type Query = {
@@ -198,6 +211,13 @@ export type RegistrationUserMutationVariables = Exact<{
 
 export type RegistrationUserMutation = { __typename?: 'Mutation', registrationUser: { __typename?: 'UserModel', id: string, firstName: string, lastName: string, middleName?: string | null, login: string, email: string } };
 
+export type ResetPasswordMutationVariables = Exact<{
+  email: Scalars['String']['input'];
+}>;
+
+
+export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword: boolean };
+
 export type StartTimerMutationVariables = Exact<{
   description?: InputMaybe<Scalars['String']['input']>;
 }>;
@@ -211,6 +231,14 @@ export type StopTimerMutationVariables = Exact<{
 
 
 export type StopTimerMutation = { __typename?: 'Mutation', stopTimer: { __typename?: 'UserTimerModel', id: string, startTimer?: any | null, endTimer?: any | null, totalTimeInSeconds: number, status: string, description?: string | null, timerId: string } };
+
+export type ValidateResetCodeMutationVariables = Exact<{
+  code: Scalars['Int']['input'];
+  email: Scalars['String']['input'];
+}>;
+
+
+export type ValidateResetCodeMutation = { __typename?: 'Mutation', validateResetCode: string };
 
 export type GetPeriodStatisticQueryVariables = Exact<{
   startPeriod: Scalars['DateTime']['input'];
@@ -399,6 +427,37 @@ export function useRegistrationUserMutation(baseOptions?: Apollo.MutationHookOpt
 export type RegistrationUserMutationHookResult = ReturnType<typeof useRegistrationUserMutation>;
 export type RegistrationUserMutationResult = Apollo.MutationResult<RegistrationUserMutation>;
 export type RegistrationUserMutationOptions = Apollo.BaseMutationOptions<RegistrationUserMutation, RegistrationUserMutationVariables>;
+export const ResetPasswordDocument = gql`
+    mutation ResetPassword($email: String!) {
+  resetPassword(email: $email)
+}
+    `;
+export type ResetPasswordMutationFn = Apollo.MutationFunction<ResetPasswordMutation, ResetPasswordMutationVariables>;
+
+/**
+ * __useResetPasswordMutation__
+ *
+ * To run a mutation, you first call `useResetPasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useResetPasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [resetPasswordMutation, { data, loading, error }] = useResetPasswordMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useResetPasswordMutation(baseOptions?: Apollo.MutationHookOptions<ResetPasswordMutation, ResetPasswordMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ResetPasswordMutation, ResetPasswordMutationVariables>(ResetPasswordDocument, options);
+      }
+export type ResetPasswordMutationHookResult = ReturnType<typeof useResetPasswordMutation>;
+export type ResetPasswordMutationResult = Apollo.MutationResult<ResetPasswordMutation>;
+export type ResetPasswordMutationOptions = Apollo.BaseMutationOptions<ResetPasswordMutation, ResetPasswordMutationVariables>;
 export const StartTimerDocument = gql`
     mutation StartTimer($description: String) {
   startTimer(description: $description) {
@@ -477,6 +536,38 @@ export function useStopTimerMutation(baseOptions?: Apollo.MutationHookOptions<St
 export type StopTimerMutationHookResult = ReturnType<typeof useStopTimerMutation>;
 export type StopTimerMutationResult = Apollo.MutationResult<StopTimerMutation>;
 export type StopTimerMutationOptions = Apollo.BaseMutationOptions<StopTimerMutation, StopTimerMutationVariables>;
+export const ValidateResetCodeDocument = gql`
+    mutation ValidateResetCode($code: Int!, $email: String!) {
+  validateResetCode(code: $code, email: $email)
+}
+    `;
+export type ValidateResetCodeMutationFn = Apollo.MutationFunction<ValidateResetCodeMutation, ValidateResetCodeMutationVariables>;
+
+/**
+ * __useValidateResetCodeMutation__
+ *
+ * To run a mutation, you first call `useValidateResetCodeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useValidateResetCodeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [validateResetCodeMutation, { data, loading, error }] = useValidateResetCodeMutation({
+ *   variables: {
+ *      code: // value for 'code'
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useValidateResetCodeMutation(baseOptions?: Apollo.MutationHookOptions<ValidateResetCodeMutation, ValidateResetCodeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ValidateResetCodeMutation, ValidateResetCodeMutationVariables>(ValidateResetCodeDocument, options);
+      }
+export type ValidateResetCodeMutationHookResult = ReturnType<typeof useValidateResetCodeMutation>;
+export type ValidateResetCodeMutationResult = Apollo.MutationResult<ValidateResetCodeMutation>;
+export type ValidateResetCodeMutationOptions = Apollo.BaseMutationOptions<ValidateResetCodeMutation, ValidateResetCodeMutationVariables>;
 export const GetPeriodStatisticDocument = gql`
     query GetPeriodStatistic($startPeriod: DateTime!, $endPeriod: DateTime!) {
   getByPeriod(startPeriod: $startPeriod, endPeriod: $endPeriod) {

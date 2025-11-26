@@ -1,7 +1,7 @@
-import { Header } from '../../components/Header';
+import { Header } from '../components/Header';
 import { Outlet } from 'react-router';
-import { AsideMenu } from '../../components/AsideMenu';
-import { TimerStore } from '../../store/Timer.store';
+import { AsideMenu } from '../components/AsideMenu';
+import { TimerStore } from '../store/Timer.store';
 import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 

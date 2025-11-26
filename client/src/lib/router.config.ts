@@ -16,6 +16,7 @@ class PublicPages {
   PUBLIC_PREFIX = this._PREFIX;
   AUTH = 'login';
   REGISTER = 'register';
+  RESET_PASSWORD = 'reset-password';
 
   goTo(path: string) {
     return this.PUBLIC_PREFIX + `/${path}`;

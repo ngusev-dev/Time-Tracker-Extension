@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Token } from 'generated/prisma/client';
 import { TokenType } from 'generated/prisma/enums';
+import { UserModel } from 'generated/prisma/models';
 import { MailService } from 'src/lib/mail/mail.service';
 import { UuidService } from 'src/lib/uuid/uuid.service';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -24,9 +25,8 @@ export class PasswordRecoveryService {
       );
     }
 
-    const passwordResetToken = await this.generatePasswordResetToken(
-      existingUser.id,
-    );
+    const passwordResetToken =
+      await this.generatePasswordResetToken(existingUser);
 
     if (!passwordResetToken.code)
       throw new NotFoundException(
@@ -42,13 +42,29 @@ export class PasswordRecoveryService {
     return true;
   }
 
-  private async generatePasswordResetToken(userId: number): Promise<Token> {
+  async validateResetCode(code: number, email: string) {
+    const tokenPayload = await this.prismaService.token.findFirst({
+      where: {
+        email,
+        code,
+      },
+    });
+
+    if (!tokenPayload)
+      throw new NotFoundException('Неверный код восстановления');
+
+    return tokenPayload.token;
+  }
+
+  private async generatePasswordResetToken(user: UserModel): Promise<Token> {
+    const { id, email } = user;
     const token = this.uuidService.generateUUID_v4();
     const expiresIn = new Date(new Date().getTime() + 3600 * 1000);
 
     const existingToken = await this.prismaService.token.findFirst({
       where: {
-        userId,
+        userId: id,
+        email,
         type: TokenType.RESET_PASSWORD,
       },
     });
@@ -56,7 +72,7 @@ export class PasswordRecoveryService {
     if (existingToken) {
       await this.prismaService.token.delete({
         where: {
-          userId,
+          userId: id,
           type: TokenType.RESET_PASSWORD,
         },
       });
@@ -64,7 +80,8 @@ export class PasswordRecoveryService {
 
     const verificationToken = await this.prismaService.token.create({
       data: {
-        userId,
+        userId: id,
+        email,
         token,
         code: Math.floor(1000 + Math.random() * 9000),
         expiresIn,

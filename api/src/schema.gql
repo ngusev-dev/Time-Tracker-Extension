@@ -32,6 +32,7 @@ type Mutation {
   resetPassword(email: String!): Boolean!
   startTimer(description: String): UserTimerModel!
   stopTimer(description: String): UserTimerModel!
+  validateResetCode(code: Int!, email: String!): String!
 }
 
 type Query {

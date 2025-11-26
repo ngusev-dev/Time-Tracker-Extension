@@ -1,0 +1,3 @@
+mutation ValidateResetCode($code: Int!, $email: String!) {
+  validateResetCode(code: $code, email: $email)
+}

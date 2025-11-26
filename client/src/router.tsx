@@ -3,11 +3,12 @@ import MainPage from './pages/MainPage';
 import { StatisticPage } from './pages/StatisticPage';
 import { AUTH_ROUTES, PUBLIC_ROUTES } from './lib/router.config';
 import HistoryPage from './pages/HistoryPage/HistoryPage';
-import AuthorizedLayout from './pages/layouts/AuthorizedLayout';
+import AuthorizedLayout from './layouts/AuthorizedLayout';
 import AuthPage from './pages/AuthPage/AuthPage';
-import PublicLayout from './pages/layouts/PublicLayout';
-import BaseLayout from './pages/layouts/BaseLayout';
+import PublicLayout from './layouts/PublicLayout';
+import BaseLayout from './layouts/BaseLayout';
 import RegistrationPage from './pages/RegistrationPage/RegistrationPage';
+import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage';
 
 export const router = createBrowserRouter([
   {
@@ -27,6 +28,7 @@ export const router = createBrowserRouter([
         children: [
           { path: PUBLIC_ROUTES.AUTH, Component: AuthPage },
           { path: PUBLIC_ROUTES.REGISTER, Component: RegistrationPage },
+          { path: PUBLIC_ROUTES.RESET_PASSWORD, Component: ResetPasswordPage },
         ],
       },
     ],

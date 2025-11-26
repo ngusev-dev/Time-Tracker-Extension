@@ -67,6 +67,7 @@ model Token {
   type      TokenType
   code      Int?
 
+  email     String      @unique
   user      User        @relation(fields: [userId], references: [id])
   userId    Int         @unique
 

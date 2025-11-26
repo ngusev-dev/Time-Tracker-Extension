@@ -1,4 +1,4 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Resolver } from '@nestjs/graphql';
 import { PasswordRecoveryService } from './password-recovery.service';
 
 @Resolver()
@@ -12,5 +12,13 @@ export class PasswordRecoveryResolver {
     @Args({ name: 'email', type: () => String }) email: string,
   ) {
     return await this.passwordRecoveryService.reset(email);
+  }
+
+  @Mutation(() => String)
+  async validateResetCode(
+    @Args({ name: 'email', type: () => String }) email: string,
+    @Args({ name: 'code', type: () => Int }) code: number,
+  ) {
+    return await this.passwordRecoveryService.validateResetCode(code, email);
   }
 }
