@@ -15,6 +15,7 @@ import { TimerStatisticModule } from './timer-statistic/timer-statistic.module';
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from './lib/mail/mail.module';
 import { PasswordRecoveryModule } from './auth/password-recovery/password-recovery.module';
+import { HashModule } from './lib/hash/hash.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { PasswordRecoveryModule } from './auth/password-recovery/password-recove
     AuthModule,
     MailModule,
     PasswordRecoveryModule,
+    HashModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

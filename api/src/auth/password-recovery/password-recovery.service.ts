@@ -1,7 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Token } from 'generated/prisma/client';
 import { TokenType } from 'generated/prisma/enums';
 import { UserModel } from 'generated/prisma/models';
+import { HashService } from 'src/lib/hash/hash.service';
 import { MailService } from 'src/lib/mail/mail.service';
 import { UuidService } from 'src/lib/uuid/uuid.service';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -14,6 +20,7 @@ export class PasswordRecoveryService {
     private userService: UserService,
     private mailService: MailService,
     private uuidService: UuidService,
+    private hashService: HashService,
   ) {}
 
   async reset(email: string) {
@@ -54,6 +61,40 @@ export class PasswordRecoveryService {
       throw new NotFoundException('Неверный код восстановления');
 
     return tokenPayload.token;
+  }
+
+  async changePassword(email: string, password: string, token: string) {
+    const existingToken = await this.prismaService.token.findFirst({
+      where: {
+        token,
+        email,
+      },
+    });
+
+    if (!existingToken)
+      throw new BadRequestException(
+        'Токен восстановления не найден. Повторите попытку позже',
+      );
+
+    const newPasswordHash = await this.hashService.hash(password);
+
+    try {
+      await this.prismaService.user.update({
+        where: {
+          email: existingToken.email,
+          id: existingToken.userId,
+        },
+        data: {
+          password: newPasswordHash,
+        },
+      });
+    } catch {
+      throw new InternalServerErrorException(
+        'Не удалось обновить пароль. Пожалуйста, повторите попытку позже',
+      );
+    }
+
+    return true;
   }
 
   private async generatePasswordResetToken(user: UserModel): Promise<Token> {

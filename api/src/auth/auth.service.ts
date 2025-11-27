@@ -6,11 +6,11 @@ import {
 
 import { RegistrationDto } from './dto/registration.dto';
 import { UserService } from 'src/user/user.service';
-import * as bcrypt from 'bcrypt';
 import { UserTimerService } from 'src/user-timer/user-timer.service';
 import { User } from 'generated/prisma/client';
 import { Request } from 'express';
 import { LoginDto } from './dto/login.dto';
+import { HashService } from 'src/lib/hash/hash.service';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +19,7 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private userTimerService: UserTimerService,
+    private hashService: HashService,
   ) {}
 
   async loginUser(req: Request, dto: LoginDto) {
@@ -32,7 +33,7 @@ export class AuthService {
         'Неправильные данные. Проверьте введенные данные и повторите попытку',
       );
 
-    const isMatchPassword = await bcrypt.compare(
+    const isMatchPassword = await this.hashService.compare(
       dto.password,
       candidate.password,
     );
@@ -55,7 +56,7 @@ export class AuthService {
         'Пользователь с таким логином или e-mail уже существует',
       );
 
-    dto.password = await bcrypt.hash(dto.password, this.saltOrRounds);
+    dto.password = await this.hashService.hash(dto.password);
 
     const createdUser = await this.userService.createUser(dto);
     if (!createdUser)

@@ -24,6 +24,7 @@ input LoginDto {
 }
 
 type Mutation {
+  changePassword(email: String!, password: String!): String!
   createUserTimer: UserTimerModel!
   loginUser(loginDto: LoginDto!): UserModel!
   logoutUser: Boolean!
