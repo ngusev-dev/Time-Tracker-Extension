@@ -1,29 +1,44 @@
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/Card';
+import { FieldDescription } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
-import { useResetPasswordMutation, useValidateResetCodeMutation } from '@/graphql/generated/output';
+import {
+  useChangePasswordMutation,
+  useResetPasswordMutation,
+  useValidateResetCodeMutation,
+} from '@/graphql/generated/output';
 import { PUBLIC_ROUTES } from '@/lib/router.config';
 import { REGEXP_ONLY_DIGITS } from 'input-otp';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { NavLink } from 'react-router';
+import { NavLink, useNavigate } from 'react-router';
 
 interface IResetPasswordForm {
   email: string;
   code: number;
   password: string;
+  repeatPassword: string;
+  token: string;
 }
 
 export default function ResetPasswordPage() {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
-
-  const { getValues, register, control } = useForm<IResetPasswordForm>({
+  const {
+    getValues,
+    register,
+    control,
+    setValue,
+    watch,
+    formState: { errors, isValid },
+  } = useForm<IResetPasswordForm>({
     mode: 'onChange',
   });
 
   const [resetPasswordMutation] = useResetPasswordMutation();
   const [validateResetCodeMutation] = useValidateResetCodeMutation();
+  const [changePasswordMutation] = useChangePasswordMutation();
 
   const onClickHandler = async () => {
     if (step === 1) {
@@ -48,7 +63,31 @@ export default function ResetPasswordPage() {
           code: getValues('code'),
         },
         async onCompleted({ validateResetCode }) {
-          if (validateResetCode.length) setStep((prev) => prev + 1);
+          setValue('token', validateResetCode);
+          setStep((prev) => prev + 1);
+        },
+        async onError(error) {
+          const { toast } = await import('react-hot-toast');
+          toast.error(error.message, {
+            id: 'reset-password-error',
+          });
+        },
+      });
+    } else if (step === 3) {
+      if (!isValid) return;
+
+      await changePasswordMutation({
+        variables: {
+          email: getValues('email'),
+          password: getValues('password'),
+          token: getValues('token'),
+        },
+        async onCompleted() {
+          const { toast } = await import('react-hot-toast');
+          toast.success('Пароль успешно изменен', {
+            id: 'reset-password-success',
+          });
+          navigate(PUBLIC_ROUTES.goTo(PUBLIC_ROUTES.AUTH));
         },
         async onError(error) {
           const { toast } = await import('react-hot-toast');
@@ -66,9 +105,9 @@ export default function ResetPasswordPage() {
         <CardHeader>
           <CardTitle className="text-2xl">Восстановление доступа</CardTitle>
           <CardDescription>
-            {step === 1 && 'Введите E-mail от аккаунта, для восстанволения доступа'}
-            {step === 2 && 'Введите код подтверждения, отправленный на вашу почту'}
-            {step === 3 && 'Укажите новый пароль от аккаунта'}
+            {step === 1 && 'Введите E-mail от аккаунта, для восстановления доступа'}
+            {step === 2 && 'Введите код подтверждения, отправленный на вашу электронную почту'}
+            {step === 3 && 'Введите новый пароль'}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -98,6 +137,7 @@ export default function ResetPasswordPage() {
                   placeholder="Введите новый пароль"
                   className="placeholder:text-sm"
                   type="password"
+                  {...register('password', { required: true })}
                 />
               </div>
               <div className="grid gap-2">
@@ -106,8 +146,12 @@ export default function ResetPasswordPage() {
                   className="placeholder:text-sm"
                   placeholder="Повоторите пароль"
                   type="password"
+                  {...register('repeatPassword', {
+                    required: true,
+                    validate: (val?: string) => val === watch('password') || 'Пароли не совпадают',
+                  })}
                 />
-                {/* <FieldDescription className="text-xs text-red-500">{errors.repeatPassword?.message}</FieldDescription> */}
+                <FieldDescription className="text-xs text-red-500">{errors.repeatPassword?.message}</FieldDescription>
               </div>
             </div>
           )}
@@ -116,11 +160,9 @@ export default function ResetPasswordPage() {
           <Button type="button" className="w-full" onClick={onClickHandler}>
             Далее
           </Button>
-          {(step === 1 || step === 3) && (
-            <Button variant="outline" className="w-full" asChild>
-              <NavLink to={PUBLIC_ROUTES.goTo(PUBLIC_ROUTES.AUTH)}>Войти в систему</NavLink>
-            </Button>
-          )}
+          <Button variant="outline" className="w-full" asChild>
+            <NavLink to={PUBLIC_ROUTES.goTo(PUBLIC_ROUTES.AUTH)}>Войти в систему</NavLink>
+          </Button>
         </CardFooter>
       </Card>
     </form>

@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Token } from 'generated/prisma/client';
 import { TokenType } from 'generated/prisma/enums';
-import { UserModel } from 'generated/prisma/models';
+import { TokenModel, UserModel } from 'generated/prisma/models';
 import { HashService } from 'src/lib/hash/hash.service';
 import { MailService } from 'src/lib/mail/mail.service';
 import { UuidService } from 'src/lib/uuid/uuid.service';
@@ -60,6 +60,12 @@ export class PasswordRecoveryService {
     if (!tokenPayload)
       throw new NotFoundException('Неверный код восстановления');
 
+    if (this.isTokenExpired(tokenPayload)) {
+      throw new BadRequestException(
+        'Срок действия кода восстановления истек. Пожалуйста, повторите попытку',
+      );
+    }
+
     return tokenPayload.token;
   }
 
@@ -75,6 +81,12 @@ export class PasswordRecoveryService {
       throw new BadRequestException(
         'Токен восстановления не найден. Повторите попытку позже',
       );
+
+    if (this.isTokenExpired(existingToken)) {
+      throw new BadRequestException(
+        'Срок действия кода восстановления истек. Пожалуйста, повторите попытку',
+      );
+    }
 
     const newPasswordHash = await this.hashService.hash(password);
 
@@ -95,6 +107,11 @@ export class PasswordRecoveryService {
     }
 
     return true;
+  }
+
+  private isTokenExpired(token: TokenModel): boolean {
+    const { expiresIn } = token;
+    return new Date() > new Date(expiresIn);
   }
 
   private async generatePasswordResetToken(user: UserModel): Promise<Token> {

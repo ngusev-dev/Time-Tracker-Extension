@@ -1,7 +1,5 @@
-import { Args, Context, Int, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Resolver } from '@nestjs/graphql';
 import { PasswordRecoveryService } from './password-recovery.service';
-import { Request } from 'express';
-import { BadRequestException } from '@nestjs/common';
 
 @Resolver()
 export class PasswordRecoveryResolver {
@@ -28,17 +26,12 @@ export class PasswordRecoveryResolver {
   async changePassword(
     @Args({ name: 'email', type: () => String }) email: string,
     @Args({ name: 'password', type: () => String }) password: string,
-    @Context() context: any,
+    @Args({ name: 'token', type: () => String }) token: string,
   ) {
-    const token = (context.req as Request).query.token;
-
-    if (!token)
-      throw new BadRequestException('Отсутсвует токен восстановления');
-
     return await this.passwordRecoveryService.changePassword(
       email,
       password,
-      token as string,
+      token,
     );
   }
 }
