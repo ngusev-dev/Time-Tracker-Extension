@@ -26,6 +26,7 @@ These features help track productivity and optimize task allocation.
 - [ ] Creating multiple workspaces for a user
 - [ ] Sending an invitation to another user in your workspace
 - [ ] Managing access and user roles in workspace
+- [ ] Changing the app color theme
 
 <div align="center">
   <img width="541" height="444" alt="image" src="https://github.com/user-attachments/assets/d0f0b8e2-76f4-4e9e-8612-2f328134f4ba" />
