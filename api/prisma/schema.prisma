@@ -66,6 +66,7 @@ model Token {
   expiresIn DateTime
   type      TokenType
   code      Int?
+  attempts  Int         @default(0)
 
   email     String      @unique
   user      User        @relation(fields: [userId], references: [id])

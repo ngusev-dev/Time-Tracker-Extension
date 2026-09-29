@@ -38,7 +38,7 @@ export type LoginDto = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  changePassword: Scalars['String']['output'];
+  changePassword: Scalars['Boolean']['output'];
   createUserTimer: UserTimerModel;
   loginUser: UserModel;
   logoutUser: Scalars['Boolean']['output'];
@@ -100,7 +100,6 @@ export type Query = {
   getTimer: UserTimerModel;
   getTimerHistoryGroupByDate: Array<TimerHistoryGroupModel>;
   getTimerHistoryGroupByTimerId: Array<TimerHistoryGroupModel>;
-  getUsers: Array<UserModel>;
   getWeekStatistic: TimerStatisticModel;
   profileData: UserModel;
 };
@@ -177,7 +176,6 @@ export type UserModel = {
   lastName: Scalars['String']['output'];
   login: Scalars['String']['output'];
   middleName?: Maybe<Scalars['String']['output']>;
-  password: Scalars['String']['output'];
 };
 
 export type UserTimerModel = {
@@ -200,7 +198,7 @@ export type ChangePasswordMutationVariables = Exact<{
 }>;
 
 
-export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: string };
+export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: boolean };
 
 export type LoginUserMutationVariables = Exact<{
   loginDto: LoginDto;

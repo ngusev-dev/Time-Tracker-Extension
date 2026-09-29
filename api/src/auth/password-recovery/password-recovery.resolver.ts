@@ -22,7 +22,7 @@ export class PasswordRecoveryResolver {
     return await this.passwordRecoveryService.validateResetCode(code, email);
   }
 
-  @Mutation(() => String)
+  @Mutation(() => Boolean)
   async changePassword(
     @Args({ name: 'email', type: () => String }) email: string,
     @Args({ name: 'password', type: () => String }) password: string,

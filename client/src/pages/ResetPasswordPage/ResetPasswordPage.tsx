@@ -14,6 +14,8 @@ import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { NavLink, useNavigate } from 'react-router';
 
+const RESET_CODE_LENGTH = 6;
+
 interface IResetPasswordForm {
   email: string;
   code: number;
@@ -119,9 +121,9 @@ export default function ResetPasswordPage() {
               name="code"
               control={control}
               render={({ field }) => (
-                <InputOTP maxLength={6} pattern={REGEXP_ONLY_DIGITS} onChange={(e) => field.onChange(+e)}>
+                <InputOTP maxLength={RESET_CODE_LENGTH} pattern={REGEXP_ONLY_DIGITS} onChange={(e) => field.onChange(+e)}>
                   <InputOTPGroup className="w-full justify-center">
-                    {[0, 1, 2, 3].map((index) => (
+                    {Array.from({ length: RESET_CODE_LENGTH }, (_, index) => (
                       <InputOTPSlot key={index} index={index} />
                     ))}
                   </InputOTPGroup>
@@ -157,7 +159,12 @@ export default function ResetPasswordPage() {
           )}
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          <Button type="button" className="w-full" onClick={onClickHandler}>
+          <Button
+            type="button"
+            className="w-full"
+            onClick={onClickHandler}
+            disabled={step === 2 && String(watch('code') ?? '').length !== RESET_CODE_LENGTH}
+          >
             Далее
           </Button>
           <Button variant="outline" className="w-full" asChild>
