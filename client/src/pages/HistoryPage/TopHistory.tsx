@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import type { THistoryGroup } from '../../lib/queries/user-timer-statistic';
+import type { THistoryGroup } from '../../graphql/types';
 
 export default function TopHistory({ group }: { group: THistoryGroup }) {
   return (

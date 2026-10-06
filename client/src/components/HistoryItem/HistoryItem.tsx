@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import { computeIntervalDuration } from '../../lib/helper/time.helper';
-import type { THistoryTimerRecord } from '../../lib/queries/user-timer-statistic';
+import type { THistoryTimerRecord } from '../../graphql/types';
 
 export default function HistoryItem({ record }: { record: THistoryTimerRecord }) {
   return (
@@ -11,6 +11,7 @@ export default function HistoryItem({ record }: { record: THistoryTimerRecord })
             <div className="font-medium">
               {record.user.lastName} {record.user.firstName} {record.user.middleName}
             </div>
+
             {/* <div className="text-sm text-muted-foreground">•</div>
                           <div className="text-sm">Планирование проекта</div>
                           <div className="text-sm text-muted-foreground">•</div>
