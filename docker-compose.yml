@@ -1,0 +1,11 @@
+services:
+  api:
+    build: ./api
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@host.docker.internal:5432/time-tracker?schema=public
+      MAIL_USER: resend
+      MAIL_PORT: 465
+      MAIL_HOST: smtp.resend.com
+      MAIL_PASSWORD: test
+    ports: ["3000:3000"]
+    restart: unless-stopped

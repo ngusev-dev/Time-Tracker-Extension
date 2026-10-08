@@ -3,8 +3,6 @@ import {
   Body,
   Html,
   Container,
-  Heading,
-  Link,
   Section,
   Tailwind,
   Text,
@@ -15,7 +13,10 @@ interface IResetPasswordTemplate {
   resetCode: number;
   firstName: string;
 }
-export function ResetPasswordTemplate({ resetCode, firstName }) {
+export function ResetPasswordTemplate({
+  resetCode,
+  firstName,
+}: IResetPasswordTemplate) {
   return (
     <Html>
       <Tailwind

@@ -23,7 +23,6 @@ async function bootstrap() {
       resave: true,
       saveUninitialized: false,
       cookie: {
-        domain: 'localhost',
         maxAge: 7 * 24 * 60 * 60 * 1000,
         httpOnly: true,
         secure: false,
