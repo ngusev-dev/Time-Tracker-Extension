@@ -1,13 +1,16 @@
+import { cn } from '@/lib/utils';
+
 type Props = {
   progress: number;
+  className?: string;
 };
-export function Progress({ progress }: Props) {
+export function Progress({ progress, className }: Props) {
   return (
-    <div className="h-2 w-full bg-primary/15 rounded-full overflow-hidden">
+    <div className={cn('h-2 w-full bg-muted rounded-full overflow-hidden', className)}>
       <span
-        className="bg-primary h-full block rounded-full"
+        className="bg-brand h-full block rounded-full transition-[width] duration-500 ease-out"
         style={{
-          width: `${progress}%`,
+          width: `${Math.min(Math.max(progress, 0), 100)}%`,
         }}
       />
     </div>

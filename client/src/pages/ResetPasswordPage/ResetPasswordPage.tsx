@@ -121,7 +121,11 @@ export default function ResetPasswordPage() {
               name="code"
               control={control}
               render={({ field }) => (
-                <InputOTP maxLength={RESET_CODE_LENGTH} pattern={REGEXP_ONLY_DIGITS} onChange={(e) => field.onChange(+e)}>
+                <InputOTP
+                  maxLength={RESET_CODE_LENGTH}
+                  pattern={REGEXP_ONLY_DIGITS}
+                  onChange={(e) => field.onChange(+e)}
+                >
                   <InputOTPGroup className="w-full justify-center">
                     {Array.from({ length: RESET_CODE_LENGTH }, (_, index) => (
                       <InputOTPSlot key={index} index={index} />

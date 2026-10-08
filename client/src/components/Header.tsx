@@ -1,26 +1,32 @@
 import { observer } from 'mobx-react-lite';
+import { Menu, Timer, X } from 'lucide-react';
 import { AppStore } from '../store/App.store';
+import { Button } from './ui/Button';
 
 export const Header = observer(() => {
   const { toggleAsideMenu, isOpenAsideMenu, user } = AppStore;
 
+  const initials = user?.login?.slice(0, 2).toUpperCase();
+
   return (
-    <header className="border-b border-gray-300 backdrop-blur">
-      <div className="flex h-16 items-center px-3">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => toggleAsideMenu(!isOpenAsideMenu)}
-            className="cursor-pointer inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-8 px-3 text-sm "
-          >
-            ☰
-          </button>
-        </div>
-        <div className="ml-auto flex items-center gap-4">
-          <div className="flex items-center gap-3 pl-4 border-l border-gray-300">
-            <div className="text-sm">
-              <div className="font-medium">{user?.login}</div>
-              <div className="text-muted-foreground">{user?.email}</div>
-            </div>
+    <header className="border-b bg-background/80 backdrop-blur">
+      <div className="flex h-14 items-center gap-2 px-3">
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          onClick={() => toggleAsideMenu(!isOpenAsideMenu)}
+          aria-label={isOpenAsideMenu ? 'Закрыть меню' : 'Открыть меню'}
+        >
+          {isOpenAsideMenu ? <X /> : <Menu />}
+        </Button>
+
+        <div className="ml-auto flex items-center gap-2.5">
+          <div className="text-right text-xs leading-tight">
+            <div className="font-medium">{user?.login}</div>
+            <div className="text-muted-foreground">{user?.email}</div>
+          </div>
+          <div className="flex size-8 items-center justify-center rounded-full bg-brand-soft text-xs font-semibold text-brand">
+            {initials}
           </div>
         </div>
       </div>

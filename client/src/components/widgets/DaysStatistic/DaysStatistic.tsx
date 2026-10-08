@@ -1,69 +1,69 @@
-import { ArrowBigLeft, ArrowBigRight, BarChart3 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/Card';
 import { Progress } from '../../ui/Progress';
 
 import { WEEK_DAYS } from '../../../lib/constants/period.constants';
-import { format } from 'date-fns';
+import { format, isSameMonth } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { useState } from 'react';
-import ControlButton from './ControlButton';
 import { computeIntervalDuration } from '../../../lib/helper/time.helper';
 import { useGetWeekStatisticQuery } from '@/graphql/generated/output';
+import { PeriodSwitcher } from '../../ui/PeriodSwitcher';
+import Skeleton from '../../ui/Skeleton';
+import { cn } from '@/lib/utils';
+
+const formatWeekRange = (start: Date, end: Date) => {
+  if (isSameMonth(start, end)) {
+    return `${format(start, 'd')}–${format(end, 'd MMM', { locale: ru })}`;
+  }
+  return `${format(start, 'd MMM', { locale: ru })} – ${format(end, 'd MMM', { locale: ru })}`;
+};
 
 export function DaysStatistic() {
   const [weekOffset, setWeekOffset] = useState(0);
 
-  const { data } = useGetWeekStatisticQuery({
+  const { data, loading } = useGetWeekStatisticQuery({
     variables: { weekOffset },
   });
 
-  const currentPeriodTime = () => (
-    <>
-      {data?.getWeekStatistic.startPeriod &&
-        format(data?.getWeekStatistic.startPeriod, 'dd.MM.yyyy', {
-          locale: ru,
-        })}
-      -
-      {data?.getWeekStatistic.endPeriod &&
-        format(data?.getWeekStatistic.endPeriod, 'dd.MM.yyyy', {
-          locale: ru,
-        })}
-    </>
-  );
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <BarChart3 className="w-5 h-5" />
-            Рабочие часы по дням
-          </div>
-          <div className="text-xs text-gray-600 flex gap-2">
-            <ControlButton onClick={() => setWeekOffset((prev) => prev + 1)}>
-              <ArrowBigLeft size={17} fill="black" />
-            </ControlButton>
-            <div className="w-30 flex justify-center">{currentPeriodTime()}</div>
+  const statistic = data?.getWeekStatistic;
+  const today = format(new Date(), 'EEEE');
 
-            {weekOffset > 0 && (
-              <ControlButton onClick={() => setWeekOffset((prev) => prev - 1)}>
-                <ArrowBigRight size={17} fill="black" />
-              </ControlButton>
-            )}
-          </div>
+  return (
+    <Card className="gap-4 py-4">
+      <CardHeader className="px-4">
+        <CardTitle className="flex items-center justify-between gap-2">
+          <span className="text-sm font-medium text-muted-foreground">Рабочие часы по дням</span>
+          <PeriodSwitcher
+            label={statistic ? formatWeekRange(new Date(statistic.startPeriod), new Date(statistic.endPeriod)) : '…'}
+            onPrev={() => setWeekOffset((prev) => prev + 1)}
+            onNext={() => setWeekOffset((prev) => prev - 1)}
+            canNext={weekOffset > 0}
+          />
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="flex flex-col gap-1">
+      <CardContent className="px-4">
+        <div className="flex flex-col gap-2.5">
           {Object.entries(WEEK_DAYS).map(([key, value]) => {
-            const row = data?.getWeekStatistic.history.find((x) => x.day === key);
+            if (loading && !data) {
+              return <Skeleton key={key} className="h-4" />;
+            }
+
+            const row = statistic?.history.find((x) => x.day === key);
+            const isCurrentDay = weekOffset === 0 && key === today;
+
             return (
-              <div key={value} className="flex items-center gap-1 items-end">
-                <div className="w-8 text-sm">{value}</div>
-                <div className="flex-4">
-                  <div className="text-right  text-sm text-muted-foreground">
-                    {row ? computeIntervalDuration(row.general.totalTimeInSeconds) : '-'}
-                  </div>
-                  <Progress progress={(row && +row.general.percent) ?? 0} />
+              <div key={key} className="grid grid-cols-[2rem_1fr_4.5rem] items-center gap-3">
+                <div
+                  className={cn('text-xs font-medium', {
+                    'text-brand': isCurrentDay,
+                    'text-muted-foreground': !row && !isCurrentDay,
+                  })}
+                >
+                  {value}
+                </div>
+                <Progress className="h-2.5" progress={row ? +row.general.percent : 0} />
+                <div className={cn('text-right text-xs tabular-nums', row ? 'font-medium' : 'text-muted-foreground')}>
+                  {row ? computeIntervalDuration(row.general.totalTimeInSeconds) : '—'}
                 </div>
               </div>
             );
