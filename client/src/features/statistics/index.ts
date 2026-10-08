@@ -1,0 +1,1 @@
+export { DaysStatistic } from './DaysStatistic';

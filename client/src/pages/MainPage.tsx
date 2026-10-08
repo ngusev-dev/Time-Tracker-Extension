@@ -1,6 +1,6 @@
-import { TimeTracker } from '../components/TimeTracker/TimeTracker';
+import { TimeTracker } from '@/features/timer';
 
-function MainPage() {
+export function MainPage() {
   return (
     <div className="flex items-center h-full">
       <TimeTracker />
@@ -8,4 +8,3 @@ function MainPage() {
   );
 }
 
-export default MainPage;
