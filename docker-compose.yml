@@ -7,5 +7,7 @@ services:
       MAIL_PORT: 465
       MAIL_HOST: smtp.resend.com
       MAIL_PASSWORD: test
+      SESSION_SECRET: 123Qweras!
+      COOKIE_SECURE: "false"
     ports: ["3000:3000"]
     restart: unless-stopped
