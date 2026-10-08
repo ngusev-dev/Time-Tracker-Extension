@@ -87,12 +87,12 @@ const RegistrationPage = observer(() => {
           {step === 0 && (
             <div className="flex flex-col gap-2">
               <div className="grid gap-2">
-                <FieldLabel htmlFor="firstName">Фамилия</FieldLabel>
-                <Input id="firstName" {...register('firstName', { required: true })} type="text" />
+                <FieldLabel htmlFor="lastName">Фамилия</FieldLabel>
+                <Input id="lastName" {...register('lastName', { required: true })} type="text" />
               </div>
               <div className="grid gap-2">
-                <FieldLabel htmlFor="lastName">Имя</FieldLabel>
-                <Input id="lastName" {...register('lastName', { required: true })} type="text" />
+                <FieldLabel htmlFor="firstName">Имя</FieldLabel>
+                <Input id="firstName" {...register('firstName', { required: true })} type="text" />
               </div>
               <div className="grid gap-2">
                 <FieldLabel htmlFor="middlename">Отчество</FieldLabel>
