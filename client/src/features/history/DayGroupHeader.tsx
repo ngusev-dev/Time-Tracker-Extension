@@ -13,7 +13,7 @@ export function DayGroupHeader({ group }: { group: THistoryGroup }) {
   const count = group.records.length;
 
   return (
-    <div className="sticky top-[-12px] z-10 flex items-center gap-3 bg-background/90 py-2.5 backdrop-blur">
+    <div className="sticky -top-3 z-10 flex items-center gap-3 bg-background/90 py-2.5 backdrop-blur">
       <div className="text-sm font-semibold">{formatGroupDate(new Date(+group.groupField))}</div>
       <span className="h-px flex-1 bg-border" />
       <div className="rounded-full bg-brand-soft px-2.5 py-0.5 text-xs font-medium text-brand">

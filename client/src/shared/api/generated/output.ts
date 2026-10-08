@@ -268,7 +268,7 @@ export type GetWeekStatisticQueryVariables = Exact<{
 }>;
 
 
-export type GetWeekStatisticQuery = { __typename?: 'Query', getWeekStatistic: { __typename?: 'TimerStatisticModel', startPeriod: any, endPeriod: any, length: number, history: Array<{ __typename?: 'HistoryItemModel', day: string, general: { __typename?: 'GeneralStatisticModel', totalTimeInSeconds: number, percent: string }, entries: Array<{ __typename?: 'TimerHistoryModel', id: string, startTimer: any, endTimer: any, totalTimeInSeconds: number, userId: number, description?: string | null, timerId: string, user: { __typename?: 'UserModel', id: string, firstName: string, lastName: string, middleName?: string | null } }> }> } };
+export type GetWeekStatisticQuery = { __typename?: 'Query', getWeekStatistic: { __typename?: 'TimerStatisticModel', startPeriod: any, endPeriod: any, length: number, history: Array<{ __typename?: 'HistoryItemModel', day: string, general: { __typename?: 'GeneralStatisticModel', totalTimeInSeconds: number } }> } };
 
 export type GetTimerQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -718,22 +718,6 @@ export const GetWeekStatisticDocument = gql`
       day
       general {
         totalTimeInSeconds
-        percent
-      }
-      entries {
-        id
-        startTimer
-        endTimer
-        totalTimeInSeconds
-        userId
-        description
-        timerId
-        user {
-          id
-          firstName
-          lastName
-          middleName
-        }
       }
     }
   }
