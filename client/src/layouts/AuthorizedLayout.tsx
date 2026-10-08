@@ -1,12 +1,11 @@
-import { Header } from '../components/Header';
+import { AsideMenu, Header } from '@/features/navigation';
 import { Outlet } from 'react-router';
-import { AsideMenu } from '../components/AsideMenu';
-import { TimerStore } from '../store/Timer.store';
+import { TimerStore } from '@/features/timer';
 import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { AppStore } from '../store/App.store';
+import { AppStore } from '@/shared/model/App.store';
 
-const AuthorizedLayout = observer(() => {
+export const AuthorizedLayout = observer(() => {
   const { loadTimerInit } = TimerStore;
   const { isOpenAsideMenu, toggleAsideMenu } = AppStore;
 
@@ -37,4 +36,3 @@ const AuthorizedLayout = observer(() => {
   );
 });
 
-export default AuthorizedLayout;

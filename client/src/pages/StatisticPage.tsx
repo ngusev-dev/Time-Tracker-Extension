@@ -1,6 +1,6 @@
 import { BarChart3 } from 'lucide-react';
-import { DaysStatistic } from '../components/widgets/DaysStatistic/DaysStatistic';
-import { PageHeader } from '@/components/ui/PageHeader';
+import { DaysStatistic } from '@/features/statistics';
+import { PageHeader } from '@/shared/ui/PageHeader';
 
 export function StatisticPage() {
   return (
