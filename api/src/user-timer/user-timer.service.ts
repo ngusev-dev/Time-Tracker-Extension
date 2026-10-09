@@ -74,6 +74,49 @@ export class UserTimerService {
     });
   }
 
+  async continueTimer(userId: number, timerId: string) {
+    const lastRecord = await this.prisma.timerHistory.findFirst({
+      where: {
+        userId,
+        timerId,
+      },
+      orderBy: {
+        startTimer: 'desc',
+      },
+    });
+
+    if (!lastRecord) throw new NotFoundException('Task not found');
+
+    const timer = await this.prisma.userTimer.findFirst({
+      where: {
+        userId,
+      },
+    });
+
+    if (timer?.timerId === timerId) {
+      if (timer.status === 'WORKING') return timer;
+      if (timer.status === 'PAUSE')
+        return await this.startTimer(userId, timer.description);
+    }
+
+    if (timer?.status === 'WORKING')
+      await this.saveTimerRecordHistory(userId, timer.description);
+
+    return await this.prisma.userTimer.update({
+      data: {
+        timerId,
+        description: lastRecord.description,
+        startTimer: new Date(),
+        endTimer: null,
+        totalTimeInSeconds: 0,
+        status: 'WORKING',
+      },
+      where: {
+        userId,
+      },
+    });
+  }
+
   async pauseTimer(userId: number, description: string | null) {
     const timer = await this.prisma.userTimer.findFirst({
       where: {

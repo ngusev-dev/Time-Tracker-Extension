@@ -39,6 +39,7 @@ export type LoginDto = {
 export type Mutation = {
   __typename?: 'Mutation';
   changePassword: Scalars['Boolean']['output'];
+  continueTimer: UserTimerModel;
   createUserTimer: UserTimerModel;
   loginUser: UserModel;
   logoutUser: Scalars['Boolean']['output'];
@@ -55,6 +56,11 @@ export type MutationChangePasswordArgs = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
   token: Scalars['String']['input'];
+};
+
+
+export type MutationContinueTimerArgs = {
+  timerId: Scalars['String']['input'];
 };
 
 
@@ -97,6 +103,7 @@ export type Query = {
   __typename?: 'Query';
   getByPeriod: Array<TimerHistoryModel>;
   getByTimerId: Array<TimerHistoryModel>;
+  getRecentTimerGroups: Array<TimerHistoryGroupModel>;
   getTimer: UserTimerModel;
   getTimerHistoryGroupByDate: Array<TimerHistoryGroupModel>;
   getTimerHistoryGroupByTimerId: Array<TimerHistoryGroupModel>;
@@ -113,6 +120,11 @@ export type QueryGetByPeriodArgs = {
 
 export type QueryGetByTimerIdArgs = {
   timerId: Scalars['String']['input'];
+};
+
+
+export type QueryGetRecentTimerGroupsArgs = {
+  limit?: Scalars['Int']['input'];
 };
 
 
@@ -239,6 +251,13 @@ export type ValidateResetCodeMutationVariables = Exact<{
 
 export type ValidateResetCodeMutation = { __typename?: 'Mutation', validateResetCode: string };
 
+export type GetRecentTimerGroupsQueryVariables = Exact<{
+  limit: Scalars['Int']['input'];
+}>;
+
+
+export type GetRecentTimerGroupsQuery = { __typename?: 'Query', getRecentTimerGroups: Array<{ __typename?: 'TimerHistoryGroupModel', groupField: string, records: Array<{ __typename?: 'TimerHistoryModel', id: string, startTimer: any, endTimer: any, totalTimeInSeconds: number, userId: number, description?: string | null, timerId: string, user: { __typename?: 'UserModel', id: string, firstName: string, lastName: string, middleName?: string | null } }> }> };
+
 export type GetTimerHistoryGroupByDateQueryVariables = Exact<{
   startPeriod: Scalars['DateTime']['input'];
   endPeriod: Scalars['DateTime']['input'];
@@ -269,6 +288,13 @@ export type GetWeekStatisticQueryVariables = Exact<{
 
 
 export type GetWeekStatisticQuery = { __typename?: 'Query', getWeekStatistic: { __typename?: 'TimerStatisticModel', startPeriod: any, endPeriod: any, length: number, history: Array<{ __typename?: 'HistoryItemModel', day: string, general: { __typename?: 'GeneralStatisticModel', totalTimeInSeconds: number } }> } };
+
+export type ContinueTimerMutationVariables = Exact<{
+  timerId: Scalars['String']['input'];
+}>;
+
+
+export type ContinueTimerMutation = { __typename?: 'Mutation', continueTimer: { __typename?: 'UserTimerModel', id: string, startTimer?: any | null, endTimer?: any | null, totalTimeInSeconds: number, status: string, description?: string | null, timerId: string } };
 
 export type GetTimerQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -543,6 +569,61 @@ export function useValidateResetCodeMutation(baseOptions?: Apollo.MutationHookOp
 export type ValidateResetCodeMutationHookResult = ReturnType<typeof useValidateResetCodeMutation>;
 export type ValidateResetCodeMutationResult = Apollo.MutationResult<ValidateResetCodeMutation>;
 export type ValidateResetCodeMutationOptions = Apollo.BaseMutationOptions<ValidateResetCodeMutation, ValidateResetCodeMutationVariables>;
+export const GetRecentTimerGroupsDocument = gql`
+    query GetRecentTimerGroups($limit: Int!) {
+  getRecentTimerGroups(limit: $limit) {
+    groupField
+    records {
+      id
+      startTimer
+      endTimer
+      totalTimeInSeconds
+      userId
+      description
+      timerId
+      user {
+        id
+        firstName
+        lastName
+        middleName
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetRecentTimerGroupsQuery__
+ *
+ * To run a query within a React component, call `useGetRecentTimerGroupsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRecentTimerGroupsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRecentTimerGroupsQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetRecentTimerGroupsQuery(baseOptions: Apollo.QueryHookOptions<GetRecentTimerGroupsQuery, GetRecentTimerGroupsQueryVariables> & ({ variables: GetRecentTimerGroupsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetRecentTimerGroupsQuery, GetRecentTimerGroupsQueryVariables>(GetRecentTimerGroupsDocument, options);
+      }
+export function useGetRecentTimerGroupsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRecentTimerGroupsQuery, GetRecentTimerGroupsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetRecentTimerGroupsQuery, GetRecentTimerGroupsQueryVariables>(GetRecentTimerGroupsDocument, options);
+        }
+export function useGetRecentTimerGroupsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetRecentTimerGroupsQuery, GetRecentTimerGroupsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetRecentTimerGroupsQuery, GetRecentTimerGroupsQueryVariables>(GetRecentTimerGroupsDocument, options);
+        }
+export type GetRecentTimerGroupsQueryHookResult = ReturnType<typeof useGetRecentTimerGroupsQuery>;
+export type GetRecentTimerGroupsLazyQueryHookResult = ReturnType<typeof useGetRecentTimerGroupsLazyQuery>;
+export type GetRecentTimerGroupsSuspenseQueryHookResult = ReturnType<typeof useGetRecentTimerGroupsSuspenseQuery>;
+export type GetRecentTimerGroupsQueryResult = Apollo.QueryResult<GetRecentTimerGroupsQuery, GetRecentTimerGroupsQueryVariables>;
 export const GetTimerHistoryGroupByDateDocument = gql`
     query GetTimerHistoryGroupByDate($startPeriod: DateTime!, $endPeriod: DateTime!) {
   getTimerHistoryGroupByDate(startPeriod: $startPeriod, endPeriod: $endPeriod) {
@@ -756,6 +837,45 @@ export type GetWeekStatisticQueryHookResult = ReturnType<typeof useGetWeekStatis
 export type GetWeekStatisticLazyQueryHookResult = ReturnType<typeof useGetWeekStatisticLazyQuery>;
 export type GetWeekStatisticSuspenseQueryHookResult = ReturnType<typeof useGetWeekStatisticSuspenseQuery>;
 export type GetWeekStatisticQueryResult = Apollo.QueryResult<GetWeekStatisticQuery, GetWeekStatisticQueryVariables>;
+export const ContinueTimerDocument = gql`
+    mutation ContinueTimer($timerId: String!) {
+  continueTimer(timerId: $timerId) {
+    id
+    startTimer
+    endTimer
+    totalTimeInSeconds
+    status
+    description
+    timerId
+  }
+}
+    `;
+export type ContinueTimerMutationFn = Apollo.MutationFunction<ContinueTimerMutation, ContinueTimerMutationVariables>;
+
+/**
+ * __useContinueTimerMutation__
+ *
+ * To run a mutation, you first call `useContinueTimerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useContinueTimerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [continueTimerMutation, { data, loading, error }] = useContinueTimerMutation({
+ *   variables: {
+ *      timerId: // value for 'timerId'
+ *   },
+ * });
+ */
+export function useContinueTimerMutation(baseOptions?: Apollo.MutationHookOptions<ContinueTimerMutation, ContinueTimerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ContinueTimerMutation, ContinueTimerMutationVariables>(ContinueTimerDocument, options);
+      }
+export type ContinueTimerMutationHookResult = ReturnType<typeof useContinueTimerMutation>;
+export type ContinueTimerMutationResult = Apollo.MutationResult<ContinueTimerMutation>;
+export type ContinueTimerMutationOptions = Apollo.BaseMutationOptions<ContinueTimerMutation, ContinueTimerMutationVariables>;
 export const GetTimerDocument = gql`
     query GetTimer {
   getTimer {

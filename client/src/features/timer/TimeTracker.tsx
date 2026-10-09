@@ -54,7 +54,7 @@ export const TimeTracker = observer(() => {
         onChange={(e) => updateDescription(e.target.value)}
         className="resize-none rounded-lg border bg-card p-3 text-sm shadow-xs outline-none transition placeholder:text-muted-foreground focus-visible:border-brand/50 focus-visible:ring-[3px] focus-visible:ring-brand/15"
         placeholder="Над чем работаете?"
-        rows={4}
+        rows={1}
       />
 
       <div className="flex w-full gap-2">

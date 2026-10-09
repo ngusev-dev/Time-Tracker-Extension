@@ -16,7 +16,7 @@ export const AuthorizedLayout = observer(() => {
   }, []);
 
   return (
-    <div className="flex h-[450px] w-[550px] flex-col bg-background">
+    <div className="flex popup-size flex-col bg-background">
       <Header />
       <div className="flex min-h-0 flex-1">
         <AsideMenu />
@@ -35,4 +35,3 @@ export const AuthorizedLayout = observer(() => {
     </div>
   );
 });
-

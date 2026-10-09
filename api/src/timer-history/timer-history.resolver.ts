@@ -1,4 +1,4 @@
-import { Args, Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Query, Resolver } from '@nestjs/graphql';
 import { TimerHistoryService } from './timer-history.service';
 import {
   TimerHistoryGroupModel,
@@ -45,6 +45,14 @@ export class TimerHistoryResolver {
       startPeriod,
       endPeriod,
     );
+  }
+
+  @Query(() => [TimerHistoryGroupModel])
+  async getRecentTimerGroups(
+    @Authorized('id') userId: number,
+    @Args({ name: 'limit', type: () => Int, defaultValue: 3 }) limit: number,
+  ) {
+    return await this.timerHistoryService.getRecentTimerGroups(userId, limit);
   }
 
   @Query(() => [TimerHistoryGroupModel])

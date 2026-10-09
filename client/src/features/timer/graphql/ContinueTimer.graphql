@@ -1,0 +1,11 @@
+mutation ContinueTimer($timerId: String!) {
+  continueTimer(timerId: $timerId) {
+    id
+    startTimer
+    endTimer
+    totalTimeInSeconds
+    status
+    description
+    timerId
+  }
+}

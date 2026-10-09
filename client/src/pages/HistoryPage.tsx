@@ -1,14 +1,17 @@
-import { DayGroupHeader, HistoryItem } from '@/features/history';
+import { DayGroupHeader, TaskGroupItem, groupRecordsByTimerId } from '@/features/history';
 import { endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { CalendarX2, History } from 'lucide-react';
 import { useGetTimerHistoryGroupByDateQuery } from '@/shared/api/generated/output';
+import { AUTH_ROUTES } from '@/shared/config/routes';
 import { PageHeader } from '@/shared/ui/PageHeader';
 import { PeriodSwitcher } from '@/shared/ui/PeriodSwitcher';
 import { Skeleton } from '@/shared/ui/Skeleton';
 
 export function HistoryPage() {
+  const navigate = useNavigate();
   const [monthOffset, setMonthOffset] = useState(0);
 
   const startPeriod = () => startOfMonth(subMonths(new Date(), monthOffset));
@@ -60,8 +63,8 @@ export function HistoryPage() {
               <DayGroupHeader group={group} />
 
               <div className="flex flex-col gap-2 pb-2">
-                {group.records.map((record) => (
-                  <HistoryItem record={record} key={record.id} />
+                {groupRecordsByTimerId(group.records).map((task) => (
+                  <TaskGroupItem group={task} key={task.timerId} onContinue={() => navigate(AUTH_ROUTES.MAIN)} />
                 ))}
               </div>
             </section>

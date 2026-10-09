@@ -4,10 +4,12 @@ import { ApolloError } from '@apollo/client';
 import { apolloClient, isUnauthorizedError } from '@/shared/api/apollo.client';
 import { onSessionReset } from '@/shared/lib/session';
 import {
+  ContinueTimerDocument,
   GetTimerDocument,
   PauseTimerDocument,
   StartTimerDocument,
   StopTimerDocument,
+  type ContinueTimerMutation,
   type GetTimerQuery,
   type PauseTimerMutation,
   type StartTimerMutation,
@@ -18,11 +20,15 @@ type TimerSnapshot = GetTimerQuery['getTimer'];
 
 const TICK_INTERVAL_MS = 500;
 
+/** Списки сессий, которые нужно обновить после появления новой записи в истории */
+const HISTORY_QUERIES = ['GetRecentTimerGroups', 'GetTimerHistoryGroupByDate'];
+
 class timerStore {
   isLoading = false;
   isPending = false;
   status: string | null = null;
   description: string | null = null;
+  timerId: string | null = null;
 
   /** Время по данным сервера на момент последней синхронизации */
   private baseSeconds = 0;
@@ -98,6 +104,7 @@ class timerStore {
       const { data } = await apolloClient.mutate<PauseTimerMutation>({
         mutation: PauseTimerDocument,
         variables: { description: this.description },
+        refetchQueries: HISTORY_QUERIES,
       });
       return data?.pauseTimer;
     }, 'Не удалось поставить таймер на паузу');
@@ -107,6 +114,7 @@ class timerStore {
       const { data } = await apolloClient.mutate<StopTimerMutation>({
         mutation: StopTimerDocument,
         variables: { description: this.description },
+        refetchQueries: HISTORY_QUERIES,
       });
 
       runInAction(() => {
@@ -115,12 +123,27 @@ class timerStore {
       return data?.stopTimer;
     }, 'Не удалось остановить таймер');
 
+  continueTimer = (timerId: string) =>
+    this._runMutation(async () => {
+      const { data } = await apolloClient.mutate<ContinueTimerMutation>({
+        mutation: ContinueTimerDocument,
+        variables: { timerId },
+        refetchQueries: HISTORY_QUERIES,
+      });
+
+      runInAction(() => {
+        this.description = data?.continueTimer.description ?? null;
+      });
+      return data?.continueTimer;
+    }, 'Не удалось продолжить задачу');
+
   reset = () => {
     this._stopTicker();
     this.isLoading = false;
     this.isPending = false;
     this.status = null;
     this.description = null;
+    this.timerId = null;
     this.baseSeconds = 0;
     this.syncedAt = 0;
   };
@@ -145,6 +168,7 @@ class timerStore {
 
   private _applySnapshot(snapshot: TimerSnapshot) {
     this.status = snapshot.status;
+    this.timerId = snapshot.timerId;
     this.baseSeconds = snapshot.totalTimeInSeconds || 0;
     this.syncedAt = Date.now();
     this.now = this.syncedAt;

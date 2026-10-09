@@ -4,6 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
+  --popup-width: 550px;
+  --popup-height: 550px;
   --font-size: 14px;
   --background: #ffffff;
   --foreground: oklch(0.145 0 0);
@@ -42,6 +44,11 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+}
+
+@utility popup-size {
+  width: var(--popup-width);
+  height: var(--popup-height);
 }
 
 @theme inline {

@@ -25,7 +25,7 @@ export const BaseLayout = observer(() => {
 
   if (error && !loading && !isUnauthorized) {
     return (
-      <div className="flex h-[450px] w-[550px] flex-col items-center justify-center gap-3 bg-background p-6 text-center">
+      <div className="flex popup-size flex-col items-center justify-center gap-3 bg-background p-6 text-center">
         <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
           <WifiOff className="size-5" />
         </div>
@@ -41,6 +41,5 @@ export const BaseLayout = observer(() => {
     );
   }
 
-  return <Skeleton className="h-[450px] w-[550px] rounded-none" />;
+  return <Skeleton className="popup-size rounded-none" />;
 });
-

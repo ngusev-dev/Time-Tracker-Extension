@@ -52,7 +52,44 @@ export class TimerHistoryService {
       },
     });
 
-    const groupByTimerId = list.reduce((acc, record) => {
+    return this.groupByTimerId(list);
+  }
+
+  async getRecentTimerGroups(userId: number, limit: number) {
+    const recent = await this.prisma.timerHistory.groupBy({
+      by: ['timerId'],
+      where: {
+        userId,
+      },
+      _max: {
+        startTimer: true,
+      },
+      orderBy: {
+        _max: {
+          startTimer: 'desc',
+        },
+      },
+      take: limit,
+    });
+
+    const list = await this.prisma.timerHistory.findMany({
+      where: {
+        userId,
+        timerId: { in: recent.map((x) => x.timerId) },
+      },
+      include: {
+        user: true,
+      },
+      orderBy: {
+        startTimer: 'desc',
+      },
+    });
+
+    return this.groupByTimerId(list);
+  }
+
+  private groupByTimerId(list: TimerHistoryGroupModel['records']) {
+    return list.reduce((acc, record) => {
       const index = acc.findIndex((x) => x.groupField === record.timerId);
       if (index === -1) {
         acc.push({
@@ -65,8 +102,6 @@ export class TimerHistoryService {
 
       return acc;
     }, [] as TimerHistoryGroupModel[]);
-
-    return groupByTimerId;
   }
 
   async getTimerHistoryGroupByDate(

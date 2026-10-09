@@ -1,0 +1,20 @@
+query GetRecentTimerGroups($limit: Int!) {
+  getRecentTimerGroups(limit: $limit) {
+    groupField
+    records {
+      id
+      startTimer
+      endTimer
+      totalTimeInSeconds
+      userId
+      description
+      timerId
+      user {
+        id
+        firstName
+        lastName
+        middleName
+      }
+    }
+  }
+}

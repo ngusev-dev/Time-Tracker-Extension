@@ -30,6 +30,14 @@ export class UserTimerResolver {
   }
 
   @Mutation(() => UserTimerModel)
+  async continueTimer(
+    @Authorized('id') userId: number,
+    @Args({ name: 'timerId', type: () => String }) timerId: string,
+  ) {
+    return await this.userTimerService.continueTimer(userId, timerId);
+  }
+
+  @Mutation(() => UserTimerModel)
   async pauseTimer(
     @Authorized('id') userId: number,
     @Args({ name: 'description', type: () => String, nullable: true })

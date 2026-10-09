@@ -25,6 +25,7 @@ input LoginDto {
 
 type Mutation {
   changePassword(email: String!, password: String!, token: String!): Boolean!
+  continueTimer(timerId: String!): UserTimerModel!
   createUserTimer: UserTimerModel!
   loginUser(loginDto: LoginDto!): UserModel!
   logoutUser: Boolean!
@@ -39,6 +40,7 @@ type Mutation {
 type Query {
   getByPeriod(endPeriod: DateTime!, startPeriod: DateTime!): [TimerHistoryModel!]!
   getByTimerId(timerId: String!): [TimerHistoryModel!]!
+  getRecentTimerGroups(limit: Int! = 3): [TimerHistoryGroupModel!]!
   getTimer: UserTimerModel!
   getTimerHistoryGroupByDate(endPeriod: DateTime!, startPeriod: DateTime!): [TimerHistoryGroupModel!]!
   getTimerHistoryGroupByTimerId(endPeriod: DateTime!, startPeriod: DateTime!): [TimerHistoryGroupModel!]!
