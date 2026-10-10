@@ -4,6 +4,7 @@ import { ru } from 'date-fns/locale';
 import { observer } from 'mobx-react-lite';
 import { ChevronDown, Clock, Play } from 'lucide-react';
 import { TimerStore } from '@/features/timer';
+import { TaskTypeBadge } from '@/features/task-type';
 import { Button } from '@/shared/ui/Button';
 import { computeIntervalDuration } from '@/shared/lib/time';
 import { cn } from '@/shared/lib/utils';
@@ -42,6 +43,7 @@ export const TaskGroupItem = observer(({ group, showDate, onContinue }: TaskGrou
         )}
       >
         <div className="flex min-w-0 flex-1 flex-col gap-1">
+          <TaskTypeBadge timerId={timerId} />
           <p className={cn('truncate text-sm', { 'text-muted-foreground': !latest.description })}>
             {latest.description || 'Без описания'}
           </p>
