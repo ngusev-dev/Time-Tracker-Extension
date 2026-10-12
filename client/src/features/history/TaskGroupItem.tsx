@@ -43,7 +43,7 @@ export const TaskGroupItem = observer(({ group, showDate, onContinue }: TaskGrou
         )}
       >
         <div className="flex min-w-0 flex-1 flex-col gap-1">
-          <TaskTypeBadge timerId={timerId} />
+          <TaskTypeBadge taskTypeId={latest.taskTypeId} />
           <p className={cn('truncate text-sm', { 'text-muted-foreground': !latest.description })}>
             {latest.description || 'Без описания'}
           </p>

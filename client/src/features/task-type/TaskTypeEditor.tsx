@@ -5,48 +5,52 @@ import { Input } from '@/shared/ui/Input';
 import { cn } from '@/shared/lib/utils';
 import { TASK_TYPE_COLORS } from './constants';
 import { TaskTypeStore } from './TaskType.store';
-import type { TTaskSubtype, TTaskType } from './types';
+import type { TTaskType } from './types';
 
 type TaskTypeEditorProps = {
-  /** Без типа редактор работает в режиме создания */
   type?: TTaskType;
   onClose: () => void;
 };
 
+type TDraftChild = { key: string; id?: string; name: string };
+
 export function TaskTypeEditor({ type, onClose }: TaskTypeEditorProps) {
   const [name, setName] = useState(type?.name ?? '');
   const [color, setColor] = useState(type?.color ?? TaskTypeStore.nextColor);
-  const [children, setChildren] = useState<TTaskSubtype[]>(() => type?.children.map((child) => ({ ...child })) ?? []);
-  const [addedChildId, setAddedChildId] = useState<string | null>(null);
+  const [children, setChildren] = useState<TDraftChild[]>(
+    () => type?.children.map((child) => ({ ...child, key: child.id })) ?? [],
+  );
+  const [addedChildKey, setAddedChildKey] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const canSave = name.trim().length > 0;
+  const canSave = name.trim().length > 0 && !isSaving;
+
+  const finish = async (request: Promise<boolean>) => {
+    setIsSaving(true);
+    const isOk = await request;
+    setIsSaving(false);
+    if (isOk) onClose();
+  };
 
   const handleSave = () => {
-    if (!canSave) return;
-
-    const patch = { name, color, children: children.filter((child) => child.name.trim()) };
-    if (type) TaskTypeStore.update(type.id, patch);
-    else TaskTypeStore.create(patch);
-
-    onClose();
+    if (canSave) finish(TaskTypeStore.save(type, { name, color, children }));
   };
 
   const addChild = () => {
-    const child = { id: crypto.randomUUID(), name: '' };
+    const child = { key: crypto.randomUUID(), name: '' };
     setChildren((prev) => [...prev, child]);
-    setAddedChildId(child.id);
+    setAddedChildKey(child.key);
   };
 
-  const renameChild = (id: string, childName: string) =>
-    setChildren((prev) => prev.map((child) => (child.id === id ? { ...child, name: childName } : child)));
+  const renameChild = (key: string, childName: string) =>
+    setChildren((prev) => prev.map((child) => (child.key === key ? { ...child, name: childName } : child)));
 
-  const removeChild = (id: string) => setChildren((prev) => prev.filter((child) => child.id !== id));
+  const removeChild = (key: string) => setChildren((prev) => prev.filter((child) => child.key !== key));
 
   const handleRemove = () => {
     if (!type || !confirm(`Удалить тип «${type.name}»? Он пропадёт и у задач, где был выбран.`)) return;
 
-    TaskTypeStore.remove(type.id);
-    onClose();
+    finish(TaskTypeStore.remove(type.id));
   };
 
   return (
@@ -85,12 +89,12 @@ export function TaskTypeEditor({ type, onClose }: TaskTypeEditorProps) {
         <span className="text-xs font-medium text-muted-foreground">Подтипы</span>
 
         {children.map((child) => (
-          <div key={child.id} className="flex items-center gap-1">
+          <div key={child.key} className="flex items-center gap-1">
             <span className="h-4 w-px shrink-0" style={{ backgroundColor: color }} />
             <Input
-              autoFocus={child.id === addedChildId}
+              autoFocus={child.key === addedChildKey}
               value={child.name}
-              onChange={(e) => renameChild(child.id, e.target.value)}
+              onChange={(e) => renameChild(child.key, e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') addChild();
               }}
@@ -101,7 +105,7 @@ export function TaskTypeEditor({ type, onClose }: TaskTypeEditorProps) {
               size="icon-sm"
               variant="ghost"
               className="size-7 text-muted-foreground"
-              onClick={() => removeChild(child.id)}
+              onClick={() => removeChild(child.key)}
               title="Удалить подтип"
             >
               <X />
@@ -120,6 +124,7 @@ export function TaskTypeEditor({ type, onClose }: TaskTypeEditorProps) {
             size="sm"
             variant="ghost"
             className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+            disabled={isSaving}
             onClick={handleRemove}
           >
             <Trash2 /> Удалить

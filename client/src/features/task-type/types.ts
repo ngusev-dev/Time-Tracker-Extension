@@ -11,7 +11,12 @@ export type TTaskType = {
   children: TTaskSubtype[];
 };
 
-/** Выбор у задачи: тип и, если есть, его подтип */
+export type TTaskTypeDraft = {
+  name: string;
+  color: string;
+  children: { id?: string; name: string }[];
+};
+
 export type TTaskTypeSelection = {
   typeId: string;
   subtypeId?: string;

@@ -18,6 +18,12 @@ export type Scalars = {
   DateTime: { input: any; output: any; }
 };
 
+export type CreateTaskTypeDto = {
+  color?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  parentId?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type GeneralStatisticModel = {
   __typename?: 'GeneralStatisticModel';
   percent: Scalars['String']['output'];
@@ -40,14 +46,18 @@ export type Mutation = {
   __typename?: 'Mutation';
   changePassword: Scalars['Boolean']['output'];
   continueTimer: UserTimerModel;
+  createTaskType: TaskTypeModel;
   createUserTimer: UserTimerModel;
+  deleteTaskType: Scalars['Boolean']['output'];
   loginUser: UserModel;
   logoutUser: Scalars['Boolean']['output'];
   pauseTimer: UserTimerModel;
   registrationUser: UserModel;
   resetPassword: Scalars['Boolean']['output'];
+  setTimerTaskType: UserTimerModel;
   startTimer: UserTimerModel;
   stopTimer: UserTimerModel;
+  updateTaskType: TaskTypeModel;
   validateResetCode: Scalars['String']['output'];
 };
 
@@ -61,6 +71,16 @@ export type MutationChangePasswordArgs = {
 
 export type MutationContinueTimerArgs = {
   timerId: Scalars['String']['input'];
+};
+
+
+export type MutationCreateTaskTypeArgs = {
+  input: CreateTaskTypeDto;
+};
+
+
+export type MutationDeleteTaskTypeArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -84,6 +104,12 @@ export type MutationResetPasswordArgs = {
 };
 
 
+export type MutationSetTimerTaskTypeArgs = {
+  taskTypeId?: InputMaybe<Scalars['String']['input']>;
+  timerId: Scalars['String']['input'];
+};
+
+
 export type MutationStartTimerArgs = {
   description?: InputMaybe<Scalars['String']['input']>;
 };
@@ -91,6 +117,12 @@ export type MutationStartTimerArgs = {
 
 export type MutationStopTimerArgs = {
   description?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUpdateTaskTypeArgs = {
+  id: Scalars['String']['input'];
+  input: UpdateTaskTypeDto;
 };
 
 
@@ -109,6 +141,7 @@ export type Query = {
   getTimerHistoryGroupByTimerId: Array<TimerHistoryGroupModel>;
   getWeekStatistic: TimerStatisticModel;
   profileData: UserModel;
+  taskTypes: Array<TaskTypeModel>;
 };
 
 
@@ -153,6 +186,16 @@ export type RegistrationDto = {
   password: Scalars['String']['input'];
 };
 
+export type TaskTypeModel = {
+  __typename?: 'TaskTypeModel';
+  children: Array<TaskTypeModel>;
+  color?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  parent?: Maybe<TaskTypeModel>;
+  parentId?: Maybe<Scalars['String']['output']>;
+};
+
 export type TimerHistoryGroupModel = {
   __typename?: 'TimerHistoryGroupModel';
   groupField: Scalars['String']['output'];
@@ -165,6 +208,8 @@ export type TimerHistoryModel = {
   endTimer: Scalars['DateTime']['output'];
   id: Scalars['ID']['output'];
   startTimer: Scalars['DateTime']['output'];
+  taskType?: Maybe<TaskTypeModel>;
+  taskTypeId?: Maybe<Scalars['String']['output']>;
   timerId: Scalars['String']['output'];
   totalTimeInSeconds: Scalars['Float']['output'];
   user: UserModel;
@@ -177,6 +222,11 @@ export type TimerStatisticModel = {
   history: Array<HistoryItemModel>;
   length: Scalars['Int']['output'];
   startPeriod: Scalars['DateTime']['output'];
+};
+
+export type UpdateTaskTypeDto = {
+  color?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UserModel = {
@@ -197,6 +247,8 @@ export type UserTimerModel = {
   id: Scalars['ID']['output'];
   startTimer?: Maybe<Scalars['DateTime']['output']>;
   status: Scalars['String']['output'];
+  taskType?: Maybe<TaskTypeModel>;
+  taskTypeId?: Maybe<Scalars['String']['output']>;
   timerId: Scalars['String']['output'];
   totalTimeInSeconds: Scalars['Float']['output'];
   user: UserModel;
@@ -256,7 +308,7 @@ export type GetRecentTimerGroupsQueryVariables = Exact<{
 }>;
 
 
-export type GetRecentTimerGroupsQuery = { __typename?: 'Query', getRecentTimerGroups: Array<{ __typename?: 'TimerHistoryGroupModel', groupField: string, records: Array<{ __typename?: 'TimerHistoryModel', id: string, startTimer: any, endTimer: any, totalTimeInSeconds: number, userId: number, description?: string | null, timerId: string, user: { __typename?: 'UserModel', id: string, firstName: string, lastName: string, middleName?: string | null } }> }> };
+export type GetRecentTimerGroupsQuery = { __typename?: 'Query', getRecentTimerGroups: Array<{ __typename?: 'TimerHistoryGroupModel', groupField: string, records: Array<{ __typename?: 'TimerHistoryModel', id: string, startTimer: any, endTimer: any, totalTimeInSeconds: number, userId: number, description?: string | null, timerId: string, taskTypeId?: string | null, user: { __typename?: 'UserModel', id: string, firstName: string, lastName: string, middleName?: string | null } }> }> };
 
 export type GetTimerHistoryGroupByDateQueryVariables = Exact<{
   startPeriod: Scalars['DateTime']['input'];
@@ -264,7 +316,7 @@ export type GetTimerHistoryGroupByDateQueryVariables = Exact<{
 }>;
 
 
-export type GetTimerHistoryGroupByDateQuery = { __typename?: 'Query', getTimerHistoryGroupByDate: Array<{ __typename?: 'TimerHistoryGroupModel', groupField: string, records: Array<{ __typename?: 'TimerHistoryModel', id: string, startTimer: any, endTimer: any, totalTimeInSeconds: number, userId: number, description?: string | null, timerId: string, user: { __typename?: 'UserModel', id: string, firstName: string, lastName: string, middleName?: string | null } }> }> };
+export type GetTimerHistoryGroupByDateQuery = { __typename?: 'Query', getTimerHistoryGroupByDate: Array<{ __typename?: 'TimerHistoryGroupModel', groupField: string, records: Array<{ __typename?: 'TimerHistoryModel', id: string, startTimer: any, endTimer: any, totalTimeInSeconds: number, userId: number, description?: string | null, timerId: string, taskTypeId?: string | null, user: { __typename?: 'UserModel', id: string, firstName: string, lastName: string, middleName?: string | null } }> }> };
 
 export type GetTimerHistoryGroupByTimerIdQueryVariables = Exact<{
   startPeriod: Scalars['DateTime']['input'];
@@ -272,7 +324,7 @@ export type GetTimerHistoryGroupByTimerIdQueryVariables = Exact<{
 }>;
 
 
-export type GetTimerHistoryGroupByTimerIdQuery = { __typename?: 'Query', getTimerHistoryGroupByTimerId: Array<{ __typename?: 'TimerHistoryGroupModel', groupField: string, records: Array<{ __typename?: 'TimerHistoryModel', id: string, startTimer: any, endTimer: any, totalTimeInSeconds: number, userId: number, description?: string | null, timerId: string, user: { __typename?: 'UserModel', id: string, firstName: string, lastName: string, middleName?: string | null } }> }> };
+export type GetTimerHistoryGroupByTimerIdQuery = { __typename?: 'Query', getTimerHistoryGroupByTimerId: Array<{ __typename?: 'TimerHistoryGroupModel', groupField: string, records: Array<{ __typename?: 'TimerHistoryModel', id: string, startTimer: any, endTimer: any, totalTimeInSeconds: number, userId: number, description?: string | null, timerId: string, taskTypeId?: string | null, user: { __typename?: 'UserModel', id: string, firstName: string, lastName: string, middleName?: string | null } }> }> };
 
 export type GetPeriodStatisticQueryVariables = Exact<{
   startPeriod: Scalars['DateTime']['input'];
@@ -289,38 +341,73 @@ export type GetWeekStatisticQueryVariables = Exact<{
 
 export type GetWeekStatisticQuery = { __typename?: 'Query', getWeekStatistic: { __typename?: 'TimerStatisticModel', startPeriod: any, endPeriod: any, length: number, history: Array<{ __typename?: 'HistoryItemModel', day: string, general: { __typename?: 'GeneralStatisticModel', totalTimeInSeconds: number } }> } };
 
+export type CreateTaskTypeMutationVariables = Exact<{
+  input: CreateTaskTypeDto;
+}>;
+
+
+export type CreateTaskTypeMutation = { __typename?: 'Mutation', createTaskType: { __typename?: 'TaskTypeModel', id: string } };
+
+export type DeleteTaskTypeMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type DeleteTaskTypeMutation = { __typename?: 'Mutation', deleteTaskType: boolean };
+
+export type GetTaskTypesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTaskTypesQuery = { __typename?: 'Query', taskTypes: Array<{ __typename?: 'TaskTypeModel', id: string, name: string, color?: string | null, children: Array<{ __typename?: 'TaskTypeModel', id: string, name: string }> }> };
+
+export type SetTimerTaskTypeMutationVariables = Exact<{
+  timerId: Scalars['String']['input'];
+  taskTypeId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type SetTimerTaskTypeMutation = { __typename?: 'Mutation', setTimerTaskType: { __typename?: 'UserTimerModel', id: string, taskTypeId?: string | null } };
+
+export type UpdateTaskTypeMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+  input: UpdateTaskTypeDto;
+}>;
+
+
+export type UpdateTaskTypeMutation = { __typename?: 'Mutation', updateTaskType: { __typename?: 'TaskTypeModel', id: string } };
+
 export type ContinueTimerMutationVariables = Exact<{
   timerId: Scalars['String']['input'];
 }>;
 
 
-export type ContinueTimerMutation = { __typename?: 'Mutation', continueTimer: { __typename?: 'UserTimerModel', id: string, startTimer?: any | null, endTimer?: any | null, totalTimeInSeconds: number, status: string, description?: string | null, timerId: string } };
+export type ContinueTimerMutation = { __typename?: 'Mutation', continueTimer: { __typename?: 'UserTimerModel', id: string, startTimer?: any | null, endTimer?: any | null, totalTimeInSeconds: number, status: string, description?: string | null, timerId: string, taskTypeId?: string | null } };
 
 export type GetTimerQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetTimerQuery = { __typename?: 'Query', getTimer: { __typename?: 'UserTimerModel', id: string, startTimer?: any | null, endTimer?: any | null, totalTimeInSeconds: number, status: string, description?: string | null, timerId: string } };
+export type GetTimerQuery = { __typename?: 'Query', getTimer: { __typename?: 'UserTimerModel', id: string, startTimer?: any | null, endTimer?: any | null, totalTimeInSeconds: number, status: string, description?: string | null, timerId: string, taskTypeId?: string | null } };
 
 export type PauseTimerMutationVariables = Exact<{
   description?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type PauseTimerMutation = { __typename?: 'Mutation', pauseTimer: { __typename?: 'UserTimerModel', id: string, startTimer?: any | null, endTimer?: any | null, totalTimeInSeconds: number, status: string, description?: string | null, timerId: string } };
+export type PauseTimerMutation = { __typename?: 'Mutation', pauseTimer: { __typename?: 'UserTimerModel', id: string, startTimer?: any | null, endTimer?: any | null, totalTimeInSeconds: number, status: string, description?: string | null, timerId: string, taskTypeId?: string | null } };
 
 export type StartTimerMutationVariables = Exact<{
   description?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type StartTimerMutation = { __typename?: 'Mutation', startTimer: { __typename?: 'UserTimerModel', id: string, startTimer?: any | null, endTimer?: any | null, totalTimeInSeconds: number, status: string, description?: string | null, timerId: string } };
+export type StartTimerMutation = { __typename?: 'Mutation', startTimer: { __typename?: 'UserTimerModel', id: string, startTimer?: any | null, endTimer?: any | null, totalTimeInSeconds: number, status: string, description?: string | null, timerId: string, taskTypeId?: string | null } };
 
 export type StopTimerMutationVariables = Exact<{
   description?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type StopTimerMutation = { __typename?: 'Mutation', stopTimer: { __typename?: 'UserTimerModel', id: string, startTimer?: any | null, endTimer?: any | null, totalTimeInSeconds: number, status: string, description?: string | null, timerId: string } };
+export type StopTimerMutation = { __typename?: 'Mutation', stopTimer: { __typename?: 'UserTimerModel', id: string, startTimer?: any | null, endTimer?: any | null, totalTimeInSeconds: number, status: string, description?: string | null, timerId: string, taskTypeId?: string | null } };
 
 
 export const ChangePasswordDocument = gql`
@@ -581,6 +668,7 @@ export const GetRecentTimerGroupsDocument = gql`
       userId
       description
       timerId
+      taskTypeId
       user {
         id
         firstName
@@ -636,6 +724,7 @@ export const GetTimerHistoryGroupByDateDocument = gql`
       userId
       description
       timerId
+      taskTypeId
       user {
         id
         firstName
@@ -692,6 +781,7 @@ export const GetTimerHistoryGroupByTimerIdDocument = gql`
       userId
       description
       timerId
+      taskTypeId
       user {
         id
         firstName
@@ -837,6 +927,184 @@ export type GetWeekStatisticQueryHookResult = ReturnType<typeof useGetWeekStatis
 export type GetWeekStatisticLazyQueryHookResult = ReturnType<typeof useGetWeekStatisticLazyQuery>;
 export type GetWeekStatisticSuspenseQueryHookResult = ReturnType<typeof useGetWeekStatisticSuspenseQuery>;
 export type GetWeekStatisticQueryResult = Apollo.QueryResult<GetWeekStatisticQuery, GetWeekStatisticQueryVariables>;
+export const CreateTaskTypeDocument = gql`
+    mutation CreateTaskType($input: CreateTaskTypeDto!) {
+  createTaskType(input: $input) {
+    id
+  }
+}
+    `;
+export type CreateTaskTypeMutationFn = Apollo.MutationFunction<CreateTaskTypeMutation, CreateTaskTypeMutationVariables>;
+
+/**
+ * __useCreateTaskTypeMutation__
+ *
+ * To run a mutation, you first call `useCreateTaskTypeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTaskTypeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTaskTypeMutation, { data, loading, error }] = useCreateTaskTypeMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateTaskTypeMutation(baseOptions?: Apollo.MutationHookOptions<CreateTaskTypeMutation, CreateTaskTypeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTaskTypeMutation, CreateTaskTypeMutationVariables>(CreateTaskTypeDocument, options);
+      }
+export type CreateTaskTypeMutationHookResult = ReturnType<typeof useCreateTaskTypeMutation>;
+export type CreateTaskTypeMutationResult = Apollo.MutationResult<CreateTaskTypeMutation>;
+export type CreateTaskTypeMutationOptions = Apollo.BaseMutationOptions<CreateTaskTypeMutation, CreateTaskTypeMutationVariables>;
+export const DeleteTaskTypeDocument = gql`
+    mutation DeleteTaskType($id: String!) {
+  deleteTaskType(id: $id)
+}
+    `;
+export type DeleteTaskTypeMutationFn = Apollo.MutationFunction<DeleteTaskTypeMutation, DeleteTaskTypeMutationVariables>;
+
+/**
+ * __useDeleteTaskTypeMutation__
+ *
+ * To run a mutation, you first call `useDeleteTaskTypeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteTaskTypeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteTaskTypeMutation, { data, loading, error }] = useDeleteTaskTypeMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteTaskTypeMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTaskTypeMutation, DeleteTaskTypeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteTaskTypeMutation, DeleteTaskTypeMutationVariables>(DeleteTaskTypeDocument, options);
+      }
+export type DeleteTaskTypeMutationHookResult = ReturnType<typeof useDeleteTaskTypeMutation>;
+export type DeleteTaskTypeMutationResult = Apollo.MutationResult<DeleteTaskTypeMutation>;
+export type DeleteTaskTypeMutationOptions = Apollo.BaseMutationOptions<DeleteTaskTypeMutation, DeleteTaskTypeMutationVariables>;
+export const GetTaskTypesDocument = gql`
+    query GetTaskTypes {
+  taskTypes {
+    id
+    name
+    color
+    children {
+      id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetTaskTypesQuery__
+ *
+ * To run a query within a React component, call `useGetTaskTypesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTaskTypesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTaskTypesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetTaskTypesQuery(baseOptions?: Apollo.QueryHookOptions<GetTaskTypesQuery, GetTaskTypesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTaskTypesQuery, GetTaskTypesQueryVariables>(GetTaskTypesDocument, options);
+      }
+export function useGetTaskTypesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTaskTypesQuery, GetTaskTypesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTaskTypesQuery, GetTaskTypesQueryVariables>(GetTaskTypesDocument, options);
+        }
+export function useGetTaskTypesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTaskTypesQuery, GetTaskTypesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetTaskTypesQuery, GetTaskTypesQueryVariables>(GetTaskTypesDocument, options);
+        }
+export type GetTaskTypesQueryHookResult = ReturnType<typeof useGetTaskTypesQuery>;
+export type GetTaskTypesLazyQueryHookResult = ReturnType<typeof useGetTaskTypesLazyQuery>;
+export type GetTaskTypesSuspenseQueryHookResult = ReturnType<typeof useGetTaskTypesSuspenseQuery>;
+export type GetTaskTypesQueryResult = Apollo.QueryResult<GetTaskTypesQuery, GetTaskTypesQueryVariables>;
+export const SetTimerTaskTypeDocument = gql`
+    mutation SetTimerTaskType($timerId: String!, $taskTypeId: String) {
+  setTimerTaskType(timerId: $timerId, taskTypeId: $taskTypeId) {
+    id
+    taskTypeId
+  }
+}
+    `;
+export type SetTimerTaskTypeMutationFn = Apollo.MutationFunction<SetTimerTaskTypeMutation, SetTimerTaskTypeMutationVariables>;
+
+/**
+ * __useSetTimerTaskTypeMutation__
+ *
+ * To run a mutation, you first call `useSetTimerTaskTypeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetTimerTaskTypeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setTimerTaskTypeMutation, { data, loading, error }] = useSetTimerTaskTypeMutation({
+ *   variables: {
+ *      timerId: // value for 'timerId'
+ *      taskTypeId: // value for 'taskTypeId'
+ *   },
+ * });
+ */
+export function useSetTimerTaskTypeMutation(baseOptions?: Apollo.MutationHookOptions<SetTimerTaskTypeMutation, SetTimerTaskTypeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetTimerTaskTypeMutation, SetTimerTaskTypeMutationVariables>(SetTimerTaskTypeDocument, options);
+      }
+export type SetTimerTaskTypeMutationHookResult = ReturnType<typeof useSetTimerTaskTypeMutation>;
+export type SetTimerTaskTypeMutationResult = Apollo.MutationResult<SetTimerTaskTypeMutation>;
+export type SetTimerTaskTypeMutationOptions = Apollo.BaseMutationOptions<SetTimerTaskTypeMutation, SetTimerTaskTypeMutationVariables>;
+export const UpdateTaskTypeDocument = gql`
+    mutation UpdateTaskType($id: String!, $input: UpdateTaskTypeDto!) {
+  updateTaskType(id: $id, input: $input) {
+    id
+  }
+}
+    `;
+export type UpdateTaskTypeMutationFn = Apollo.MutationFunction<UpdateTaskTypeMutation, UpdateTaskTypeMutationVariables>;
+
+/**
+ * __useUpdateTaskTypeMutation__
+ *
+ * To run a mutation, you first call `useUpdateTaskTypeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTaskTypeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTaskTypeMutation, { data, loading, error }] = useUpdateTaskTypeMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateTaskTypeMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTaskTypeMutation, UpdateTaskTypeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateTaskTypeMutation, UpdateTaskTypeMutationVariables>(UpdateTaskTypeDocument, options);
+      }
+export type UpdateTaskTypeMutationHookResult = ReturnType<typeof useUpdateTaskTypeMutation>;
+export type UpdateTaskTypeMutationResult = Apollo.MutationResult<UpdateTaskTypeMutation>;
+export type UpdateTaskTypeMutationOptions = Apollo.BaseMutationOptions<UpdateTaskTypeMutation, UpdateTaskTypeMutationVariables>;
 export const ContinueTimerDocument = gql`
     mutation ContinueTimer($timerId: String!) {
   continueTimer(timerId: $timerId) {
@@ -847,6 +1115,7 @@ export const ContinueTimerDocument = gql`
     status
     description
     timerId
+    taskTypeId
   }
 }
     `;
@@ -886,6 +1155,7 @@ export const GetTimerDocument = gql`
     status
     description
     timerId
+    taskTypeId
   }
 }
     `;
@@ -931,6 +1201,7 @@ export const PauseTimerDocument = gql`
     status
     description
     timerId
+    taskTypeId
   }
 }
     `;
@@ -970,6 +1241,7 @@ export const StartTimerDocument = gql`
     status
     description
     timerId
+    taskTypeId
   }
 }
     `;
@@ -1009,6 +1281,7 @@ export const StopTimerDocument = gql`
     status
     description
     timerId
+    taskTypeId
   }
 }
     `;

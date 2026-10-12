@@ -9,6 +9,7 @@ query GetRecentTimerGroups($limit: Int!) {
       userId
       description
       timerId
+      taskTypeId
       user {
         id
         firstName

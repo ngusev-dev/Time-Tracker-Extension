@@ -7,5 +7,6 @@ mutation StartTimer($description: String) {
     status
     description
     timerId
+    taskTypeId
   }
 }

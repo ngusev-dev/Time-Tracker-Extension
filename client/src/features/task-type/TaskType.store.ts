@@ -1,45 +1,33 @@
-import { autorun, makeAutoObservable } from 'mobx';
-import { TimerStore } from '@/features/timer/Timer.store';
+import { makeAutoObservable, runInAction } from 'mobx';
+import toast from 'react-hot-toast';
+import { apolloClient } from '@/shared/api/apollo.client';
 import { onSessionReset } from '@/shared/lib/session';
-import { MOCK_TASK_TYPES, TASK_TYPE_COLORS, TASK_TYPE_STORAGE_KEY } from './constants';
-import type { TTaskSubtype, TTaskType, TTaskTypeSelection } from './types';
+import {
+  CreateTaskTypeDocument,
+  DeleteTaskTypeDocument,
+  GetTaskTypesDocument,
+  SetTimerTaskTypeDocument,
+  UpdateTaskTypeDocument,
+  type GetTaskTypesQuery,
+} from '@/shared/api/generated/output';
+import { HISTORY_QUERIES, TimerStore } from '@/features/timer/Timer.store';
+import { TASK_TYPE_COLORS } from './constants';
+import type { TTaskSubtype, TTaskType, TTaskTypeDraft, TTaskTypeSelection } from './types';
 
-type TPersistedState = {
-  types: TTaskType[];
-  assignments: Record<string, TTaskTypeSelection>;
-};
+const errorMessage = (error: unknown, fallback: string) =>
+  error instanceof Error && error.message ? error.message : fallback;
 
-/**
- * Типы задач пока живут только на клиенте (моки + localStorage).
- */
 class taskTypeStore {
-  types: TTaskType[] = structuredClone(MOCK_TASK_TYPES);
-  /** Тип, привязанный к задаче: timerId -> выбранный тип и подтип */
-  assignments: Record<string, TTaskTypeSelection> = {};
+  types: TTaskType[] = [];
 
   constructor() {
     makeAutoObservable(this);
-    this._restore();
-    autorun(() => this._persist(JSON.stringify({ types: this.types, assignments: this.assignments })));
   }
 
-  /** Тип и подтип текущей задачи таймера */
   get selected() {
-    return this.getByTimerId(TimerStore.timerId);
+    return this.find(TimerStore.taskTypeId);
   }
 
-  getById = (id: string | null | undefined) => (id ? this.types.find((type) => type.id === id) : undefined);
-
-  getByTimerId = (timerId: string | null | undefined) => {
-    const selection = timerId ? this.assignments[timerId] : undefined;
-    const type = this.getById(selection?.typeId);
-    if (!type) return undefined;
-
-    const subtype = type.children.find((child) => child.id === selection?.subtypeId);
-    return { type, subtype };
-  };
-
-  /** Цвет для нового типа — первый ещё не занятый из палитры */
   get nextColor() {
     const used = new Set(this.types.map((type) => type.color));
     return (
@@ -48,82 +36,139 @@ class taskTypeStore {
     );
   }
 
-  select = (selection: TTaskTypeSelection | null) => {
-    const { timerId } = TimerStore;
-    if (!timerId) return;
+  find = (id: string | null | undefined): { type: TTaskType; subtype?: TTaskSubtype } | undefined => {
+    if (!id) return;
 
-    if (selection) this.assignments[timerId] = selection;
-    else delete this.assignments[timerId];
-  };
+    for (const type of this.types) {
+      if (type.id === id) return { type };
 
-  create = ({ name, color, children }: Omit<TTaskType, 'id'>) => {
-    const type: TTaskType = {
-      id: crypto.randomUUID(),
-      name: name.trim(),
-      color,
-      children: children.map((child) => ({ ...child, name: child.name.trim() })),
-    };
-    this.types.push(type);
-    return type;
-  };
-
-  update = (id: string, patch: Partial<Omit<TTaskType, 'id'>>) => {
-    const type = this.getById(id);
-    if (!type) return;
-
-    if (patch.name !== undefined) type.name = patch.name.trim();
-    if (patch.color !== undefined) type.color = patch.color;
-    if (patch.children !== undefined) {
-      type.children = patch.children.map((child) => ({ ...child, name: child.name.trim() }));
-      this._dropMissingSubtypes(type);
+      const subtype = type.children.find((child) => child.id === id);
+      if (subtype) return { type, subtype };
     }
   };
 
-  remove = (id: string) => {
-    this.types = this.types.filter((type) => type.id !== id);
+  load = async () => {
+    try {
+      const { data } = await apolloClient.query<GetTaskTypesQuery>({
+        query: GetTaskTypesDocument,
+        fetchPolicy: 'network-only',
+      });
 
-    for (const [timerId, selection] of Object.entries(this.assignments)) {
-      if (selection.typeId === id) delete this.assignments[timerId];
+      runInAction(() => {
+        this.types = data.taskTypes.map((type) => ({ ...type, color: type.color ?? TASK_TYPE_COLORS[0] }));
+      });
+    } catch (error) {
+      toast.error(errorMessage(error, 'Не удалось загрузить типы задач'), { id: 'task-type-error' });
+    }
+  };
+
+  select = async (selection: TTaskTypeSelection | null) => {
+    const { timerId, taskTypeId: previous } = TimerStore;
+    if (!timerId) return;
+
+    const taskTypeId = selection ? (selection.subtypeId ?? selection.typeId) : null;
+    TimerStore.setTaskTypeId(taskTypeId);
+
+    try {
+      await apolloClient.mutate({
+        mutation: SetTimerTaskTypeDocument,
+        variables: { timerId, taskTypeId },
+        refetchQueries: HISTORY_QUERIES,
+      });
+    } catch (error) {
+      TimerStore.setTaskTypeId(previous);
+      toast.error(errorMessage(error, 'Не удалось сохранить тип задачи'), { id: 'task-type-error' });
+    }
+  };
+
+  save = async (type: TTaskType | undefined, draft: TTaskTypeDraft) => {
+    const name = draft.name.trim();
+    const children = draft.children
+      .map((child) => ({ ...child, name: child.name.trim() }))
+      .filter((child) => child.name);
+
+    try {
+      let typeId = type?.id;
+
+      if (typeId === undefined) {
+        const { data } = await apolloClient.mutate({
+          mutation: CreateTaskTypeDocument,
+          variables: { input: { name, color: draft.color } },
+        });
+        typeId = data!.createTaskType.id;
+      } else if (name !== type?.name || draft.color !== type?.color) {
+        await apolloClient.mutate({
+          mutation: UpdateTaskTypeDocument,
+          variables: { id: typeId, input: { name, color: draft.color } },
+        });
+      }
+
+      const parentId = typeId;
+      const kept = new Set(children.map((child) => child.id));
+      const requests = (type?.children ?? [])
+        .filter((child) => !kept.has(child.id))
+        .map((child) =>
+          apolloClient.mutate({
+            mutation: DeleteTaskTypeDocument,
+            variables: { id: child.id },
+            refetchQueries: HISTORY_QUERIES,
+          }),
+        );
+
+      for (const child of children) {
+        const existing = type?.children.find((x) => x.id === child.id);
+        if (!existing) {
+          requests.push(
+            apolloClient.mutate({
+              mutation: CreateTaskTypeDocument,
+              variables: { input: { name: child.name, parentId } },
+            }),
+          );
+        } else if (existing.name !== child.name) {
+          requests.push(
+            apolloClient.mutate({
+              mutation: UpdateTaskTypeDocument,
+              variables: { id: child.id, input: { name: child.name } },
+            }),
+          );
+        }
+      }
+
+      await Promise.all(requests);
+      return true;
+    } catch (error) {
+      toast.error(errorMessage(error, 'Не удалось сохранить тип задачи'), { id: 'task-type-error' });
+      return false;
+    } finally {
+      await this.load();
+      this._dropStaleSelection(type?.id ?? null);
+    }
+  };
+
+  remove = async (id: string) => {
+    const found = this.find(id);
+
+    try {
+      await apolloClient.mutate({
+        mutation: DeleteTaskTypeDocument,
+        variables: { id },
+        refetchQueries: HISTORY_QUERIES,
+      });
+      await this.load();
+      this._dropStaleSelection(found?.subtype ? found.type.id : null);
+      return true;
+    } catch (error) {
+      toast.error(errorMessage(error, 'Не удалось удалить тип задачи'), { id: 'task-type-error' });
+      return false;
     }
   };
 
   reset = () => {
-    this.types = structuredClone(MOCK_TASK_TYPES);
-    this.assignments = {};
+    this.types = [];
   };
 
-  /** Задачи с удалённым подтипом остаются привязанными к родительскому типу */
-  private _dropMissingSubtypes(type: TTaskType) {
-    const ids = new Set(type.children.map((child) => child.id));
-
-    for (const selection of Object.values(this.assignments)) {
-      if (selection.typeId === type.id && selection.subtypeId && !ids.has(selection.subtypeId)) {
-        delete selection.subtypeId;
-      }
-    }
-  }
-
-  private _restore() {
-    try {
-      const raw = localStorage.getItem(TASK_TYPE_STORAGE_KEY);
-      if (!raw) return;
-
-      const state = JSON.parse(raw) as Partial<TPersistedState>;
-      if (Array.isArray(state.types)) {
-        this.types = state.types.map((type) => ({ ...type, children: type.children ?? ([] as TTaskSubtype[]) }));
-      }
-      if (state.assignments) this.assignments = state.assignments;
-    } catch {
-      // повреждённые или недоступные данные — остаёмся на моках
-    }
-  }
-
-  private _persist(serialized: string) {
-    try {
-      localStorage.setItem(TASK_TYPE_STORAGE_KEY, serialized);
-    } catch {
-      // хранилище недоступно — данные проживут до перезагрузки
-    }
+  private _dropStaleSelection(fallbackId: string | null) {
+    if (TimerStore.taskTypeId && !this.find(TimerStore.taskTypeId)) TimerStore.setTaskTypeId(fallbackId);
   }
 }
 

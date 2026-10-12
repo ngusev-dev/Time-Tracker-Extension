@@ -4,14 +4,15 @@ import { TaskTypeStore } from './TaskType.store';
 import { TaskTypeLabel } from './TaskTypeLabel';
 
 type TaskTypeBadgeProps = {
-  timerId: string;
+  /** Id типа или подтипа, как его хранит запись истории */
+  taskTypeId: string | null | undefined;
   className?: string;
 };
 
 /** Тип задачи в карточках истории; ничего не рендерит, если тип не выбран */
-export const TaskTypeBadge = observer(({ timerId, className }: TaskTypeBadgeProps) => {
-  const selected = TaskTypeStore.getByTimerId(timerId);
-  if (!selected) return null;
+export const TaskTypeBadge = observer(({ taskTypeId, className }: TaskTypeBadgeProps) => {
+  const found = TaskTypeStore.find(taskTypeId);
+  if (!found) return null;
 
-  return <TaskTypeLabel {...selected} className={cn('text-xs font-medium', className)} />;
+  return <TaskTypeLabel {...found} className={cn('text-xs font-medium', className)} />;
 });
