@@ -1,0 +1,5 @@
+mutation CreateTaskType($input: CreateTaskTypeDto!) {
+  createTaskType(input: $input) {
+    id
+  }
+}

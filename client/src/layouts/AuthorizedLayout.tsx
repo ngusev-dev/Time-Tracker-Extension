@@ -1,17 +1,19 @@
 import { AsideMenu, Header } from '@/features/navigation';
 import { Outlet } from 'react-router';
 import { TimerStore } from '@/features/timer';
+import { TaskTypeStore } from '@/features/task-type';
 import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { AppStore } from '@/shared/model/App.store';
 
 export const AuthorizedLayout = observer(() => {
   const { loadTimerInit } = TimerStore;
+  const { load } = TaskTypeStore;
   const { isOpenAsideMenu, toggleAsideMenu } = AppStore;
 
   useEffect(() => {
     (async function () {
-      await loadTimerInit();
+      await Promise.all([loadTimerInit(), load()]);
     })();
   }, []);
 

@@ -106,6 +106,7 @@ export class UserTimerService {
       data: {
         timerId,
         description: lastRecord.description,
+        taskTypeId: lastRecord.taskTypeId,
         startTimer: new Date(),
         endTimer: null,
         totalTimeInSeconds: 0,
@@ -194,9 +195,8 @@ export class UserTimerService {
         totalTimeInSeconds,
         timerId: timer.timerId,
         description,
-        user: {
-          connect: { id: timer.userId },
-        },
+        taskTypeId: timer.taskTypeId,
+        userId: timer.userId,
       },
       include: {
         user: true,
@@ -212,6 +212,7 @@ export class UserTimerService {
         totalTimeInSeconds: 0,
         status: 'NEW',
         description: null,
+        taskTypeId: null,
         timerId: this.uuid.generateUUID_v4(),
       },
       where: {

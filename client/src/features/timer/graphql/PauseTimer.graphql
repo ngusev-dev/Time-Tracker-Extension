@@ -7,5 +7,6 @@ mutation PauseTimer($description: String) {
     status
     description
     timerId
+    taskTypeId
   }
 }

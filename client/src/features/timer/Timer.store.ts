@@ -21,7 +21,7 @@ type TimerSnapshot = GetTimerQuery['getTimer'];
 const TICK_INTERVAL_MS = 500;
 
 /** Списки сессий, которые нужно обновить после появления новой записи в истории */
-const HISTORY_QUERIES = ['GetRecentTimerGroups', 'GetTimerHistoryGroupByDate'];
+export const HISTORY_QUERIES = ['GetRecentTimerGroups', 'GetTimerHistoryGroupByDate'];
 
 class timerStore {
   isLoading = false;
@@ -29,6 +29,7 @@ class timerStore {
   status: string | null = null;
   description: string | null = null;
   timerId: string | null = null;
+  taskTypeId: string | null = null;
 
   /** Время по данным сервера на момент последней синхронизации */
   private baseSeconds = 0;
@@ -66,6 +67,10 @@ class timerStore {
 
   updateDescription = (description: string | null) => {
     this.description = description;
+  };
+
+  setTaskTypeId = (taskTypeId: string | null) => {
+    this.taskTypeId = taskTypeId;
   };
 
   loadTimerInit = async () => {
@@ -144,6 +149,7 @@ class timerStore {
     this.status = null;
     this.description = null;
     this.timerId = null;
+    this.taskTypeId = null;
     this.baseSeconds = 0;
     this.syncedAt = 0;
   };
@@ -169,6 +175,7 @@ class timerStore {
   private _applySnapshot(snapshot: TimerSnapshot) {
     this.status = snapshot.status;
     this.timerId = snapshot.timerId;
+    this.taskTypeId = snapshot.taskTypeId ?? null;
     this.baseSeconds = snapshot.totalTimeInSeconds || 0;
     this.syncedAt = Date.now();
     this.now = this.syncedAt;

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { endOfDay, startOfDay } from 'date-fns';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { TASK_TYPE_INCLUDE } from 'src/task-type/task-type.service';
 import { TimerHistoryGroupModel } from './models/TimerHistory.model';
 
 @Injectable()
@@ -27,6 +28,7 @@ export class TimerHistoryService {
       },
       include: {
         user: true,
+        ...TASK_TYPE_INCLUDE,
       },
     });
   }
@@ -46,6 +48,7 @@ export class TimerHistoryService {
       },
       include: {
         user: true,
+        ...TASK_TYPE_INCLUDE,
       },
       orderBy: {
         startTimer: 'desc',
@@ -79,6 +82,7 @@ export class TimerHistoryService {
       },
       include: {
         user: true,
+        ...TASK_TYPE_INCLUDE,
       },
       orderBy: {
         startTimer: 'desc',
@@ -119,6 +123,7 @@ export class TimerHistoryService {
       },
       include: {
         user: true,
+        ...TASK_TYPE_INCLUDE,
       },
       orderBy: {
         startTimer: 'desc',

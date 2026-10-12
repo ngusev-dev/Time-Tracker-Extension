@@ -1,0 +1,11 @@
+query GetTaskTypes {
+  taskTypes {
+    id
+    name
+    color
+    children {
+      id
+      name
+    }
+  }
+}

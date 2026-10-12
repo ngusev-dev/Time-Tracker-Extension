@@ -1,0 +1,6 @@
+mutation SetTimerTaskType($timerId: String!, $taskTypeId: String) {
+  setTimerTaskType(timerId: $timerId, taskTypeId: $taskTypeId) {
+    id
+    taskTypeId
+  }
+}
