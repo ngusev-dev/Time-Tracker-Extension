@@ -16,6 +16,7 @@ import { AuthModule } from './auth/auth.module';
 import { MailModule } from './lib/mail/mail.module';
 import { PasswordRecoveryModule } from './auth/password-recovery/password-recovery.module';
 import { HashModule } from './lib/hash/hash.module';
+import { TaskTypeModule } from './task-type/task-type.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { HashModule } from './lib/hash/hash.module';
     MailModule,
     PasswordRecoveryModule,
     HashModule,
+    TaskTypeModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

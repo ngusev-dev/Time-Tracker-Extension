@@ -5,6 +5,7 @@ import { TimerStore } from './Timer.store';
 import { observer } from 'mobx-react-lite';
 import { cn } from '@/shared/lib/utils';
 import { TimerSkeleton } from './TimerSkeleton';
+import { TaskTypeSelect } from '@/features/task-type/TaskTypeSelect';
 
 export const TimeTracker = observer(() => {
   const {
@@ -56,6 +57,8 @@ export const TimeTracker = observer(() => {
         placeholder="Над чем работаете?"
         rows={1}
       />
+
+      <TaskTypeSelect />
 
       <div className="flex w-full gap-2">
         {(!isStarted || isPaused) && (

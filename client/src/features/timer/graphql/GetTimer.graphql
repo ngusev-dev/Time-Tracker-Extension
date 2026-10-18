@@ -7,5 +7,6 @@ query GetTimer {
     status
     description
     timerId
+    taskTypeId
   }
 }

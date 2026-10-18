@@ -9,6 +9,7 @@ query GetTimerHistoryGroupByDate($startPeriod: DateTime!, $endPeriod: DateTime!)
       userId
       description
       timerId
+      taskTypeId
       user {
         id
         firstName

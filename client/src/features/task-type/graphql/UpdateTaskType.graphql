@@ -1,0 +1,5 @@
+mutation UpdateTaskType($id: String!, $input: UpdateTaskTypeDto!) {
+  updateTaskType(id: $id, input: $input) {
+    id
+  }
+}
