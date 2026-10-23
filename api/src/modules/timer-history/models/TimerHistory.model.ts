@@ -1,0 +1,46 @@
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { TimerHistory } from 'generated/prisma/client';
+import { TaskTypeModel } from '@modules/task-type/models/TaskType.model';
+import { UserModel } from '@modules/user/models/User.model';
+
+@ObjectType()
+export class TimerHistoryModel implements TimerHistory {
+  @Field(() => ID)
+  id: number;
+
+  @Field(() => String)
+  timerId: string;
+
+  @Field(() => Date)
+  startTimer: Date;
+
+  @Field(() => Date)
+  endTimer: Date;
+
+  @Field(() => Number)
+  totalTimeInSeconds: number;
+
+  @Field(() => String, { nullable: true })
+  description: string | null;
+
+  @Field(() => Int)
+  userId: number;
+
+  @Field(() => String, { nullable: true })
+  taskTypeId: string | null;
+
+  @Field(() => TaskTypeModel, { nullable: true })
+  taskType?: TaskTypeModel | null;
+
+  @Field(() => UserModel)
+  user: UserModel;
+}
+
+@ObjectType()
+export class TimerHistoryGroupModel {
+  @Field(() => String)
+  groupField: any;
+
+  @Field(() => [TimerHistoryModel])
+  records: TimerHistoryModel[];
+}

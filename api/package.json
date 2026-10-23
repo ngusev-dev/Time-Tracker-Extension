@@ -38,6 +38,7 @@
     "class-validator": "^0.14.2",
     "connect-pg-simple": "^10.0.0",
     "date-fns": "^4.1.0",
+    "exceljs": "^4.4.0",
     "express-session": "^1.18.2",
     "graphql": "^16.11.0",
     "nodemailer": "^7.0.10",
@@ -85,6 +86,8 @@
     "rootDir": "src",
     "moduleNameMapper": {
       "^src/(.*)$": "<rootDir>/$1",
+      "^@modules/(.*)$": "<rootDir>/modules/$1",
+      "^@shared/(.*)$": "<rootDir>/shared/$1",
       "^generated/(.*)$": "<rootDir>/../generated/$1",
       "^(\\.{1,2}/.*)\\.js$": "$1"
     },

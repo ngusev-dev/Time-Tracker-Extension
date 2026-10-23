@@ -1,22 +1,21 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { UserModule } from './user/user.module';
+import { UserModule } from '@modules/user/user.module';
 import { join } from 'path';
 import { PrismaService } from './prisma/prisma.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
-import { UserTimerModule } from './user-timer/user-timer.module';
-import { UuidModule } from './lib/uuid/uuid.module';
-import { TimerHistoryModule } from './timer-history/timer-history.module';
-import { TimerStatisticModule } from './timer-statistic/timer-statistic.module';
-import { AuthModule } from './auth/auth.module';
-import { MailModule } from './lib/mail/mail.module';
-import { PasswordRecoveryModule } from './auth/password-recovery/password-recovery.module';
-import { HashModule } from './lib/hash/hash.module';
-import { TaskTypeModule } from './task-type/task-type.module';
+import { UserTimerModule } from '@modules/user-timer/user-timer.module';
+import { UuidModule } from '@shared/lib/uuid/uuid.module';
+import { TimerHistoryModule } from '@modules/timer-history/timer-history.module';
+import { TimerStatisticModule } from '@modules/timer-statistic/timer-statistic.module';
+import { AuthModule } from '@modules/auth/auth.module';
+import { MailModule } from '@shared/lib/mail/mail.module';
+import { PasswordRecoveryModule } from '@modules/password-recovery/password-recovery.module';
+import { HashModule } from '@shared/lib/hash/hash.module';
+import { TaskTypeModule } from '@modules/task-type/task-type.module';
 
 @Module({
   imports: [
@@ -41,7 +40,7 @@ import { TaskTypeModule } from './task-type/task-type.module';
     HashModule,
     TaskTypeModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, PrismaService],
+  controllers: [],
+  providers: [PrismaService],
 })
 export class AppModule {}
