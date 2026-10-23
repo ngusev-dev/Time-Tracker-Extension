@@ -10,7 +10,7 @@ import { ReportService } from './report.service';
 import { format } from 'date-fns';
 import type { Response } from 'express';
 import { ReportQueryDto } from './dto/report-query.dto';
-// import { AuthGuard } from '@shared/guards/auth.guard';
+import { AuthGuard } from '@shared/guards/auth.guard';
 
 // @UseGuards(AuthGuard)
 @Controller('report')
