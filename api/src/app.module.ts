@@ -16,6 +16,7 @@ import { MailModule } from '@shared/lib/mail/mail.module';
 import { PasswordRecoveryModule } from '@modules/password-recovery/password-recovery.module';
 import { HashModule } from '@shared/lib/hash/hash.module';
 import { TaskTypeModule } from '@modules/task-type/task-type.module';
+import { ReportModule } from './modules/report/report.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { TaskTypeModule } from '@modules/task-type/task-type.module';
     PasswordRecoveryModule,
     HashModule,
     TaskTypeModule,
+    ReportModule,
   ],
   controllers: [],
   providers: [PrismaService],

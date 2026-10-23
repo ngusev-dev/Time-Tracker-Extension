@@ -8,6 +8,55 @@ import { TimerHistoryGroupModel } from './models/TimerHistory.model';
 export class TimerHistoryService {
   constructor(private prisma: PrismaService) {}
 
+  async getHistoryToReport(
+    startPeriod: Date,
+    endPeriod: Date,
+    taskTypeIds: string[],
+  ) {
+    const history = await this.prisma.timerHistory.groupBy({
+      by: ['timerId', 'userId', 'description', 'taskTypeId'],
+      where: {
+        taskTypeId: {
+          in: taskTypeIds,
+        },
+        startTimer: {
+          gte: startOfDay(startPeriod),
+          lte: endOfDay(endPeriod),
+        },
+      },
+      _sum: { totalTimeInSeconds: true },
+      _min: { startTimer: true },
+      _max: { endTimer: true },
+      _count: { _all: true },
+      orderBy: { _min: { startTimer: 'asc' } },
+    });
+
+    const userIds = new Set(history.map((h) => h.userId));
+    const typeIds = [
+      ...new Set(history.map((h) => h.taskTypeId).filter((id) => id !== null)),
+    ];
+
+    const [users, taskTypes] = await Promise.all([
+      this.prisma.user.findMany({
+        where: { id: { in: [...userIds] } },
+        select: { id: true, firstName: true, lastName: true, email: true },
+      }),
+      this.prisma.taskType.findMany({
+        where: { id: { in: typeIds } },
+        include: { parent: true },
+      }),
+    ]);
+
+    const usersMap = new Map(users.map((u) => [u.id, u]));
+    const taskTypesMap = new Map(taskTypes.map((t) => [t.id, t]));
+
+    return history.map((h) => ({
+      ...h,
+      user: usersMap.get(h.userId),
+      taskType: h.taskTypeId ? taskTypesMap.get(h.taskTypeId) : undefined,
+    }));
+  }
+
   async getByTimerId(userId: number, timerId: string) {
     return await this.prisma.timerHistory.findMany({
       where: {
