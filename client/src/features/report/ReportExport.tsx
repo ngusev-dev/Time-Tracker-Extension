@@ -37,7 +37,7 @@ export const ReportExport = observer(() => {
     setIsLoading(true);
     try {
       await downloadExcelReport({ ...period, typeIds });
-      toast.success('Отчёт скачан', { id: 'report-success', duration: 2000 });
+      toast.success('Отчёт готов', { id: 'report-success', duration: 2000 });
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Не удалось скачать отчёт', { id: 'report-error' });
     } finally {
@@ -112,7 +112,7 @@ export const ReportExport = observer(() => {
 
       <Button
         className="bg-brand text-brand-foreground hover:bg-brand/90"
-        disabled={!typeIds.length ||!isPeriodValid || isLoading}
+        disabled={!typeIds.length || !isPeriodValid || isLoading}
         onClick={handleDownload}
       >
         {isLoading ? <Loader2 className="animate-spin" /> : <Download />}

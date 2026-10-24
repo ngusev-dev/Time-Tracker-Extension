@@ -238,7 +238,13 @@ export type UserModel = {
   lastName: Scalars['String']['output'];
   login: Scalars['String']['output'];
   middleName?: Maybe<Scalars['String']['output']>;
+  role: UserRole;
 };
+
+/** User roles */
+export type UserRole =
+  | 'ADMIN'
+  | 'MEMBER';
 
 export type UserTimerModel = {
   __typename?: 'UserTimerModel';
@@ -269,7 +275,7 @@ export type LoginUserMutationVariables = Exact<{
 }>;
 
 
-export type LoginUserMutation = { __typename?: 'Mutation', loginUser: { __typename?: 'UserModel', id: string, firstName: string, lastName: string, middleName?: string | null, login: string, email: string } };
+export type LoginUserMutation = { __typename?: 'Mutation', loginUser: { __typename?: 'UserModel', id: string, firstName: string, lastName: string, middleName?: string | null, login: string, email: string, role: UserRole } };
 
 export type LogoutUserMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -279,14 +285,14 @@ export type LogoutUserMutation = { __typename?: 'Mutation', logoutUser: boolean 
 export type ProfileDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfileDataQuery = { __typename?: 'Query', profileData: { __typename?: 'UserModel', id: string, firstName: string, lastName: string, middleName?: string | null, login: string, email: string } };
+export type ProfileDataQuery = { __typename?: 'Query', profileData: { __typename?: 'UserModel', id: string, firstName: string, lastName: string, middleName?: string | null, login: string, email: string, role: UserRole } };
 
 export type RegistrationUserMutationVariables = Exact<{
   registrationDto: RegistrationDto;
 }>;
 
 
-export type RegistrationUserMutation = { __typename?: 'Mutation', registrationUser: { __typename?: 'UserModel', id: string, firstName: string, lastName: string, middleName?: string | null, login: string, email: string } };
+export type RegistrationUserMutation = { __typename?: 'Mutation', registrationUser: { __typename?: 'UserModel', id: string, firstName: string, lastName: string, middleName?: string | null, login: string, email: string, role: UserRole } };
 
 export type ResetPasswordMutationVariables = Exact<{
   email: Scalars['String']['input'];
@@ -452,6 +458,7 @@ export const LoginUserDocument = gql`
     middleName
     login
     email
+    role
   }
 }
     `;
@@ -520,6 +527,7 @@ export const ProfileDataDocument = gql`
     middleName
     login
     email
+    role
   }
 }
     `;
@@ -564,6 +572,7 @@ export const RegistrationUserDocument = gql`
     middleName
     login
     email
+    role
   }
 }
     `;

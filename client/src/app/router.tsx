@@ -2,7 +2,8 @@ import { createBrowserRouter } from 'react-router';
 import { AuthorizedLayout } from '@/layouts/AuthorizedLayout';
 import { BaseLayout } from '@/layouts/BaseLayout';
 import { PublicLayout } from '@/layouts/PublicLayout';
-import { AUTH_ROUTES, PUBLIC_ROUTES } from '@/shared/config/routes';
+import { RoleLayout } from '@/layouts/RoleLayout';
+import { AUTH_ROUTES, PUBLIC_ROUTES, ROUTE_ROLES } from '@/shared/config/routes';
 
 export const router = createBrowserRouter([
   {
@@ -25,12 +26,22 @@ export const router = createBrowserRouter([
             lazy: () => import('@/pages/HistoryPage').then((m) => ({ Component: m.HistoryPage })),
           },
           {
-            path: AUTH_ROUTES.REPORT,
-            lazy: () => import('@/pages/ReportPage').then((m) => ({ Component: m.ReportPage })),
+            element: <RoleLayout roles={ROUTE_ROLES[AUTH_ROUTES.REPORT]} />,
+            children: [
+              {
+                path: AUTH_ROUTES.REPORT,
+                lazy: () => import('@/pages/ReportPage').then((m) => ({ Component: m.ReportPage })),
+              },
+            ],
           },
           {
-            path: AUTH_ROUTES.CONFIGURATION,
-            lazy: () => import('@/pages/ConfigurationPage').then((m) => ({ Component: m.ConfigurationPage })),
+            element: <RoleLayout roles={ROUTE_ROLES[AUTH_ROUTES.CONFIGURATION]} />,
+            children: [
+              {
+                path: AUTH_ROUTES.CONFIGURATION,
+                lazy: () => import('@/pages/ConfigurationPage').then((m) => ({ Component: m.ConfigurationPage })),
+              },
+            ],
           },
         ],
       },

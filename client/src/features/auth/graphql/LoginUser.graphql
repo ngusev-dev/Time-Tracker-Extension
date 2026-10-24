@@ -6,5 +6,6 @@ mutation LoginUser($loginDto: LoginDto!) {
     middleName
     login
     email
+    role
   }
 }

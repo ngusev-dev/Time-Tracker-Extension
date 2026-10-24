@@ -1,6 +1,6 @@
 import { NavLink, useNavigate } from 'react-router';
 
-import { AUTH_ROUTES, PUBLIC_ROUTES } from '@/shared/config/routes';
+import { AUTH_ROUTES, PUBLIC_ROUTES, ROUTE_ROLES } from '@/shared/config/routes';
 import { observer } from 'mobx-react-lite';
 import { AppStore } from '@/shared/model/App.store';
 import { cn } from '@/shared/lib/utils';
@@ -30,17 +30,19 @@ const LINKS_BAR = [
     title: 'Отчёт',
     href: AUTH_ROUTES.goTo(AUTH_ROUTES.REPORT),
     icon: FileSpreadsheet,
+    roles: ROUTE_ROLES[AUTH_ROUTES.REPORT],
   },
   {
     title: 'Конфигурация',
     href: AUTH_ROUTES.goTo(AUTH_ROUTES.CONFIGURATION),
     icon: Settings,
+    roles: ROUTE_ROLES[AUTH_ROUTES.CONFIGURATION],
   },
 ];
 
 export const AsideMenu = observer(() => {
   const navigate = useNavigate();
-  const { isOpenAsideMenu, toggleAsideMenu } = AppStore;
+  const { isOpenAsideMenu, toggleAsideMenu, hasRole } = AppStore;
 
   const [logoutUserMutation, { loading }] = useLogoutUserMutation();
 
@@ -54,7 +56,7 @@ export const AsideMenu = observer(() => {
       )}
     >
       <nav className="flex flex-1 flex-col gap-1 text-sm">
-        {LINKS_BAR.map((link) => (
+        {LINKS_BAR.filter((link) => hasRole(link.roles)).map((link) => (
           <NavLink
             key={link.title}
             end

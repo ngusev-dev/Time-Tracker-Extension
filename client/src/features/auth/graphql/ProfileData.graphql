@@ -6,5 +6,6 @@ query profileData {
     middleName
     login
     email
+    role
   }
 }

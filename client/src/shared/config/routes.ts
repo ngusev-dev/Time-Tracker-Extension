@@ -1,3 +1,5 @@
+import type { UserRole } from '@/shared/api/generated/output';
+
 class AuthPages {
   _PREFIX = '/index.html';
 
@@ -33,3 +35,8 @@ export const PUBLIC_PATHS = [PUBLIC_ROUTES.AUTH, PUBLIC_ROUTES.REGISTER, PUBLIC_
 );
 
 export const isPublicPath = (pathname: string) => PUBLIC_PATHS.includes(pathname);
+
+export const ROUTE_ROLES: Partial<Record<string, UserRole[]>> = {
+  [AUTH_ROUTES.REPORT]: ['ADMIN'],
+  [AUTH_ROUTES.CONFIGURATION]: ['ADMIN'],
+};

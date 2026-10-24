@@ -6,5 +6,6 @@ mutation RegistrationUser($registrationDto: RegistrationDto!) {
     middleName
     login
     email
+    role
   }
 }

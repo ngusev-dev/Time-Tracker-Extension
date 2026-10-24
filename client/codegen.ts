@@ -8,6 +8,7 @@ const config: CodegenConfig = {
       plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
       config: {
         withHooks: true,
+        enumsAsTypes: true,
       },
     },
   },

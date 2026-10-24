@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import type { UserStoreModel } from '@/shared/model/UserStoreModel.type';
+import type { UserRole } from '@/shared/api/generated/output';
 
 class appStore {
   user: UserStoreModel | null = null;
@@ -11,6 +12,11 @@ class appStore {
 
   setUserData = (user: UserStoreModel) => {
     this.user = user;
+  };
+
+  hasRole = (roles?: UserRole[]) => {
+    if (!roles?.length) return true;
+    return !!this.user && roles.includes(this.user.role);
   };
 
   toggleAsideMenu = (flag: boolean) => {
