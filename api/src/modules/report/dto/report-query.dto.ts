@@ -1,5 +1,5 @@
-import { Type } from 'class-transformer';
-import { IsDate, IsUUID } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { ArrayNotEmpty, IsDate, IsUUID } from 'class-validator';
 
 export class ReportQueryDto {
   @Type(() => Date)
@@ -10,6 +10,8 @@ export class ReportQueryDto {
   @IsDate()
   end: Date;
 
-  @IsUUID()
-  typeId: string;
+  @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
+  @ArrayNotEmpty()
+  @IsUUID('all', { each: true })
+  typeIds: string[];
 }

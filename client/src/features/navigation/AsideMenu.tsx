@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite';
 import { AppStore } from '@/shared/model/App.store';
 import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/Button';
-import { BarChart3, History, LogOut, Settings, Timer } from 'lucide-react';
+import { BarChart3, FileSpreadsheet, History, LogOut, Settings, Timer } from 'lucide-react';
 import { useLogoutUserMutation } from '@/shared/api/generated/output';
 import { resetSession } from '@/shared/lib/session';
 import toast from 'react-hot-toast';
@@ -25,6 +25,11 @@ const LINKS_BAR = [
     title: 'История',
     href: AUTH_ROUTES.goTo(AUTH_ROUTES.HISTORY),
     icon: History,
+  },
+  {
+    title: 'Отчёт',
+    href: AUTH_ROUTES.goTo(AUTH_ROUTES.REPORT),
+    icon: FileSpreadsheet,
   },
   {
     title: 'Конфигурация',

@@ -5,6 +5,7 @@ import {
   Res,
   StreamableFile,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ReportService } from './report.service';
 import { format } from 'date-fns';
@@ -19,13 +20,13 @@ export class ReportController {
 
   @Get('excel')
   async createExcelReport(
-    @Query() query: ReportQueryDto,
+    @Query(new ValidationPipe({ transform: true })) query: ReportQueryDto,
     @Res({ passthrough: true }) res: Response,
   ) {
     const buf = await this.reportService.excelReport(
       query.start,
       query.end,
-      query.typeId,
+      query.typeIds,
     );
 
     const name = `report_${format(query.start, 'yyyy-MM-dd')}.xlsx`;

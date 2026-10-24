@@ -5,11 +5,11 @@ import { Workbook } from 'exceljs';
 export class ReportService {
   constructor(private readonly timerHistoryService: TimerHistoryService) {}
 
-  async excelReport(startPeriod: Date, endPeriod: Date, taskTypeId: string) {
+  async excelReport(startPeriod: Date, endPeriod: Date, taskTypeIds: string[]) {
     const rows = await this.timerHistoryService.getHistoryToReport(
       startPeriod,
       endPeriod,
-      [taskTypeId],
+      taskTypeIds,
     );
     const wb = new Workbook();
     const ws = wb.addWorksheet('Отчёт');
@@ -37,6 +37,12 @@ export class ReportService {
         width: 12,
         style: { numFmt: '[h]:mm:ss' },
       },
+      {
+        header: 'Часы',
+        key: 'hours',
+        width: 10,
+        style: { numFmt: '0.00' },
+      },
       { header: 'Сессий', key: 'sessions', width: 10 },
     ];
     ws.getRow(1).font = { bold: true };
@@ -55,6 +61,7 @@ export class ReportService {
         start: r._min.startTimer,
         end: r._max.endTimer,
         time: (r._sum.totalTimeInSeconds ?? 0) / 86400,
+        hours: (r._sum.totalTimeInSeconds ?? 0) / 3600,
         sessions: r._count._all,
       });
     }

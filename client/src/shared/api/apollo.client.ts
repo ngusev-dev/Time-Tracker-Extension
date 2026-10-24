@@ -9,6 +9,8 @@ export const setUnauthorizedHandler = (handler: UnauthorizedHandler) => {
   unauthorizedHandler = handler;
 };
 
+export const notifyUnauthorized = () => unauthorizedHandler?.();
+
 export const isUnauthorizedError = (error: { extensions?: Record<string, unknown> }) => {
   const extensions = error.extensions as { code?: string; originalError?: { statusCode?: number } } | undefined;
 

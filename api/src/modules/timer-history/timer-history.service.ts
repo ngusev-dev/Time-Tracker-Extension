@@ -14,7 +14,7 @@ export class TimerHistoryService {
     taskTypeIds: string[],
   ) {
     const history = await this.prisma.timerHistory.groupBy({
-      by: ['timerId', 'userId', 'description', 'taskTypeId'],
+      by: ['timerId', 'userId', 'taskTypeId'],
       where: {
         taskTypeId: {
           in: taskTypeIds,
@@ -36,7 +36,9 @@ export class TimerHistoryService {
       ...new Set(history.map((h) => h.taskTypeId).filter((id) => id !== null)),
     ];
 
-    const [users, taskTypes] = await Promise.all([
+    const timerIds = [...new Set(history.map((h) => h.timerId))];
+
+    const [users, taskTypes, descriptions] = await Promise.all([
       this.prisma.user.findMany({
         where: { id: { in: [...userIds] } },
         select: { id: true, firstName: true, lastName: true, email: true },
@@ -45,13 +47,27 @@ export class TimerHistoryService {
         where: { id: { in: typeIds } },
         include: { parent: true },
       }),
+
+      this.prisma.timerHistory.findMany({
+        where: {
+          timerId: { in: timerIds },
+          AND: [{ description: { not: null } }, { description: { not: '' } }],
+        },
+        distinct: ['timerId'],
+        orderBy: [{ timerId: 'asc' }, { startTimer: 'desc' }],
+        select: { timerId: true, description: true },
+      }),
     ]);
 
     const usersMap = new Map(users.map((u) => [u.id, u]));
     const taskTypesMap = new Map(taskTypes.map((t) => [t.id, t]));
+    const descriptionsMap = new Map(
+      descriptions.map((d) => [d.timerId, d.description]),
+    );
 
     return history.map((h) => ({
       ...h,
+      description: descriptionsMap.get(h.timerId) ?? null,
       user: usersMap.get(h.userId),
       taskType: h.taskTypeId ? taskTypesMap.get(h.taskTypeId) : undefined,
     }));

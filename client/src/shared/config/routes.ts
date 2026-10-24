@@ -5,6 +5,7 @@ class AuthPages {
   STATISTIC = 'statistic';
   HISTORY = 'history';
   CONFIGURATION = 'configuration';
+  REPORT = 'report';
 
   goTo(path: string) {
     return this._PREFIX + `/${path}`;

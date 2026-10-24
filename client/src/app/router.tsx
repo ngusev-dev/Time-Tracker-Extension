@@ -25,6 +25,10 @@ export const router = createBrowserRouter([
             lazy: () => import('@/pages/HistoryPage').then((m) => ({ Component: m.HistoryPage })),
           },
           {
+            path: AUTH_ROUTES.REPORT,
+            lazy: () => import('@/pages/ReportPage').then((m) => ({ Component: m.ReportPage })),
+          },
+          {
             path: AUTH_ROUTES.CONFIGURATION,
             lazy: () => import('@/pages/ConfigurationPage').then((m) => ({ Component: m.ConfigurationPage })),
           },
