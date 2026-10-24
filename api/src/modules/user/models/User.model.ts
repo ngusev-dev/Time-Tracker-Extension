@@ -1,5 +1,10 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { User } from 'generated/prisma/client';
+import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { User, UserRole } from 'generated/prisma/client';
+
+registerEnumType(UserRole, {
+  name: 'UserRole',
+  description: 'User roles',
+});
 
 @ObjectType()
 export class UserModel implements Omit<User, 'password'> {
@@ -23,4 +28,7 @@ export class UserModel implements Omit<User, 'password'> {
 
   @Field(() => Date)
   createdAt: Date;
+
+  @Field(() => UserRole)
+  role: UserRole;
 }

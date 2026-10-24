@@ -21,6 +21,7 @@ model User {
   timerHistory TimerHistory[]
   userTimer    UserTimer?
   token        Token?
+  role         UserRole       @default(MEMBER)
 
   @@map("users")
 }
@@ -61,7 +62,7 @@ model TaskType {
   id       String         @id @default(uuid()) @db.Uuid
   parentId String?        @db.Uuid
   name     String
-  // hex; только у корневых типов, подтипы наследуют цвет родителя
+
   color    String?
   parent   TaskType?      @relation("TaskTypeTree", fields: [parentId], references: [id], onDelete: Cascade)
   children TaskType[]     @relation("TaskTypeTree")
@@ -103,4 +104,9 @@ enum TimerStatus {
   NEW
   WORKING
   PAUSE
+}
+
+enum UserRole {
+  MEMBER
+  ADMIN
 }

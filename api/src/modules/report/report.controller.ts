@@ -4,16 +4,16 @@ import {
   Query,
   Res,
   StreamableFile,
-  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { ReportService } from './report.service';
 import { format } from 'date-fns';
 import type { Response } from 'express';
 import { ReportQueryDto } from './dto/report-query.dto';
-import { AuthGuard } from '@shared/guards/auth.guard';
 
-@UseGuards(AuthGuard)
+import { Protected } from '@shared/decorators/protected.decorator';
+
+@Protected('ADMIN')
 @Controller('report')
 export class ReportController {
   constructor(private readonly reportService: ReportService) {}

@@ -2,10 +2,10 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserTimerService } from './user-timer.service';
 import { UserTimerModel } from './models/UserTimer.model';
 import { Authorized } from '@shared/decorators/authorized.decorator';
-import { UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@shared/guards/auth.guard';
 
-@UseGuards(AuthGuard)
+import { Protected } from '@shared/decorators/protected.decorator';
+
+@Protected()
 @Resolver()
 export class UserTimerResolver {
   constructor(private readonly userTimerService: UserTimerService) {}

@@ -115,6 +115,13 @@ type UserModel {
   lastName: String!
   login: String!
   middleName: String
+  role: UserRole!
+}
+
+"""User roles"""
+enum UserRole {
+  ADMIN
+  MEMBER
 }
 
 type UserTimerModel {

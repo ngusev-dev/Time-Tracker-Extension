@@ -1,15 +1,14 @@
 import { Args, Int, Query, Resolver } from '@nestjs/graphql';
 import { TimerStatisticService } from './timer-statistic.service';
 import { TimerStatisticModel } from './models/TimerStatistic.model';
-import { UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@shared/guards/auth.guard';
 import { Authorized } from '@shared/decorators/authorized.decorator';
+import { Protected } from '@shared/decorators/protected.decorator';
 
+@Protected()
 @Resolver()
 export class TimerStatisticResolver {
   constructor(private readonly timerStatisticService: TimerStatisticService) {}
 
-  @UseGuards(AuthGuard)
   @Query(() => TimerStatisticModel)
   async getWeekStatistic(
     @Authorized('id') userId: number,

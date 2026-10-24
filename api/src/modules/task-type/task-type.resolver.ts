@@ -1,4 +1,3 @@
-import { UseGuards } from '@nestjs/common';
 import {
   Args,
   Mutation,
@@ -8,28 +7,30 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { Authorized } from '@shared/decorators/authorized.decorator';
-import { AuthGuard } from '@shared/guards/auth.guard';
 import { TimerHistoryModel } from '@modules/timer-history/models/TimerHistory.model';
 import { UserTimerModel } from '@modules/user-timer/models/UserTimer.model';
 import { CreateTaskTypeDto, UpdateTaskTypeDto } from './dto/task-type.dto';
 import { TaskTypeModel } from './models/TaskType.model';
 import { TaskTypeService } from './task-type.service';
+import { Protected } from '@shared/decorators/protected.decorator';
 
-@UseGuards(AuthGuard)
 @Resolver(() => TaskTypeModel)
 export class TaskTypeResolver {
   constructor(private readonly taskTypeService: TaskTypeService) {}
 
+  @Protected()
   @Query(() => [TaskTypeModel])
   async taskTypes() {
     return await this.taskTypeService.getTree();
   }
 
+  @Protected('ADMIN')
   @Mutation(() => TaskTypeModel)
   async createTaskType(@Args('input') input: CreateTaskTypeDto) {
     return await this.taskTypeService.create(input);
   }
 
+  @Protected('ADMIN')
   @Mutation(() => TaskTypeModel)
   async updateTaskType(
     @Args('id') id: string,
@@ -38,11 +39,13 @@ export class TaskTypeResolver {
     return await this.taskTypeService.update(id, input);
   }
 
+  @Protected('ADMIN')
   @Mutation(() => Boolean)
   async deleteTaskType(@Args('id') id: string) {
     return await this.taskTypeService.remove(id);
   }
 
+  @Protected()
   @Mutation(() => UserTimerModel)
   async setTimerTaskType(
     @Authorized('id') userId: number,

@@ -5,10 +5,9 @@ import {
   TimerHistoryModel,
 } from './models/TimerHistory.model';
 import { Authorized } from '@shared/decorators/authorized.decorator';
-import { UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@shared/guards/auth.guard';
+import { Protected } from '@shared/decorators/protected.decorator';
 
-@UseGuards(AuthGuard)
+@Protected()
 @Resolver()
 export class TimerHistoryResolver {
   constructor(private readonly timerHistoryService: TimerHistoryService) {}
