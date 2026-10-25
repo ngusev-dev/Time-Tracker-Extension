@@ -1,4 +1,4 @@
-import { Args, Int, Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { TimerHistoryService } from './timer-history.service';
 import {
   TimerHistoryGroupModel,
@@ -6,6 +6,7 @@ import {
 } from './models/TimerHistory.model';
 import { Authorized } from '@shared/decorators/authorized.decorator';
 import { Protected } from '@shared/decorators/protected.decorator';
+import { CreateManualSessionDto } from './dto/create-manual-session.dto';
 
 @Protected()
 @Resolver()
@@ -65,5 +66,13 @@ export class TimerHistoryResolver {
       startPeriod,
       endPeriod,
     );
+  }
+
+  @Mutation(() => TimerHistoryModel)
+  async createManualSession(
+    @Authorized('id') userId: number,
+    @Args('input') input: CreateManualSessionDto,
+  ) {
+    return await this.timerHistoryService.createManualSession(userId, input);
   }
 }

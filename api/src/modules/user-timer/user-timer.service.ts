@@ -4,8 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { computedIntervalInSeconds } from './helpers/time.helper';
 import { UuidService } from '@shared/lib/uuid/uuid.service';
+import { computedIntervalInSeconds } from '@shared/helpers/time.helper';
 
 @Injectable()
 export class UserTimerService {

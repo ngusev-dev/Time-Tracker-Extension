@@ -2,6 +2,13 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input CreateManualSessionDto {
+  description: String
+  endTimer: DateTime!
+  startTimer: DateTime!
+  taskTypeId: String
+}
+
 input CreateTaskTypeDto {
   color: String
   name: String!
@@ -32,6 +39,7 @@ input LoginDto {
 type Mutation {
   changePassword(email: String!, password: String!, token: String!): Boolean!
   continueTimer(timerId: String!): UserTimerModel!
+  createManualSession(input: CreateManualSessionDto!): TimerHistoryModel!
   createTaskType(input: CreateTaskTypeDto!): TaskTypeModel!
   createUserTimer: UserTimerModel!
   deleteTaskType(id: String!): Boolean!

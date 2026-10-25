@@ -101,7 +101,7 @@ export class TaskTypeService {
       const type = await this.prisma.taskType.findUnique({
         where: { id: taskTypeId },
       });
-      if (!type) throw new NotFoundException('Task type not found');
+      if (!type) throw new NotFoundException('Тип задачи не найден');
     }
 
     const where = { timerId, userId };
