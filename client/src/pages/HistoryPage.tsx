@@ -2,10 +2,11 @@ import { DayGroupHeader, TaskGroupItem, groupRecordsByTimerId } from '@/features
 import { endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
-import { CalendarX2, History } from 'lucide-react';
+import { NavLink, useNavigate } from 'react-router';
+import { CalendarX2, History, Plus } from 'lucide-react';
 import { useGetTimerHistoryGroupByDateQuery } from '@/shared/api/generated/output';
 import { AUTH_ROUTES } from '@/shared/config/routes';
+import { Button } from '@/shared/ui/Button';
 import { PageHeader } from '@/shared/ui/PageHeader';
 import { PeriodSwitcher } from '@/shared/ui/PeriodSwitcher';
 import { Skeleton } from '@/shared/ui/Skeleton';
@@ -33,12 +34,25 @@ export function HistoryPage() {
         icon={History}
         title="История"
         action={
-          <PeriodSwitcher
-            label={<span className="capitalize">{monthLabel}</span>}
-            onPrev={() => setMonthOffset((prev) => prev + 1)}
-            onNext={() => setMonthOffset((prev) => prev - 1)}
-            canNext={monthOffset > 0}
-          />
+          <div className="flex items-center gap-1">
+            <PeriodSwitcher
+              label={<span className="capitalize">{monthLabel}</span>}
+              onPrev={() => setMonthOffset((prev) => prev + 1)}
+              onNext={() => setMonthOffset((prev) => prev - 1)}
+              canNext={monthOffset > 0}
+            />
+            <Button
+              size="icon-sm"
+              variant="ghost"
+              className="text-brand hover:bg-brand-soft hover:text-brand"
+              title="Добавить сессию"
+              asChild
+            >
+              <NavLink to={AUTH_ROUTES.goTo(AUTH_ROUTES.ADD_SESSION)}>
+                <Plus />
+              </NavLink>
+            </Button>
+          </div>
         }
       />
 

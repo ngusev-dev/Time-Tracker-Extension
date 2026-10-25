@@ -1,6 +1,8 @@
 import { Button } from '@/shared/ui/Button';
 import { formatTime } from '@/shared/lib/time';
-import { Pause, Play, Square } from 'lucide-react';
+import { CalendarPlus, Pause, Play, Square } from 'lucide-react';
+import { NavLink } from 'react-router';
+import { AUTH_ROUTES } from '@/shared/config/routes';
 import { TimerStore } from './Timer.store';
 import { observer } from 'mobx-react-lite';
 import { cn } from '@/shared/lib/utils';
@@ -85,6 +87,13 @@ export const TimeTracker = observer(() => {
           </>
         )}
       </div>
+
+      <Button variant="ghost" size="sm" className="self-center text-muted-foreground" asChild>
+        <NavLink to={AUTH_ROUTES.goTo(AUTH_ROUTES.ADD_SESSION)}>
+          <CalendarPlus />
+          Добавить сессию
+        </NavLink>
+      </Button>
     </div>
   );
 });

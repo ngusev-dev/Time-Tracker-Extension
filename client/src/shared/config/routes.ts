@@ -8,6 +8,7 @@ class AuthPages {
   HISTORY = 'history';
   CONFIGURATION = 'configuration';
   REPORT = 'report';
+  ADD_SESSION = 'add-session';
 
   goTo(path: string) {
     return this._PREFIX + `/${path}`;

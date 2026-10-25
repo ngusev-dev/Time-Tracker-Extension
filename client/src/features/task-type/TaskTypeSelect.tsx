@@ -41,14 +41,22 @@ function RowAction({ title, onClick, className, children }: RowActionProps) {
   );
 }
 
-export const TaskTypeSelect = observer(() => {
+type TaskTypePickerProps = {
+  /** id выбранного типа или подтипа */
+  value: string | null;
+  onChange: (selection: TTaskTypeSelection | null) => void;
+  disabled?: boolean;
+};
+
+export const TaskTypePicker = observer(({ value, onChange, disabled }: TaskTypePickerProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [expanded, setExpanded] = useState<TExpandedState>({});
   const [activeValue, setActiveValue] = useState('');
   const listRef = useRef<HTMLDivElement>(null);
 
-  const { types, selected } = TaskTypeStore;
+  const { types } = TaskTypeStore;
+  const selected = TaskTypeStore.find(value);
 
   const rows = buildTypeRows(types, search, expanded);
   const activeRow = rows.find((row) => row.value === activeValue);
@@ -86,7 +94,7 @@ export const TaskTypeSelect = observer(() => {
   };
 
   const handleSelect = (selection: TTaskTypeSelection) => {
-    TaskTypeStore.select(selection);
+    onChange(selection);
     handleOpenChange(false);
   };
 
@@ -125,7 +133,7 @@ export const TaskTypeSelect = observer(() => {
         <PopoverTrigger asChild>
           <button
             type="button"
-            disabled={!TimerStore.timerId}
+            disabled={disabled}
             className={cn(
               'flex h-11.5 w-full cursor-pointer items-center gap-2 rounded-lg border bg-card px-3 text-left text-sm shadow-xs transition outline-none focus-visible:border-brand/50 focus-visible:ring-[3px] focus-visible:ring-brand/15 disabled:cursor-not-allowed disabled:opacity-50',
               { 'border-brand/50 ring-[3px] ring-brand/15': isOpen, 'pr-14': selected },
@@ -207,7 +215,7 @@ export const TaskTypeSelect = observer(() => {
         <button
           type="button"
           title="Убрать тип"
-          onClick={() => TaskTypeStore.select(null)}
+          onClick={() => onChange(null)}
           className="absolute top-1/2 right-8 inline-flex size-5 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition hover:bg-muted hover:text-foreground"
         >
           <X className="size-3" />
@@ -216,3 +224,8 @@ export const TaskTypeSelect = observer(() => {
     </div>
   );
 });
+
+/** Тип задачи текущего таймера */
+export const TaskTypeSelect = observer(() => (
+  <TaskTypePicker value={TimerStore.taskTypeId} onChange={TaskTypeStore.select} disabled={!TimerStore.timerId} />
+));

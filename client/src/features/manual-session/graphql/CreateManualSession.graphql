@@ -1,0 +1,11 @@
+mutation CreateManualSession($input: CreateManualSessionDto!) {
+  createManualSession(input: $input) {
+    id
+    timerId
+    startTimer
+    endTimer
+    totalTimeInSeconds
+    description
+    taskTypeId
+  }
+}

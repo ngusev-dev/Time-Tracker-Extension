@@ -18,6 +18,13 @@ export type Scalars = {
   DateTime: { input: any; output: any; }
 };
 
+export type CreateManualSessionDto = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  endTimer: Scalars['DateTime']['input'];
+  startTimer: Scalars['DateTime']['input'];
+  taskTypeId?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type CreateTaskTypeDto = {
   color?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
@@ -46,6 +53,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   changePassword: Scalars['Boolean']['output'];
   continueTimer: UserTimerModel;
+  createManualSession: TimerHistoryModel;
   createTaskType: TaskTypeModel;
   createUserTimer: UserTimerModel;
   deleteTaskType: Scalars['Boolean']['output'];
@@ -71,6 +79,11 @@ export type MutationChangePasswordArgs = {
 
 export type MutationContinueTimerArgs = {
   timerId: Scalars['String']['input'];
+};
+
+
+export type MutationCreateManualSessionArgs = {
+  input: CreateManualSessionDto;
 };
 
 
@@ -331,6 +344,13 @@ export type GetTimerHistoryGroupByTimerIdQueryVariables = Exact<{
 
 
 export type GetTimerHistoryGroupByTimerIdQuery = { __typename?: 'Query', getTimerHistoryGroupByTimerId: Array<{ __typename?: 'TimerHistoryGroupModel', groupField: string, records: Array<{ __typename?: 'TimerHistoryModel', id: string, startTimer: any, endTimer: any, totalTimeInSeconds: number, userId: number, description?: string | null, timerId: string, taskTypeId?: string | null, user: { __typename?: 'UserModel', id: string, firstName: string, lastName: string, middleName?: string | null } }> }> };
+
+export type CreateManualSessionMutationVariables = Exact<{
+  input: CreateManualSessionDto;
+}>;
+
+
+export type CreateManualSessionMutation = { __typename?: 'Mutation', createManualSession: { __typename?: 'TimerHistoryModel', id: string, timerId: string, startTimer: any, endTimer: any, totalTimeInSeconds: number, description?: string | null, taskTypeId?: string | null } };
 
 export type GetPeriodStatisticQueryVariables = Exact<{
   startPeriod: Scalars['DateTime']['input'];
@@ -835,6 +855,45 @@ export type GetTimerHistoryGroupByTimerIdQueryHookResult = ReturnType<typeof use
 export type GetTimerHistoryGroupByTimerIdLazyQueryHookResult = ReturnType<typeof useGetTimerHistoryGroupByTimerIdLazyQuery>;
 export type GetTimerHistoryGroupByTimerIdSuspenseQueryHookResult = ReturnType<typeof useGetTimerHistoryGroupByTimerIdSuspenseQuery>;
 export type GetTimerHistoryGroupByTimerIdQueryResult = Apollo.QueryResult<GetTimerHistoryGroupByTimerIdQuery, GetTimerHistoryGroupByTimerIdQueryVariables>;
+export const CreateManualSessionDocument = gql`
+    mutation CreateManualSession($input: CreateManualSessionDto!) {
+  createManualSession(input: $input) {
+    id
+    timerId
+    startTimer
+    endTimer
+    totalTimeInSeconds
+    description
+    taskTypeId
+  }
+}
+    `;
+export type CreateManualSessionMutationFn = Apollo.MutationFunction<CreateManualSessionMutation, CreateManualSessionMutationVariables>;
+
+/**
+ * __useCreateManualSessionMutation__
+ *
+ * To run a mutation, you first call `useCreateManualSessionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateManualSessionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createManualSessionMutation, { data, loading, error }] = useCreateManualSessionMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateManualSessionMutation(baseOptions?: Apollo.MutationHookOptions<CreateManualSessionMutation, CreateManualSessionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateManualSessionMutation, CreateManualSessionMutationVariables>(CreateManualSessionDocument, options);
+      }
+export type CreateManualSessionMutationHookResult = ReturnType<typeof useCreateManualSessionMutation>;
+export type CreateManualSessionMutationResult = Apollo.MutationResult<CreateManualSessionMutation>;
+export type CreateManualSessionMutationOptions = Apollo.BaseMutationOptions<CreateManualSessionMutation, CreateManualSessionMutationVariables>;
 export const GetPeriodStatisticDocument = gql`
     query GetPeriodStatistic($startPeriod: DateTime!, $endPeriod: DateTime!) {
   getByPeriod(startPeriod: $startPeriod, endPeriod: $endPeriod) {
