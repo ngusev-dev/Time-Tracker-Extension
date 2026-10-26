@@ -1,7 +1,10 @@
 import { defineManifest } from '@crxjs/vite-plugin';
 
-export const createManifest = (apiUrl: string) => {
+export type TargetBrowser = 'chrome' | 'firefox';
+
+export const createManifest = (apiUrl: string, browser: TargetBrowser) => {
   const { protocol, hostname } = new URL(apiUrl);
+  const isFirefox = browser === 'firefox';
 
   return defineManifest({
     manifest_version: 3,
@@ -14,9 +17,17 @@ export const createManifest = (apiUrl: string) => {
     },
     permissions: ['storage', 'unlimitedStorage', 'cookies'],
     host_permissions: [`${protocol}//${hostname}/*`],
-    background: {
-      service_worker: 'background.js',
-      persistent: false,
-    },
+    background: isFirefox ? { scripts: ['background.js'] } : { service_worker: 'background.js' },
+    ...(isFirefox ? firefoxSettings : {}),
   });
+};
+
+const firefoxSettings = {
+  browser_specific_settings: {
+    gecko: {
+      id: 'time-tracker@your-domain.com',
+      strict_min_version: '121.0',
+      data_collection_permissions: { required: ['none'] },
+    },
+  },
 };
