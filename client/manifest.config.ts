@@ -10,7 +10,7 @@ export const createManifest = (apiUrl: string, browser: TargetBrowser) => {
     manifest_version: 3,
     name: 'Time Tracker',
     description:
-      'Time Tracker is a tool designed to help users efficiently monitor the time they spend on various work tasks. It provides detailed reports, real-time tracking, and customizable alerts to improve productivity and time management. The extension seamlessly integrates with popular work platforms and offers an intuitive interface for easy start, pause, and stop of time tracking. Ideal for freelancers, remote workers, and teams who want to optimize their workflow and accurately log work hours.',
+      'Time Tracker is a tool designed to help users efficiently monitor the time they spend on various work tasks.',
     version: '1.0.0',
     action: {
       default_popup: 'index.html',
@@ -25,9 +25,12 @@ export const createManifest = (apiUrl: string, browser: TargetBrowser) => {
 const firefoxSettings = {
   browser_specific_settings: {
     gecko: {
-      id: 'time-tracker@your-domain.com',
-      strict_min_version: '121.0',
+      id: '{69f8a1af-4c1a-40d8-8a75-06bd171dcc4d}',
+      strict_min_version: '140.0',
       data_collection_permissions: { required: ['none'] },
+    },
+    gecko_android: {
+      strict_min_version: '142.0',
     },
   },
 };

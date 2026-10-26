@@ -7,6 +7,8 @@
     "dev": "vite",
     "dev:firefox": "cross-env TARGET_BROWSER=firefox vite build --watch --mode development --outDir dist-firefox",
     "run:firefox": "web-ext run --source-dir dist-firefox",
+    "lint:firefox": "web-ext lint --source-dir dist-firefox",
+    "sign:firefox": "npm run build:firefox && node --env-file=.env.production node_modules/web-ext/bin/web-ext.js sign --source-dir dist-firefox --channel unlisted",
     "build:chrome": "tsc -b && vite build",
     "build:firefox": "tsc -b && cross-env TARGET_BROWSER=firefox vite build --outDir dist-firefox",
     "lint": "eslint .",

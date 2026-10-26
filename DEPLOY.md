@@ -29,6 +29,14 @@
 
 ### 2.1. Указать адрес API
 
+Файлы окружения не хранятся в git. Создайте их из шаблона:
+
+```sh
+cd client
+cp .env.example .env.production    # для сборок (build:*, sign:firefox)
+cp .env.example .env.development   # для локальной разработки (dev, dev:firefox)
+```
+
 В `client/.env.production` укажите адрес API на сервере (без `/graphql` и без `/` в конце):
 
 ```
@@ -56,15 +64,13 @@ npm run build:firefox   # Firefox → client/dist-firefox
 2. Включить **Режим разработчика**.
 3. Нажать **Загрузить распакованное расширение** и выбрать папку `client/dist`.
 
-**Firefox (121+):**
+**Firefox (140+, Android 142+)** — временно, для проверки:
 
 1. Открыть `about:debugging#/runtime/this-firefox`.
 2. Нажать **Загрузить временное дополнение…** и выбрать `client/dist-firefox/manifest.json`.
 3. Открыть `about:addons` → Time Tracker → вкладка **Разрешения** и включить доступ к хосту API.
 
-> В Firefox разрешения на хосты (`host_permissions`) не выдаются при установке. Пока доступ к API не включён вручную, запросы блокируются CORS: API отвечает `Access-Control-Allow-Origin: *`, а браузер не принимает его вместе с cookie.
-
-> Временное дополнение удаляется при перезапуске Firefox. Чтобы установить расширение постоянно, его нужно подписать на [addons.mozilla.org](https://addons.mozilla.org/developers/) (можно как unlisted). Перед подписью замените `gecko.id` в `client/manifest.config.ts` на свой и проверьте сборку: `npx web-ext lint --source-dir dist-firefox`.
+Временное дополнение удаляется при перезапуске Firefox. Для постоянной установки расширение нужно подписать (см. 2.5).
 
 ### 2.4. Обновление расширения
 
@@ -77,6 +83,47 @@ npm run build:firefox   # Firefox → client/dist-firefox
 
 1. Пересобрать: `npm run build:firefox`.
 2. На странице `about:debugging` нажать **Перезагрузить** на карточке расширения.
+
+Подписанное расширение обновляется новой подписью (см. 2.5).
+
+### 2.5. Подпись для Firefox (постоянная установка)
+
+Обычный Firefox устанавливает навсегда только подписанные расширения. Подпись бесплатная: расширение отправляется на addons.mozilla.org (AMO) как **unlisted** — его подписывают, но не публикуют в каталоге.
+
+**Один раз:**
+
+1. Зарегистрироваться на [addons.mozilla.org](https://addons.mozilla.org/developers/).
+2. Получить API-ключи на странице [Manage API Keys](https://addons.mozilla.org/developers/addon/api/key/): **JWT issuer** и **JWT secret**.
+3. Вписать ключи в `client/.env.production` (см. 2.1):
+
+   ```
+   WEB_EXT_API_KEY=<JWT issuer>
+   WEB_EXT_API_SECRET=<JWT secret>
+   ```
+
+   `.env.production` в `.gitignore` — не коммитьте ключи. В сборку расширения они не попадают: Vite встраивает только переменные с префиксом `VITE_`.
+
+**Каждый релиз:**
+
+1. Поднять `version` в `client/manifest.config.ts` (`1.0.0` → `1.0.1`). AMO не подписывает одну версию дважды.
+2. Подписать:
+
+   ```sh
+   cd client
+   npm run sign:firefox
+   ```
+
+   Скрипт собирает `dist-firefox` и отправляет его на подпись с ключами из `client/.env.production` (нужен Node 20.6+). Автоматическая проверка обычно занимает несколько минут; подписанный `.xpi` появится в `client/web-ext-artifacts/`.
+
+3. Установить: перетащить `.xpi` в окно Firefox или `about:addons` → ⚙ → **Установить дополнение из файла**. Затем включить доступ к хосту API (см. 2.3, шаг 3).
+
+Новая подписанная версия ставится поверх старой тем же способом.
+
+> `gecko.id` в `client/manifest.config.ts` привязывает расширение к вашему аккаунту AMO. После первой подписи его менять нельзя — иначе Firefox сочтёт новую версию другим расширением.
+
+> Сборка минифицирована, поэтому AMO может запросить исходники. Тогда приложите архив папки `client` без `node_modules` и `dist*` через `--upload-source-code <путь к zip>` или в кабинете разработчика.
+
+Перед подписью можно проверить сборку: `npm run lint:firefox` (ошибок быть не должно; предупреждения про `innerHTML` и `Function` относятся к коду библиотек).
 
 ---
 
